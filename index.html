@@ -134,6 +134,25 @@
     background:transparent;color:var(--cyan);border:1px solid var(--cyan);
     border-radius:6px;padding:.45rem .9rem;cursor:pointer;
   }
+  #flash-filters{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem;}
+  .filter-chip{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;
+    background:transparent;color:var(--muted);border:1px solid var(--line);
+    border-radius:999px;padding:.35rem .85rem;cursor:pointer;
+    transition:border-color .15s,color .15s,background .15s;
+    white-space:nowrap;flex-shrink:0;
+  }
+  .filter-chip:hover{border-color:var(--cyan);color:var(--cyan);}
+  .filter-chip.active{background:var(--cyan);color:var(--bg);border-color:var(--cyan);}
+  @media(max-width:600px){
+    #flash-controls{gap:.6rem;}
+    #flash-filters{
+      flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;
+      margin-left:-1.5rem;margin-right:-1.5rem;padding:0 1.5rem .35rem;
+      scrollbar-width:none;
+    }
+    #flash-filters::-webkit-scrollbar{display:none;}
+  }
   .card-grid{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -391,12 +410,10 @@
 
   <header>
     <p class="eyebrow">Information Systems IIB &middot; INFO2001A</p>
-    <h1>INFO2001A Relational Database Mock Examination — Microsoft Access (4 Papers)</h1>
-    <p class="sub">An 80-mark, 2-hour mock examination focused on relational database design and Microsoft Access SQL. The questions use new schemas, dependencies, business rules and SQL tasks rather than recycled scenarios with renamed nouns.</p>
+    <h1>Relational Database Mock Exams</h1>
     <div class="meta-row">
       <span>Topics: <b>Normalization &middot; ER diagrams &middot; Microsoft Access SQL</b></span>
-      <span>Style ref: <b>INFO2001A Test 1, 2023</b></span>
-      <span>Mock set: <b>7 papers &middot; marks/duration vary by paper</b></span>
+      <span>Mock set: <b>7 papers</b></span>
     </div>
   </header>
 
@@ -410,11 +427,12 @@
   <!-- FLASHCARDS -->
   <section class="view active" id="flash">
     <h2 class="section-title">Concept flashcards</h2>
-    <p class="section-desc">Tap a card to flip it. These cover the definitions Test 1 actually expects you to apply, not just recite.</p>
+    <p class="section-desc">Tap a card to flip it. These cover the definitions and applied reasoning Test 1 actually expects — not just recite-a-term recall.</p>
     <div id="flash-controls">
       <span class="count" id="flash-count"></span>
       <button id="flash-reset">Flip all</button>
     </div>
+    <div id="flash-filters"></div>
     <div class="card-grid" id="flash-grid"></div>
   </section>
 
@@ -429,7 +447,7 @@
   <!-- MOCK TEST -->
   <section class="view" id="mock">
     <h2 class="section-title">Mock papers</h2>
-    <p class="section-desc">Seven full papers, each with its own marks and duration (shown on the paper once opened). Section A mixes conceptual diagnosis, query interpretation and Access-specific SQL. Section B tests normalization from functional dependencies. Section C tests ER modelling from a fresh business scenario. Section D uses query construction, aggregation, subqueries, NULL handling and output requirements. Select a paper to open it.</p>
+    <p class="section-desc">Seven full papers, each with its own marks and duration. Select a paper to open it.</p>
     <div class="pill-row" id="mock-pills"></div>
   </section>
 
@@ -480,46 +498,120 @@
 
   // ---- flashcards ----
   const flashcards = [
+    // Normalization
     {tag:'Normalization', front:'What does First Normal Form (1NF) require?', back:'Every attribute holds a single, atomic value and there are no repeating groups within a row.'},
     {tag:'Normalization', front:'What does Second Normal Form (2NF) remove?', back:'Partial dependencies — non-key attributes that depend on only part of a composite primary key, not the whole key.'},
     {tag:'Normalization', front:'What does Third Normal Form (3NF) remove?', back:'Transitive dependencies — non-key attributes that depend on another non-key attribute rather than directly on the primary key.'},
     {tag:'Normalization', front:'Define a partial dependency.', back:'When a non-key attribute depends on only one part of a composite primary key, rather than the full key.'},
     {tag:'Normalization', front:'Define a transitive dependency.', back:'When a non-key attribute depends on another non-key attribute, which in turn depends on the primary key.'},
     {tag:'Normalization', front:'Define a functional dependency.', back:'Attribute B is functionally dependent on A if each value of A is associated with exactly one value of B.'},
-    {tag:'Keys', front:'Primary key vs. foreign key?', back:'A primary key uniquely identifies each row in its own table. A foreign key is an attribute in one table that references the primary key of another.'},
-    {tag:'Keys', front:'What is a candidate key?', back:'Any attribute (or minimal set of attributes) that could uniquely identify a row; one candidate key is chosen as the primary key.'},
-    {tag:'ER diagram', front:"Crow's foot: one and only one?", back:'A single straight tick mark across the relationship line — mandatory, cardinality of exactly one.'},
-    {tag:'ER diagram', front:"Crow's foot: zero or many?", back:'A circle followed by a crow\'s foot (fork) — optional, cardinality of many.'},
-    {tag:'ER diagram', front:'What is a weak entity?', back:'An entity that cannot be uniquely identified by its own attributes alone and depends on a relationship with another (owner) entity for its identity.'},
-    {tag:'ER diagram', front:'How do you resolve a many-to-many relationship?', back:'Introduce an associative (bridge/junction) entity that holds the foreign keys of both original entities, turning the M:N into two 1:M relationships.'},
-    {tag:'SQL', front:'What does SELECT with column names implement?', back:'Projection — choosing which columns appear in the result.'},
-    {tag:'SQL', front:'What does the WHERE clause implement?', back:'Selection (restriction) — choosing which rows appear in the result based on a condition.'},
-    {tag:'SQL', front:"COUNT(*) vs COUNT(column)?", back:'COUNT(*) counts all rows, NULLs included. COUNT(column) counts only rows where that column is not NULL.'},
-    {tag:'SQL', front:'What does BETWEEN do?', back:'Selects values within an inclusive range, e.g. WHERE Price BETWEEN 100 AND 300 includes both 100 and 300.'},
-    {tag:'SQL', front:'Any arithmetic involving NULL?', back:'Always evaluates to NULL — NULL represents an unknown value, so the result of the calculation is also unknown.'},
-    {tag:'SQL', front:'GROUP BY vs HAVING?', back:'GROUP BY collapses rows into groups for aggregation. HAVING filters those groups after aggregation, the way WHERE filters individual rows before it.'},
+    {tag:'Normalization', front:'A table\u2019s primary key is a single column. Can it have a partial dependency?', back:'No — a partial dependency can only exist against a composite (multi-column) key. With a single-column key, every non-key attribute automatically depends on the whole key.'},
+    {tag:'Normalization', front:'Table T has key {A,B}. Attribute C depends only on A. Which normal form is violated?', back:'2NF is violated — C has a partial dependency on part of the composite key (A) rather than the whole key {A,B}.'},
+    {tag:'Normalization', front:'Table T has a single-attribute key A, and a non-key attribute B determines another non-key attribute C (A\u2192B\u2192C). What\u2019s the highest normal form T satisfies?', back:'2NF only. No partial dependency is possible (single-attribute key), but B\u2192C is a transitive dependency, which violates 3NF.'},
+    {tag:'Normalization', front:'What does BCNF (Boyce-Codd Normal Form) require beyond 3NF?', back:'Every determinant (the left-hand side of any functional dependency) must be a candidate key — even ones already in 3NF can still fail this if a non-candidate-key attribute determines part of the key.'},
+    {tag:'Normalization', front:'Why does normalization reduce redundancy?', back:'Each fact is decomposed so it is stored in exactly one place — no fact is duplicated across multiple rows or tables.'},
+
+    // Keys & Integrity
+    {tag:'Keys & Integrity', front:'Primary key vs. foreign key?', back:'A primary key uniquely identifies each row in its own table. A foreign key is an attribute in one table that references the primary key of another.'},
+    {tag:'Keys & Integrity', front:'What is a candidate key?', back:'Any attribute (or minimal set of attributes) that could uniquely identify a row; one candidate key is chosen as the primary key.'},
+    {tag:'Keys & Integrity', front:'What is an alternate key?', back:'A candidate key that exists but was NOT chosen as the primary key.'},
+    {tag:'Keys & Integrity', front:'What is a composite key?', back:'A primary key made up of two or more attributes, where no single attribute alone uniquely identifies a row.'},
+    {tag:'Keys & Integrity', front:'Natural key vs. surrogate key?', back:'A natural key is derived from real-world data (e.g. an ID number) and can change over time. A surrogate key is a system-generated identifier (e.g. auto-increment) with no business meaning, chosen for stability.'},
+    {tag:'Keys & Integrity', front:'Why prefer a surrogate key over a natural key as a primary key?', back:'Natural keys can change (names, phone numbers, even ID numbers get reissued), which breaks stability for a key that other tables reference via foreign keys.'},
+    {tag:'Keys & Integrity', front:'What is entity integrity?', back:'The rule that every table must have a primary key, and that primary key value can never be NULL.'},
+    {tag:'Keys & Integrity', front:'What is referential integrity?', back:'A foreign key value must either match an existing primary key value in the referenced table, or be NULL.'},
+    {tag:'Keys & Integrity', front:'What is domain integrity?', back:'The rule restricting the values a column may hold to a valid data type, range, or defined set of values.'},
+    {tag:'Keys & Integrity', front:'Can a foreign key column contain NULL?', back:'Yes, unless the relationship is mandatory. A NULL foreign key means "this row currently has no related row" (e.g. an optional relationship).'},
+
+    // ER Modelling
+    {tag:'ER Modelling', front:"Crow's foot: one and only one?", back:'A single straight tick mark across the relationship line — mandatory, cardinality of exactly one.'},
+    {tag:'ER Modelling', front:"Crow's foot: zero or many?", back:'A circle followed by a crow\'s foot (fork) — optional, cardinality of many.'},
+    {tag:'ER Modelling', front:'What is a weak entity?', back:'An entity that cannot be uniquely identified by its own attributes alone and depends on a relationship with another (owner) entity for its identity.'},
+    {tag:'ER Modelling', front:'How do you resolve a many-to-many relationship?', back:'Introduce an associative (bridge/junction) entity that holds the foreign keys of both original entities, turning the M:N into two 1:M relationships.'},
+    {tag:'ER Modelling', front:'What is an associative entity used for?', back:'To store attributes that describe the relationship itself — data that only makes sense in the context of both linked entities together (e.g. a grade, quantity, or booking date).'},
+    {tag:'ER Modelling', front:'How do you decide if an attribute belongs on the associative entity rather than either parent entity?', back:'Ask whether the value only makes sense for a specific pairing (e.g. "grade in this course, for this student") rather than being a fact about either entity alone.'},
+    {tag:'ER Modelling', front:'Mandatory one vs. optional one in crow\'s foot notation?', back:'Mandatory one = a single tick bar. Optional one = a circle plus a tick bar, meaning the relationship may or may not exist, but if it does, it\u2019s exactly one.'},
+    {tag:'ER Modelling', front:'Conceptual vs. logical vs. physical data model?', back:'Conceptual: business-level entities and relationships, no technical detail. Logical: relational schema with normalized tables and keys. Physical: implementation detail — data types, indexes, storage structures.'},
+    {tag:'ER Modelling', front:'In a business-rule sentence, what phrase signals an OPTIONAL relationship end?', back:'Wording like "may also exist without" signals a zero minimum cardinality. "Must be associated with at least one" signals mandatory instead.'},
+    {tag:'ER Modelling', front:'What is a recursive relationship?', back:'A relationship where an entity is related to another instance of itself — e.g. an EMPLOYEE who is managed by another EMPLOYEE.'},
+
+    // SQL Basics
+    {tag:'SQL Basics', front:'What does SELECT with column names implement?', back:'Projection — choosing which columns appear in the result.'},
+    {tag:'SQL Basics', front:'What does the WHERE clause implement?', back:'Selection (restriction) — choosing which rows appear in the result based on a condition.'},
+    {tag:'SQL Basics', front:"COUNT(*) vs COUNT(column)?", back:'COUNT(*) counts all rows, NULLs included. COUNT(column) counts only rows where that column is not NULL.'},
+    {tag:'SQL Basics', front:'What does BETWEEN do?', back:'Selects values within an inclusive range, e.g. WHERE Price BETWEEN 100 AND 300 includes both 100 and 300.'},
+    {tag:'SQL Basics', front:'Any arithmetic involving NULL?', back:'Always evaluates to NULL — NULL represents an unknown value, so the result of the calculation is also unknown.'},
+    {tag:'SQL Basics', front:'GROUP BY vs HAVING?', back:'GROUP BY collapses rows into groups for aggregation. HAVING filters those groups after aggregation, the way WHERE filters individual rows before it.'},
+    {tag:'SQL Basics', front:'What does DISTINCT do?', back:'Removes duplicate rows from the result set, keeping only one copy of each unique row.'},
+    {tag:'SQL Basics', front:'INNER JOIN vs LEFT JOIN?', back:'INNER JOIN returns only rows with matches in both tables. LEFT JOIN returns all rows from the left table plus matching rows from the right, with NULLs where there\u2019s no match.'},
+    {tag:'SQL Basics', front:'What is the default sort direction for ORDER BY?', back:'Ascending (ASC) — from smallest/earliest to largest/latest — unless DESC is specified.'},
+    {tag:'SQL Basics', front:'Why can\u2019t you filter on an aggregate function result using WHERE?', back:'WHERE filters individual rows before grouping happens, but an aggregate result only exists after grouping — so HAVING must be used instead.'},
+
+    // Access SQL
+    {tag:'Access SQL', front:'What does IIf(condition, true_value, false_value) do?', back:'Access\u2019s inline conditional function — returns one value if the condition is true, another if false. Like a compact CASE expression.'},
+    {tag:'Access SQL', front:'What does Nz(expression, value_if_null) do?', back:'Returns a substitute value when the expression is NULL; otherwise returns the expression\u2019s actual value.'},
+    {tag:'Access SQL', front:'Access wildcard for "any number of characters"?', back:'The asterisk (*), used with LIKE — e.g. LIKE \'Jo*\' matches Jonathan, Joe, Jones, etc.'},
+    {tag:'Access SQL', front:'Access wildcard for "exactly one character"?', back:'The question mark (?) — e.g. LIKE \'a?e\' matches "ace" and "are" but not "apple".'},
+    {tag:'Access SQL', front:'How do you write a date literal in Access SQL?', back:'Enclosed in hash symbols — e.g. #2026-07-01# or #07/01/2026#.'},
+    {tag:'Access SQL', front:'What does TOP 5 do in an Access SELECT?', back:'Restricts the result set to the first 5 rows, based on the current ORDER BY (or table storage order if none is specified).'},
+    {tag:'Access SQL', front:'Format(SomeDate, \'d-mmmm-yyyy\') on 3 June 2005 would output what?', back:'"3-June-2005" — the lowercase d/mmmm/yyyy tokens control day number, full month name, and 4-digit year.'},
+    {tag:'Access SQL', front:'What is a correlated subquery?', back:'A subquery that references a column from the outer query, so it re-evaluates once per row of the outer query rather than running once overall.'},
+    {tag:'Access SQL', front:"DateAdd('d', -30, [SomeDate]) does what?", back:'Returns the date 30 days before SomeDate — the \'d\' interval code means the offset is in days.'},
+    {tag:'Access SQL', front:'What does the & operator do in Access SQL?', back:'Concatenates (joins together) two text values, e.g. [FirstName] & " " & [LastName].'},
+
+    // Anomalies & Design
+    {tag:'Anomalies & Design', front:'What is an insertion anomaly?', back:'You cannot add a new fact (e.g. a new product) because some unrelated piece of data (e.g. an order) doesn\u2019t exist yet to attach it to.'},
+    {tag:'Anomalies & Design', front:'What is an update anomaly?', back:'A single real-world fact is stored in multiple rows, so changing it requires updating every row consistently — otherwise the data becomes contradictory.'},
+    {tag:'Anomalies & Design', front:'What is a deletion anomaly?', back:'Deleting one fact (e.g. the last order for a customer) unintentionally deletes other data (e.g. the customer\u2019s own details) that should have persisted.'},
+    {tag:'Anomalies & Design', front:'When would you deliberately denormalize a database?', back:'To improve read/report performance by reducing the number of joins needed, accepting some controlled redundancy in exchange for speed.'},
+    {tag:'Anomalies & Design', front:'What\u2019s the main risk of denormalization?', back:'Update anomalies can return, since the same fact may again be stored in multiple places that must be kept in sync manually.'},
+    {tag:'Anomalies & Design', front:'A table cannot register a new store until it has made a sale. Which anomaly is this?', back:'An insertion anomaly — you\u2019re blocked from inserting a new fact (the store) because it depends on an unrelated fact (a sale) existing first.'},
   ];
 
+  const FLASH_TAGS = ['All', ...Array.from(new Set(flashcards.map(c=>c.tag)))];
+  let activeFlashTag = 'All';
+
   const grid = document.getElementById('flash-grid');
-  flashcards.forEach((c,i)=>{
-    const el = document.createElement('div');
-    el.className = 'flashcard';
-    el.innerHTML = `
-      <div class="inner">
-        <div class="face front">
-          <div class="tag">${c.tag}</div>
-          <p>${c.front}</p>
-          <span class="hint">tap to flip</span>
-        </div>
-        <div class="face back">
-          <div class="tag">${c.tag}</div>
-          <p>${c.back}</p>
-        </div>
-      </div>`;
-    el.addEventListener('click', ()=> el.classList.toggle('flipped'));
-    grid.appendChild(el);
-  });
-  document.getElementById('flash-count').textContent = flashcards.length + ' cards';
+  const filterRow = document.getElementById('flash-filters');
+
+  function renderFlashFilters(){
+    filterRow.innerHTML = '';
+    FLASH_TAGS.forEach(tag=>{
+      const btn = document.createElement('button');
+      btn.className = 'filter-chip' + (tag === activeFlashTag ? ' active' : '');
+      const count = tag === 'All' ? flashcards.length : flashcards.filter(c=>c.tag===tag).length;
+      btn.textContent = `${tag} (${count})`;
+      btn.addEventListener('click', ()=>{ activeFlashTag = tag; renderFlashFilters(); renderFlashGrid(); });
+      filterRow.appendChild(btn);
+    });
+  }
+
+  function renderFlashGrid(){
+    grid.innerHTML = '';
+    const list = activeFlashTag === 'All' ? flashcards : flashcards.filter(c=>c.tag===activeFlashTag);
+    list.forEach((c)=>{
+      const el = document.createElement('div');
+      el.className = 'flashcard';
+      el.innerHTML = `
+        <div class="inner">
+          <div class="face front">
+            <div class="tag">${c.tag}</div>
+            <p>${c.front}</p>
+            <span class="hint">tap to flip</span>
+          </div>
+          <div class="face back">
+            <div class="tag">${c.tag}</div>
+            <p>${c.back}</p>
+          </div>
+        </div>`;
+      el.addEventListener('click', ()=> el.classList.toggle('flipped'));
+      grid.appendChild(el);
+    });
+    document.getElementById('flash-count').textContent = list.length + ' cards';
+  }
+
+  renderFlashFilters();
+  renderFlashGrid();
   document.getElementById('flash-reset').addEventListener('click', ()=>{
     const cards = document.querySelectorAll('.flashcard');
     const allFlipped = Array.from(cards).every(c=>c.classList.contains('flipped'));
