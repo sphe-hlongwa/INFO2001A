@@ -98,27 +98,95 @@
   }
   .meta-row b{color:var(--ink);font-weight:500;}
 
-  /* ---- tabs ---- */
-  nav.tabs{display:flex;gap:.5rem;margin-bottom:1.75rem;flex-wrap:wrap;}
-  nav.tabs button{
-    font-family:'Space Grotesk', sans-serif;
-    font-weight:600;font-size:14.5px;
+  /* ---- app shell: full-height sidebar + content column ---- */
+  .nav-toggle-state{display:none;}
+  .nav-toggle-btn{
+    display:none;align-items:center;gap:.5rem;
+    background:var(--panel);border-bottom:1px solid var(--line);
+    color:var(--cyan);font-family:'Space Grotesk', sans-serif;
+    font-weight:600;font-size:.85rem;
+    padding:.75rem 1rem;cursor:pointer;
+    position:sticky;top:0;z-index:1001;user-select:none;
+  }
+  .nav-toggle-icon{font-size:1.05rem;line-height:1;}
+  .nav-toggle-icon-open{display:none;}
+  .nav-toggle-state:checked ~ .nav-toggle-btn .nav-toggle-icon-closed{display:none;}
+  .nav-toggle-state:checked ~ .nav-toggle-btn .nav-toggle-icon-open{display:inline;}
+  .nav-toggle-state:checked ~ .nav-toggle-btn{display:none;}
+  .nav-sidebar-overlay{display:none;}
+  .nav-sidebar-close-btn{display:none;}
+  body:has(.nav-toggle-state:checked){overflow:hidden;}
+
+  .view-shell{display:flex;align-items:stretch;min-height:100vh;}
+  .view-sidebar{
+    flex:0 0 220px;
+    display:flex;flex-direction:column;gap:.15rem;
     background:var(--panel);
-    color:var(--muted);
-    border:1px solid var(--line);
-    border-radius:8px 8px 0 0;
-    padding:.7rem 1.3rem;
+    border-right:1px solid var(--line);
+    padding:1.25rem .6rem;
+    position:sticky;top:0;
+    height:100vh;
+    overflow-y:auto;
+  }
+  .view-sidebar button{
+    display:flex;align-items:center;gap:.6rem;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;font-size:14px;text-align:left;
+    background:transparent;color:var(--muted);
+    border:none;border-radius:7px;
+    padding:.55rem .65rem;
     cursor:pointer;
-    transition:.15s ease;
+    transition:background .15s,color .15s;
   }
-  nav.tabs button:hover{color:var(--ink);}
-  nav.tabs button.active{
-    color:var(--bg);
-    background:var(--cyan);
-    border-color:var(--cyan);
+  .view-sidebar button:hover{background:var(--panel-2);color:var(--ink);}
+  .view-sidebar button.active{background:var(--cyan);color:var(--cyan-ink);}
+  .view-sidebar .side-icon{
+    display:flex;flex-shrink:0;width:18px;height:18px;
+    color:inherit;opacity:.85;
   }
+  .view-sidebar .side-icon svg{width:100%;height:100%;}
+  .view-sidebar button.active .side-icon{opacity:1;}
+  .view-outer{flex:1;min-width:0;}
   section.view{display:none;}
   section.view.active{display:block;}
+
+  @media(max-width:900px){
+    .nav-toggle-btn{display:flex;}
+    .view-shell{flex-direction:column;}
+    .view-sidebar{
+      position:fixed;top:0;left:0;
+      width:82%;max-width:280px;
+      height:100vh;height:100dvh;
+      border-right:1px solid var(--line);
+      transform:translateX(-100%);
+      transition:transform .28s ease;
+      z-index:1000;
+      box-shadow:4px 0 18px rgba(0,0,0,.45);
+    }
+    .nav-toggle-state:checked ~ .view-shell .view-sidebar{
+      transform:translateX(0);
+    }
+    .nav-sidebar-overlay{
+      display:block;position:fixed;inset:0;
+      background:rgba(4,7,14,.6);
+      opacity:0;pointer-events:none;
+      transition:opacity .28s ease;
+      z-index:999;
+    }
+    .nav-toggle-state:checked ~ .view-shell .nav-sidebar-overlay{
+      opacity:1;pointer-events:auto;
+    }
+    .nav-sidebar-close-btn{
+      display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+      margin:-.25rem -.25rem .6rem;
+      padding:.4rem .6rem;
+      color:var(--cyan);font-weight:600;font-size:.85rem;
+      border-bottom:1px solid var(--line);
+      cursor:pointer;user-select:none;
+    }
+    .nav-sidebar-close-btn .icon{font-size:1.1rem;line-height:1;}
+    .view-outer{max-width:100%;}
+  }
 
   h2.section-title{
     font-family:'Space Grotesk', sans-serif;
@@ -134,24 +202,27 @@
     background:transparent;color:var(--cyan);border:1px solid var(--cyan);
     border-radius:6px;padding:.45rem .9rem;cursor:pointer;
   }
-  #flash-filters{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem;}
-  .filter-chip{
-    font-family:'IBM Plex Mono',monospace;font-size:11.5px;
-    background:transparent;color:var(--muted);border:1px solid var(--line);
-    border-radius:999px;padding:.35rem .85rem;cursor:pointer;
-    transition:border-color .15s,color .15s,background .15s;
-    white-space:nowrap;flex-shrink:0;
+  .select-wrap{position:relative;margin-bottom:1.25rem;max-width:320px;}
+  .cyber-select{
+    appearance:none;-webkit-appearance:none;-moz-appearance:none;
+    width:100%;font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+    background:transparent;color:var(--cyan);
+    border:1px solid var(--line);border-radius:8px;
+    padding:.6rem 2.2rem .6rem .9rem;cursor:pointer;
+    transition:border-color .15s;
   }
-  .filter-chip:hover{border-color:var(--cyan);color:var(--cyan);}
-  .filter-chip.active{background:var(--cyan);color:var(--bg);border-color:var(--cyan);}
+  .cyber-select:hover,.cyber-select:focus{border-color:var(--cyan);outline:none;}
+  .cyber-select option{background:var(--bg);color:var(--cyan);}
+  .select-wrap::after{
+    content:'';position:absolute;right:.95rem;top:50%;
+    width:7px;height:7px;
+    border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);
+    transform:translateY(-70%) rotate(45deg);
+    pointer-events:none;
+  }
   @media(max-width:600px){
     #flash-controls{gap:.6rem;}
-    #flash-filters{
-      flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;
-      margin-left:-1.5rem;margin-right:-1.5rem;padding:0 1.5rem .35rem;
-      scrollbar-width:none;
-    }
-    #flash-filters::-webkit-scrollbar{display:none;}
+    .select-wrap{max-width:100%;}
   }
   .card-grid{
     display:grid;
@@ -406,7 +477,39 @@
 </style>
 </head>
 <body>
-<div class="wrap">
+<input type="checkbox" id="navToggle" class="nav-toggle-state">
+<label for="navToggle" class="nav-toggle-btn" aria-label="Toggle menu">
+  <span class="nav-toggle-icon nav-toggle-icon-closed">&#9776;</span>
+  <span class="nav-toggle-icon nav-toggle-icon-open">&#10005;</span>
+  <span>Menu</span>
+</label>
+
+<div class="view-shell">
+  <label for="navToggle" class="nav-sidebar-overlay" aria-hidden="true"></label>
+  <nav class="view-sidebar">
+    <label for="navToggle" class="nav-sidebar-close-btn" aria-label="Close menu">
+      <span>Menu</span> <span class="icon">&#10005;</span>
+    </label>
+    <button data-view="flash" class="active">
+      <span class="side-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="M7 9h6M7 12h4"/><path d="M21 9v6a2 2 0 0 1-2 2H9"/></svg></span>
+      <span class="side-label">Flashcards</span>
+    </button>
+    <button data-view="quiz">
+      <span class="side-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 1.8-2 3.3"/><path d="M12 16.5h.01"/></svg></span>
+      <span class="side-label">Quick quiz</span>
+    </button>
+    <button data-view="mock">
+      <span class="side-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span>
+      <span class="side-label">Mock test</span>
+    </button>
+    <button data-view="cheatsheet">
+      <span class="side-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v4h4"/><path d="M9 13h6M9 16.5h6"/></svg></span>
+      <span class="side-label">Cheat sheet</span>
+    </button>
+  </nav>
+
+  <div class="view-outer">
+  <div class="wrap">
 
   <header>
     <p class="eyebrow">Information Systems IIB &middot; INFO2001A</p>
@@ -417,22 +520,20 @@
     </div>
   </header>
 
-  <nav class="tabs">
-    <button data-view="flash" class="active">Flashcards</button>
-    <button data-view="quiz">Quick quiz</button>
-    <button data-view="mock">Mock test</button>
-    <button data-view="cheatsheet">Cheat sheet</button>
-  </nav>
+    <main class="view-content">
 
   <!-- FLASHCARDS -->
   <section class="view active" id="flash">
     <h2 class="section-title">Concept flashcards</h2>
+
     <p class="section-desc">Tap a card to flip it. These cover the definitions and applied reasoning Test 1 actually expects - not just recite-a-term recall.</p>
     <div id="flash-controls">
       <span class="count" id="flash-count"></span>
       <button id="flash-reset">Flip all</button>
     </div>
-    <div id="flash-filters"></div>
+    <div class="select-wrap">
+      <select id="flash-filters" class="cyber-select"></select>
+    </div>
     <div class="card-grid" id="flash-grid"></div>
   </section>
 
@@ -460,7 +561,13 @@
     </div>
   </section>
 
+    </main>
+  </div>
+  <!-- closes .wrap -->
+  </div>
+  <!-- closes .view-outer -->
 </div>
+<!-- closes .view-shell -->
 
 <!-- MOCK PAPER MODAL -->
 <div class="modal-overlay" id="mock-modal-overlay">
@@ -486,10 +593,10 @@
 </footer>
 
 <script>
-  // ---- tabs ----
-  document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  // ---- sidebar nav ----
+  document.querySelectorAll('.view-sidebar button').forEach(btn=>{
     btn.addEventListener('click', ()=>{
-      document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.view-sidebar button').forEach(b=>b.classList.remove('active'));
       document.querySelectorAll('section.view').forEach(v=>v.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById(btn.dataset.view).classList.add('active');
@@ -577,14 +684,18 @@
   function renderFlashFilters(){
     filterRow.innerHTML = '';
     FLASH_TAGS.forEach(tag=>{
-      const btn = document.createElement('button');
-      btn.className = 'filter-chip' + (tag === activeFlashTag ? ' active' : '');
+      const opt = document.createElement('option');
       const count = tag === 'All' ? flashcards.length : flashcards.filter(c=>c.tag===tag).length;
-      btn.textContent = `${tag} (${count})`;
-      btn.addEventListener('click', ()=>{ activeFlashTag = tag; renderFlashFilters(); renderFlashGrid(); });
-      filterRow.appendChild(btn);
+      opt.value = tag;
+      opt.textContent = `${tag} (${count})`;
+      if (tag === activeFlashTag) opt.selected = true;
+      filterRow.appendChild(opt);
     });
   }
+  filterRow.addEventListener('change', ()=>{
+    activeFlashTag = filterRow.value;
+    renderFlashGrid();
+  });
 
   function renderFlashGrid(){
     grid.innerHTML = '';
