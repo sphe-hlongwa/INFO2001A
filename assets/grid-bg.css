@@ -1,0 +1,8 @@
+/* Blueprint grid used as the page background on every page */
+body{
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px) !important;
+  background-size:32px 32px !important;
+  background-position:-1px -1px !important;
+}
