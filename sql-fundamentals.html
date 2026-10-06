@@ -558,6 +558,15 @@
       </ul>
     </details>
     <details>
+      <summary><a href="#nonequi">4a. Non-Equi Joins</a></summary>
+      <ul>
+        <li><a href="#nonequi-what-and-why">What and why</a></li>
+        <li><a href="#nonequi-ex1">1. Range lookup (basic)</a></li>
+        <li><a href="#nonequi-ex2">2. Self join: unique pairs</a></li>
+        <li><a href="#nonequi-ex3">3. Self join: running total</a></li>
+      </ul>
+    </details>
+    <details>
       <summary><a href="#singlerow">4b. Single-Row (Scalar) Functions</a></summary>
       <ul>
         <li><a href="#singlerow-string-functions">String functions</a></li>
@@ -1063,6 +1072,105 @@ INNER JOIN Employees AS e ON o.EmployeeID = e.EmployeeID;</code></pre></li>
         <li>Three or more tables always need nested parentheses in Access's FROM clause - the query grid adds these automatically, but hand-written SQL must include them.</li>
         <li>A self-join (joining a table to itself with two aliases) is the go-to technique for hierarchical data like employee/manager or category/parent-category relationships.</li>
         <li>If a query design view join won't let you pick LEFT vs RIGHT, just switch to SQL View and edit the JOIN keyword directly - it's fully editable there.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="nonequi">
+    <h2>4a. Non-Equi Joins</h2>
+    <p class="desc">An ordinary (equi) join matches rows when two columns are <strong>equal</strong> - usually a primary key to a foreign key. A <strong>non-equi join</strong> matches rows using any other comparison: <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>&lt;&gt;</code>, or a range with <code>BETWEEN</code>.</p>
+
+    <h3 id="nonequi-what-and-why">What and why</h3>
+    <table>
+      <tr><th></th><th>Equi join</th><th>Non-equi join</th></tr>
+      <tr><td>Condition</td><td><code>a.CustomerID = b.CustomerID</code></td><td><code>a.Amount &gt;= b.MinAmount</code></td></tr>
+      <tr><td>Relationship</td><td>Key to key</td><td>Value to range, or row to "earlier/later/other" rows</td></tr>
+      <tr><td>Matches per row</td><td>Usually one (or a few)</td><td>Often many - rows can multiply</td></tr>
+      <tr><td>Typical use</td><td>Attach related data</td><td>Bands, tiers, pairs, running totals, overlaps</td></tr>
+    </table>
+    <p class="desc">Think of a join as: <em>pair every row of A with every row of B, then keep only the pairs where the ON condition is true.</em> With <code>=</code> few pairs survive; with <code>&lt;</code> or a range, many do. That is the whole idea - the examples below just show it three ways.</p>
+
+    <h3 id="nonequi-ex1">1. Range lookup (basic)</h3>
+    <p class="desc"><strong>Scenario:</strong> Label every order Small, Medium or Large. The labels live in a tier table - there is no shared key, only a range that each amount falls into.</p>
+    <table>
+      <tr><th>TierName</th><th>MinAmount</th><th>MaxAmount</th></tr>
+      <tr><td>Small</td><td>0</td><td>199.99</td></tr>
+      <tr><td>Medium</td><td>200</td><td>499.99</td></tr>
+      <tr><td>Large</td><td>500</td><td>9999.99</td></tr>
+    </table>
+<pre><code>SELECT o.OrderID, o.OrderAmount, t.TierName
+FROM Orders AS o
+INNER JOIN Tiers AS t
+  ON o.OrderAmount &gt;= t.MinAmount
+ AND o.OrderAmount &lt;= t.MaxAmount;</code></pre>
+    <p class="desc"><strong>Logic:</strong> each order is tested against every tier; exactly one range contains it, so exactly one row survives. Order 103 (120.00) fails Medium and Large, passes Small.</p>
+    <table>
+      <tr><th>OrderID</th><th>OrderAmount</th><th>TierName</th></tr>
+      <tr><td>101</td><td>250.00</td><td>Medium</td></tr>
+      <tr><td>102</td><td>780.00</td><td>Large</td></tr>
+      <tr><td>103</td><td>120.00</td><td>Small</td></tr>
+      <tr><td>104</td><td>990.00</td><td>Large</td></tr>
+      <tr><td>105</td><td>460.00</td><td>Medium</td></tr>
+      <tr><td>106</td><td>300.00</td><td>Medium</td></tr>
+    </table>
+    <div class="note">Keep tier ranges from overlapping. If two tiers both contain an amount, that order appears twice.</div>
+
+    <h3 id="nonequi-ex2">2. Self join: unique pairs</h3>
+    <p class="desc"><strong>Scenario:</strong> List every pair of products in the same category so prices can be compared. A self join uses the same table twice under two aliases (<code>a</code> and <code>b</code>).</p>
+<pre><code>SELECT a.ProductName AS ProductA, b.ProductName AS ProductB,
+       a.UnitPrice AS PriceA, b.UnitPrice AS PriceB
+FROM Products AS a
+INNER JOIN Products AS b
+  ON a.CategoryID = b.CategoryID
+ AND a.ProductID &lt; b.ProductID;</code></pre>
+    <p class="desc"><strong>Logic:</strong> the equality alone pairs Widget A with itself, with Widget B, and Widget B with Widget A again. Category 1 would give four rows:</p>
+    <table>
+      <tr><th>a</th><th>b</th><th>a.ProductID &lt; b.ProductID?</th><th>Kept</th></tr>
+      <tr><td>Widget A (1)</td><td>Widget A (1)</td><td>1 &lt; 1 - no (paired with itself)</td><td>No</td></tr>
+      <tr><td>Widget A (1)</td><td>Widget B (2)</td><td>1 &lt; 2 - yes</td><td>Yes</td></tr>
+      <tr><td>Widget B (2)</td><td>Widget A (1)</td><td>2 &lt; 1 - no (mirror of the pair above)</td><td>No</td></tr>
+      <tr><td>Widget B (2)</td><td>Widget B (2)</td><td>2 &lt; 2 - no (paired with itself)</td><td>No</td></tr>
+    </table>
+    <p class="desc">The single <code>&lt;</code> removes both the self-pairs and the mirrored duplicates. Result:</p>
+    <table>
+      <tr><th>ProductA</th><th>ProductB</th><th>PriceA</th><th>PriceB</th></tr>
+      <tr><td>Widget A</td><td>Widget B</td><td>12.50</td><td>9.75</td></tr>
+      <tr><td>Gadget X</td><td>Gadget Y</td><td>45.00</td><td>60.00</td></tr>
+    </table>
+    <div class="note">Tool Z is alone in category 3, so it has no partner and does not appear. Use <code>&lt;&gt;</code> instead of <code>&lt;</code> and every pair shows up twice (A-B and B-A).</div>
+
+    <h3 id="nonequi-ex3">3. Self join: running total</h3>
+    <p class="desc"><strong>Scenario:</strong> Show each order with the total sales up to and including that order, in date order. For every order, we need to gather <em>all orders on or before its date</em> - a "one row to many rows" match that only a non-equi join can do.</p>
+<pre><code>SELECT cur.OrderID, cur.OrderDate, cur.OrderAmount,
+       SUM(prev.OrderAmount) AS RunningTotal
+FROM Orders AS cur
+INNER JOIN Orders AS prev
+  ON prev.OrderDate &lt;= cur.OrderDate
+GROUP BY cur.OrderID, cur.OrderDate, cur.OrderAmount
+ORDER BY cur.OrderDate;</code></pre>
+    <p class="desc"><strong>Logic, for order 103 (2026-02-20):</strong> <code>cur</code> is fixed on 103; <code>prev</code> keeps every order dated on or before 2026-02-20, which is 101, 102 and 103. <code>GROUP BY</code> collapses those matches and <code>SUM</code> adds them: 250 + 780 + 120 = 1150.</p>
+    <table>
+      <tr><th>cur (fixed)</th><th>prev rows that match</th><th>SUM</th></tr>
+      <tr><td>101</td><td>101</td><td>250</td></tr>
+      <tr><td>102</td><td>101, 102</td><td>1030</td></tr>
+      <tr><td>103</td><td>101, 102, 103</td><td>1150</td></tr>
+    </table>
+    <p class="desc">Full result:</p>
+    <table>
+      <tr><th>OrderID</th><th>OrderDate</th><th>OrderAmount</th><th>RunningTotal</th></tr>
+      <tr><td>101</td><td>2026-01-15</td><td>250.00</td><td>250.00</td></tr>
+      <tr><td>102</td><td>2026-02-03</td><td>780.00</td><td>1030.00</td></tr>
+      <tr><td>103</td><td>2026-02-20</td><td>120.00</td><td>1150.00</td></tr>
+      <tr><td>104</td><td>2026-03-05</td><td>990.00</td><td>2140.00</td></tr>
+      <tr><td>105</td><td>2026-03-10</td><td>460.00</td><td>2600.00</td></tr>
+      <tr><td>106</td><td>2026-03-18</td><td>300.00</td><td>2900.00</td></tr>
+    </table>
+    <div class="note"><strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li>Write non-equi joins in <strong>SQL View</strong>; Access Design View often cannot display them.</li>
+        <li>Use <code>&lt;=</code> to include the row itself (running total); use <code>&lt;</code> to exclude it (unique pairs).</li>
+        <li>Rows multiply, so check the row count. Aggregate with <code>GROUP BY</code> when you want one row per original record.</li>
+        <li>If two orders share a date, <code>&lt;=</code> on date counts both for each. Use OrderID as a tie-breaker when exact order matters.</li>
       </ul>
     </div>
   </section>

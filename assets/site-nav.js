@@ -1,8 +1,8 @@
 /* Floating nav bar shared by every page except Test 1 (which keeps its own sidebar).
    Edit the links / Buy Me Coffee URL here and every page updates. */
 (function () {
-  // TODO: replace with your own Buy Me a Coffee page, e.g. https://buymeacoffee.com/your-handle
-  var BMC_URL = 'https://buymeacoffee.com/';
+  // Buy Me a Coffee page
+  var BMC_URL = 'https://buymeacoffee.com/espee';
 
   var NAV = [
     { label: 'Home', href: 'index.html' },
