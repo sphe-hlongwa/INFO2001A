@@ -1,0 +1,88 @@
+@import url("nav.css");
+@import url("grid-bg.css");
+/* Shared styles: tokens, page shell, floating nav, footer, coming-soon panel.
+   Same palette + type as the Test 1 page. */
+:root{
+  --bg:#10141c;
+  --panel:#171d29;
+  --panel-2:#1c2433;
+  --line:#2a3242;
+  --ink:#d7dee8;
+  --muted:#8a94a3;
+  --cyan:#6fa8ea;
+  --amber:#e8a04c;
+  --green:#5cb87a;
+  --rose:#e2665b;
+  --violet:#a98be8;
+  --radius:10px;
+}
+*{box-sizing:border-box;scrollbar-width:thin;scrollbar-color:var(--line) transparent;}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:10px;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'IBM Plex Sans',sans-serif;
+  line-height:1.6;
+  min-height:100vh;
+}
+a{color:inherit;}
+.page{max-width:1040px;margin:0 auto;padding:7.5rem 1.5rem 3rem;}
+
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em;
+  color:var(--muted);text-transform:uppercase;margin:0 0 .75rem;
+}
+h1.page-title{
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:clamp(30px,5vw,48px);line-height:1.1;letter-spacing:-.02em;margin:0 0 .75rem;
+}
+p.page-sub{color:var(--muted);font-size:16px;margin:0;max-width:56ch;}
+
+/* ================= footer ================= */
+footer.site-footer{
+  display:flex;justify-content:center;margin-top:3rem;
+  padding-top:1.5rem;border-top:1px dashed var(--line);
+}
+footer.site-footer a{
+  display:inline-flex;align-items:center;gap:.5rem;
+  color:var(--muted);text-decoration:none;
+  font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+  padding:.5rem .9rem;border-radius:8px;border:1px solid transparent;transition:.15s ease;
+}
+footer.site-footer a:hover{color:var(--ink);border-color:var(--line);background:var(--panel);}
+footer.site-footer svg{width:18px;height:18px;fill:currentColor;flex-shrink:0;}
+
+/* ================= coming-soon panel ================= */
+.soon{
+  position:relative;overflow:hidden;
+  margin-top:2rem;padding:2.5rem 2rem 2.5rem;min-height:340px;
+  background:var(--panel);border:1px solid var(--line);border-radius:18px;
+  display:flex;flex-direction:column;justify-content:center;gap:1rem;
+}
+.soon .badge{
+  align-self:flex-start;display:inline-flex;align-items:center;gap:.5rem;
+  font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);
+  background:color-mix(in srgb,var(--accent) 10%,transparent);
+  padding:.3rem .7rem;border-radius:999px;
+}
+.soon .badge i{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+.soon h2{line-height:1.2;font-family:'Space Grotesk',sans-serif;font-size:clamp(24px,3.5vw,34px);margin:0;letter-spacing:-.01em;max-width:18ch;}
+.soon p{color:var(--muted);margin:0;max-width:46ch;}
+.soon .back{
+  align-self:flex-start;display:inline-flex;align-items:center;gap:.5rem;margin-top:.5rem;
+  font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--ink);text-decoration:none;
+  border:1px solid var(--line);border-radius:8px;padding:.5rem .9rem;background:var(--panel-2);
+}
+.soon .back:hover{border-color:var(--accent);}
+.soon .art{position:absolute;right:-6%;bottom:-14%;width:min(58%,420px);opacity:.9;pointer-events:none;}
+@media(max-width:600px){.soon{padding:1.75rem 1.25rem;} .soon .art{opacity:.4;width:80%;}}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  *{transition:none !important;animation:none !important;}
+}

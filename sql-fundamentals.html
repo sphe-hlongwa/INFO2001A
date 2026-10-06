@@ -1,0 +1,2095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQL Fundamentals | INFO2001A</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='2' y='3' width='20' height='6' rx='1.5' fill='%236fa8ea'/%3E%3Crect x='2' y='10' width='20' height='6' rx='1.5' fill='%234a7fc4'/%3E%3Crect x='2' y='17' width='20' height='4' rx='1.5' fill='%232f5a94'/%3E%3Ccircle cx='6' cy='6' r='1' fill='%230d1526'/%3E%3Ccircle cx='6' cy='13' r='1' fill='%230d1526'/%3E%3Ccircle cx='6' cy='19' r='1' fill='%230d1526'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/nav.css">
+<link rel="stylesheet" href="assets/grid-bg.css">
+<script src="assets/site-nav.js" defer></script>
+<style>
+  :root {
+    --navy: #0d1526;
+    --blue: #6fa8ea;
+    --accent: #e8a04c;
+    --bg: #10141c;
+    --card: #171d29;
+    --border: #2a3242;
+    --code-bg: #0b0f17;
+    --code-text: #dbe4f0;
+    --text: #d7dee8;
+    --muted: #8a94a3;
+  }
+  * {
+    box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--muted);
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  header {
+    background: var(--navy);
+    color: #f2f5fa;
+    padding: 40px 24px 32px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    margin: 0 0 8px;
+    font-size: 2rem;
+    letter-spacing: 0.5px;
+    color: #fff;
+  }
+  header p {
+    margin: 0;
+    color: #a9b8d0;
+    font-size: 1rem;
+  }
+  /* ---- Sidebar table-of-contents ---- */
+  .toc-toggle-state { display: none; }
+  .toc-toggle-btn {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    color: var(--blue);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 12px 16px;
+    cursor: pointer;
+    position: sticky;
+    top: 0;
+    z-index: 1001;
+    user-select: none;
+  }
+  .toc-toggle-icon { font-size: 1.05rem; line-height: 1; }
+  .toc-toggle-icon-open { display: none; }
+  .toc-toggle-state:checked ~ .toc-toggle-btn .toc-toggle-icon-closed { display: none; }
+  .toc-toggle-state:checked ~ .toc-toggle-btn .toc-toggle-icon-open { display: inline; }
+  /* Hide the sticky top bar while the mobile drawer is open so it never
+     overlaps the drawer (which is also pinned to the viewport top) */
+  .toc-toggle-state:checked ~ .toc-toggle-btn { display: none; }
+  .sidebar-overlay {
+    display: none;
+  }
+  .sidebar-close-btn { display: none; }
+  /* Locks background scroll while the mobile drawer is open */
+  body:has(.toc-toggle-state:checked) { overflow: hidden; }
+  .layout {
+    display: flex;
+    align-items: flex-start;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    padding: 20px 14px 40px;
+  }
+  .sidebar::-webkit-scrollbar { width: 8px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+  .toc details { margin-bottom: 2px; }
+  .toc summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 0.83rem;
+    font-weight: 600;
+  }
+  .toc summary::-webkit-details-marker { display: none; }
+  .toc summary::before {
+    content: '▸';
+    margin-right: 6px;
+    font-size: 0.65rem;
+    color: var(--accent);
+    transition: transform 0.15s ease;
+    flex-shrink: 0;
+  }
+  .toc details[open] summary::before { transform: rotate(90deg); }
+  .toc summary:hover { background: #1f2a3d; }
+  .toc summary a {
+    color: #f2f5fa;
+    text-decoration: none;
+    flex: 1;
+    min-width: 0;
+  }
+  .toc ul {
+    list-style: none;
+    margin: 2px 0 10px;
+    padding-left: 20px;
+    border-left: 1px solid var(--border);
+  }
+  .toc ul li { margin: 1px 0; }
+  .toc ul a {
+    display: block;
+    padding: 5px 10px;
+    border-radius: 6px;
+    color: var(--blue);
+    text-decoration: none;
+    font-size: 0.76rem;
+    line-height: 1.3;
+  }
+  .toc ul a:hover { background: #1f2a3d; color: #fff; }
+  .toc-leaf a {
+    display: block;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: #f2f5fa;
+    text-decoration: none;
+  }
+  .toc-leaf a:hover { background: #1f2a3d; }
+  .sidebar-footer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: center;
+  }
+  .sidebar-footer a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+  .sidebar-footer a:hover { color: #f2f5fa; background: #1f2a3d; }
+  .sidebar-footer svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
+  main {
+    flex: 1;
+    min-width: 0;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+  }
+  @media (max-width: 900px) {
+    .toc-toggle-btn { display: flex; }
+    .layout { flex-direction: column; }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 82%;
+      max-width: 300px;
+      height: 100vh;
+      height: 100dvh;
+      border-right: 1px solid var(--border);
+      transform: translateX(-100%);
+      transition: transform 0.28s ease;
+      z-index: 1000;
+      box-shadow: 4px 0 18px rgba(0,0,0,0.45);
+      padding: 20px 14px 40px;
+    }
+    .toc-toggle-state:checked ~ .layout .sidebar {
+      transform: translateX(0);
+    }
+    .sidebar-overlay {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: rgba(4,7,14,0.6);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+      z-index: 999;
+    }
+    .toc-toggle-state:checked ~ .layout .sidebar-overlay {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .sidebar-close-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin: -4px -4px 10px;
+      padding: 6px 10px;
+      color: var(--blue);
+      font-weight: 600;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+    }
+    .sidebar-close-btn .icon { font-size: 1.15rem; line-height: 1; }
+    main { max-width: 100%; padding: 24px 16px 60px; }
+  }
+  @media (max-width: 700px) {
+    header { padding: 28px 16px 22px; }
+    header h1 { font-size: 1.5rem; }
+    header p { font-size: 0.9rem; }
+    section { padding: 16px 16px; }
+    section h2 { font-size: 1.1rem; }
+    table { display: block; overflow-x: auto; white-space: nowrap; }
+    pre { font-size: 0.8rem; }
+  }
+  section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 26px;
+    margin-bottom: 24px;
+    scroll-margin-top: 60px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  section h2, section h3, section h4 {
+    scroll-margin-top: 80px;
+  }
+  section h2 {
+    margin-top: 0;
+    color: #f2f5fa;
+    font-size: 1.3rem;
+    border-bottom: 2px solid var(--accent);
+    display: inline-block;
+    padding-bottom: 4px;
+  }
+  section h3 {
+    color: var(--blue);
+    font-size: 1.05rem;
+    margin: 22px 0 8px;
+  }
+  p.desc { color: var(--muted); margin: 6px 0 14px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 18px;
+    font-size: 0.9rem;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: #1e2635;
+    color: var(--blue);
+    font-weight: 600;
+  }
+  tr:nth-child(even) td { background: #1a2029; }
+  code {
+    background: #232b3a;
+    color: #f0965a;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88rem;
+  }
+  pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    padding: 14px 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.87rem;
+    line-height: 1.5;
+    margin: 8px 0 16px;
+    border: 1px solid var(--border);
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+  }
+  .note {
+    background: #2a2416;
+    border: 1px solid var(--border);
+    color: #e8dcc4;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    margin: 12px 0;
+  }
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 700px) {
+    .grid2 { grid-template-columns: 1fr; }
+    nav ul { justify-content: flex-start; }
+  }
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8rem;
+    padding: 20px;
+  }
+</style>
+
+<style id="embed-overrides">
+  /* Force the mobile drawer sidebar behavior unconditionally when embedded
+     in a smaller iframe, regardless of the iframe's own rendered width.
+     This fixes horizontal overflow (sidebar + main no longer fight for
+     space) and makes the sidebar toggle open/close correctly at any size. */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 1500;
+  }
+  .toc-toggle-btn { z-index: 1499; }
+  .toc-toggle-btn { display: flex; }
+  .layout { flex-direction: column; }
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 82%;
+    max-width: 300px;
+    height: 100vh;
+    height: 100dvh;
+    border-right: 1px solid var(--border);
+    transform: translateX(-100%);
+    transition: transform 0.28s ease;
+    z-index: 2000;
+    box-shadow: 4px 0 18px rgba(0,0,0,0.45);
+    padding: 20px 14px 40px;
+  }
+  .toc-toggle-state:checked ~ .layout .sidebar {
+    transform: translateX(0);
+  }
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(4,7,14,0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease;
+    z-index: 1999;
+  }
+  .toc-toggle-state:checked ~ .layout .sidebar-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .sidebar-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin: -4px -4px 10px;
+    padding: 6px 10px;
+    color: var(--blue);
+    font-weight: 600;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+  .toc-search {
+    padding: 10px 10px 14px;
+    border-bottom: 1px solid var(--border);
+    margin: 0 -4px 12px;
+  }
+  .toc-search input {
+    width: 100%;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .toc-search input:focus {
+    border-color: var(--blue);
+  }
+  main { max-width: 100%; padding: 24px 16px 60px; overflow-x: hidden; }
+  table { display: block; overflow-x: auto; white-space: nowrap; }
+
+  /* ---- pagination: show one section at a time instead of one long scroll ---- */
+  main > section[id] { display: none; }
+  main > section[id].page-active { display: block; }
+  .page-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin: 28px 0 4px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .page-nav button {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .page-nav button:hover:not(:disabled) { border-color: var(--blue); color: var(--blue); }
+  .page-nav button:disabled { opacity: 0.35; cursor: default; }
+  .page-nav .page-indicator {
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-family: 'Consolas', 'Courier New', monospace;
+    white-space: nowrap;
+  }
+  .toc a.current-page { color: var(--accent) !important; }
+</style>
+
+<style id="site-nav-overrides">
+  /* page now lives under the floating nav instead of inside a frame */
+  body { padding-top: 86px; }
+  header { position: static !important; }
+  .toc-toggle-btn { top: 74px !important; }
+  /* header + Contents bar line up with the section panels below */
+  header, .toc-toggle-btn {
+    width: min(calc(100% - 32px), 1086px);
+    margin-left: auto; margin-right: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  main { width: 100%; max-width: 1118px !important; margin-left: auto; margin-right: auto; }
+  header { margin-bottom: 14px; padding: 32px 24px 28px; }
+  .toc-toggle-btn { box-shadow: 0 6px 18px rgba(0,0,0,.35); }
+  section, section h2, section h3, section h4 { scroll-margin-top: 150px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Microsoft Access SQL Cheat Sheet</h1>
+  <p>Syntax reference for Access SQL View - queries, joins, functions &amp; data definition</p>
+</header>
+
+<input type="checkbox" id="tocToggle" class="toc-toggle-state">
+<label for="tocToggle" class="toc-toggle-btn">
+  <span class="toc-toggle-icon toc-toggle-icon-closed">☰</span>
+  <span class="toc-toggle-icon toc-toggle-icon-open">✕</span>
+  <span>Contents</span>
+</label>
+
+<div class="layout">
+  <label for="tocToggle" class="sidebar-overlay" aria-hidden="true"></label>
+  <aside class="sidebar">
+  <label for="tocToggle" class="sidebar-close-btn" aria-label="Close menu">
+    <span>Contents</span> <span class="icon">✕</span>
+  </label>
+  <div class="toc-search">
+    <input type="text" id="tocSearchInput" placeholder="Search topics..." autocomplete="off">
+  </div>
+<nav class="toc" aria-label="Table of contents">
+    <details>
+      <summary><a href="#basics">1. Basic SELECT Syntax</a></summary>
+      <ul>
+        <li><a href="#basics-column-aliases-and-identifiers">Column aliases &amp; identifiers</a></li>
+        <li><a href="#basics-five-examples-different-cases">Five Examples - Different Cases</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#sampledata">Sample Data &amp; Worked Examples</a></summary>
+      <ul>
+        <li><a href="#sampledata-customers">Customers</a></li>
+        <li><a href="#sampledata-orders">Orders</a></li>
+        <li><a href="#sampledata-products">Products</a></li>
+        <li><a href="#sampledata-employees">Employees</a></li>
+        <li><a href="#sampledata-example-1-filter-and-sort">Example 1 - Filter &amp; Sort</a></li>
+        <li><a href="#sampledata-example-2-inner-join">Example 2 - INNER JOIN</a></li>
+        <li><a href="#sampledata-example-3-left-join-includes-customers-with-no-orders">Example 3 - LEFT JOIN (includes customers with no orders)</a></li>
+        <li><a href="#sampledata-example-4-group-by-with-having">Example 4 - GROUP BY with HAVING</a></li>
+        <li><a href="#sampledata-example-5-subquery-above-average-price">Example 5 - Subquery (above-average price)</a></li>
+        <li><a href="#sampledata-example-6-top-n">Example 6 - TOP N</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#where">2. WHERE Clause &amp; Operators</a></summary>
+      <ul>
+        <li><a href="#where-access-wildcard-characters-different-from-standard-sql">Access wildcard characters (different from standard SQL!)</a></li>
+        <li><a href="#where-five-examples-different-cases">Five Examples - Different Cases</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#sorting">3. Sorting, TOP &amp; DISTINCT</a></summary>
+      <ul>
+        <li><a href="#sorting-five-examples-different-cases">Five Examples - Different Cases</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#joins">4. Joins</a></summary>
+      <ul>
+        <li><a href="#joins-five-examples-different-cases">Five Examples - Different Cases</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#singlerow">4b. Single-Row (Scalar) Functions</a></summary>
+      <ul>
+        <li><a href="#singlerow-string-functions">String functions</a></li>
+        <li><a href="#singlerow-numeric-functions">Numeric functions</a></li>
+        <li><a href="#singlerow-date-time-conversion-and-null-handling-covered-in-detail-elsewhere">Date/time, conversion &amp; null-handling (covered in detail elsewhere)</a></li>
+        <li><a href="#singlerow-worked-example-several-single-row-functions-per-row">Worked example - several single-row functions per row</a></li>
+        <li><a href="#singlerow-five-more-examples-different-cases">Five More Examples - Different Cases</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#aggregate">5. Aggregate Functions &amp; GROUP BY</a></summary>
+      <ul>
+        <li><a href="#aggregate-five-examples-different-cases">Five Examples - Different Cases</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#subqueries">6. Subqueries</a></summary>
+      <ul>
+        <li><a href="#subqueries-five-examples-different-cases">Five Examples - Different Cases</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#modify">7. INSERT, UPDATE, DELETE</a></summary>
+      <ul>
+        <li><a href="#modify-insert">INSERT</a></li>
+        <li><a href="#modify-update">UPDATE</a></li>
+        <li><a href="#modify-delete">DELETE</a></li>
+        <li><a href="#modify-five-examples-different-cases">Five Examples - Different Cases</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#ddl">8. Creating &amp; Altering Tables (DDL)</a></summary>
+      <ul>
+        <li><a href="#ddl-common-access-data-types">Common Access data types</a></li>
+        <li><a href="#ddl-five-examples-different-cases">Five Examples - Different Cases</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#functions">9. Access-Specific Functions</a></summary>
+      <ul>
+        <li><a href="#functions-five-examples-different-cases">Five Examples - Different Cases</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#conversions">9b. Data Type Conversion Functions</a></summary>
+      <ul>
+        <li><a href="#conversions-related-non-c-conversions">Related non-"C" conversions</a></li>
+        <li><a href="#conversions-worked-example-converting-for-display-and-calculation">Worked example - converting for display and calculation</a></li>
+        <li><a href="#conversions-worked-example-mixing-types-safely-with-and-and-cstr">Worked example - mixing types safely with &amp; and CStr</a></li>
+        <li><a href="#conversions-five-more-examples-different-cases">Five More Examples - Different Cases</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#dates">10. Date &amp; Time Functions</a></summary>
+      <ul>
+        <li><a href="#dates-five-examples-different-cases">Five Examples - Different Cases</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#params">11. Parameters &amp; Crosstab Queries</a></summary>
+      <ul>
+        <li><a href="#params-five-examples-different-cases">Five Examples - Different Cases</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#union">12. UNION &amp; Simulated FULL JOIN</a></summary>
+      <ul>
+        <li><a href="#union-five-examples-different-cases">Five Examples - Different Cases</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#normalization">13. Database Normalization Techniques</a></summary>
+      <ul>
+        <li><a href="#normalization-step-by-step-worked-example-unnormalized-1nf-2nf-3nf">Step-by-Step Worked Example: Unnormalized → 1NF → 2NF → 3NF</a></li>
+        <li><a href="#normalization-five-examples-different-normalization-scenarios">Five Examples - Different Normalization Scenarios</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#indexing">14. Indexing</a></summary>
+      <ul>
+        <li><a href="#indexing-step-by-step-worked-example-indexing-the-normalized-schema">Step-by-Step Worked Example: Indexing the Normalized Schema</a></li>
+        <li><a href="#indexing-five-examples-different-cases">Five Examples - Different Cases</a></li>
+      </ul>
+    </details>
+    <div class="toc-leaf"><a href="#gotchas">15. Key Access SQL Quirks to Remember</a></div>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="https://github.com/sphe-hlongwa" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+      </svg>
+      <span>sphe-hlongwa</span>
+    </a>
+  </div>
+  </aside>
+
+  <main>
+
+  <section id="basics">
+    <h2>1. Basic SELECT Syntax</h2>
+    <p class="desc">The core statement used to retrieve data from one or more tables.</p>
+<pre><code>SELECT [DISTINCT] column1, column2, ...
+FROM table1
+WHERE condition
+GROUP BY column1
+HAVING group_condition
+ORDER BY column1 [ASC|DESC];</code></pre>
+    <table>
+      <tr><th>Clause</th><th>Purpose</th></tr>
+      <tr><td><code>SELECT</code></td><td>Choose which columns/expressions to return</td></tr>
+      <tr><td><code>DISTINCT</code></td><td>Remove duplicate rows from the result</td></tr>
+      <tr><td><code>FROM</code></td><td>Specify source table(s) or query(ies)</td></tr>
+      <tr><td><code>WHERE</code></td><td>Filter rows before grouping</td></tr>
+      <tr><td><code>GROUP BY</code></td><td>Collapse rows into summary groups</td></tr>
+      <tr><td><code>HAVING</code></td><td>Filter groups after aggregation</td></tr>
+      <tr><td><code>ORDER BY</code></td><td>Sort the final result set</td></tr>
+    </table>
+    <h3 id="basics-column-aliases-and-identifiers">Column aliases &amp; identifiers</h3>
+<pre><code>SELECT FirstName & " " & LastName AS FullName
+FROM Employees;
+
+-- Names with spaces or reserved words need square brackets:
+SELECT [Order Date], [Customer ID]
+FROM [Order Details];</code></pre>
+    <div class="note">Access uses square brackets <code>[ ]</code> for identifiers with spaces or special characters - not double quotes or backticks like MySQL/Postgres.</div>
+
+    <h3 id="basics-five-examples-different-cases">Five Examples - Different Cases</h3>
+    <ol>
+      <li><strong>All columns:</strong>
+<pre><code>SELECT * FROM Customers;</code></pre>
+        <p class="desc">Result: all 5 rows and all 5 columns of the Customers table shown above.</p>
+      </li>
+      <li><strong>Specific columns, renamed:</strong>
+<pre><code>SELECT CompanyName AS Client, City AS Location
+FROM Customers;</code></pre>
+        <table>
+          <tr><th>Client</th><th>Location</th></tr>
+          <tr><td>Acme Ltd</td><td>Johannesburg</td></tr>
+          <tr><td>Blue Sky Traders</td><td>London</td></tr>
+          <tr><td>Cape Exports</td><td>Cape Town</td></tr>
+          <tr><td>Delta Goods</td><td>New York</td></tr>
+          <tr><td>Everest Supplies</td><td>London</td></tr>
+        </table>
+      </li>
+      <li><strong>Calculated column:</strong>
+<pre><code>SELECT ProductName, UnitPrice, UnitPrice * 1.15 AS PriceWithTax
+FROM Products;</code></pre>
+        <table>
+          <tr><th>ProductName</th><th>UnitPrice</th><th>PriceWithTax</th></tr>
+          <tr><td>Widget A</td><td>12.50</td><td>14.38</td></tr>
+          <tr><td>Widget B</td><td>9.75</td><td>11.21</td></tr>
+          <tr><td>Gadget X</td><td>45.00</td><td>51.75</td></tr>
+          <tr><td>Gadget Y</td><td>60.00</td><td>69.00</td></tr>
+          <tr><td>Tool Z</td><td>22.00</td><td>25.30</td></tr>
+        </table>
+      </li>
+      <li><strong>Concatenated text with a literal:</strong>
+<pre><code>SELECT CompanyName & " - " & City AS Label
+FROM Customers;</code></pre>
+        <table>
+          <tr><th>Label</th></tr>
+          <tr><td>Acme Ltd - Johannesburg</td></tr>
+          <tr><td>Blue Sky Traders - London</td></tr>
+          <tr><td>Cape Exports - Cape Town</td></tr>
+          <tr><td>Delta Goods - New York</td></tr>
+          <tr><td>Everest Supplies - London</td></tr>
+        </table>
+      </li>
+      <li><strong>Bracketed aliases (needed whenever an output name has a space):</strong>
+<pre><code>SELECT OrderID AS [Order ID], CustomerID AS [Customer ID]
+FROM Orders
+WHERE OrderDate > #1/1/2026#;</code></pre>
+        <p class="desc">Result <em>(all 6 orders fall after 1 Jan 2026)</em>:</p>
+        <table>
+          <tr><th>Order ID</th><th>Customer ID</th></tr>
+          <tr><td>101</td><td>1</td></tr>
+          <tr><td>102</td><td>2</td></tr>
+          <tr><td>103</td><td>1</td></tr>
+          <tr><td>104</td><td>3</td></tr>
+          <tr><td>105</td><td>4</td></tr>
+          <tr><td>106</td><td>2</td></tr>
+        </table>
+      </li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li>Run <code>SELECT TOP 1 * FROM TableName;</code> first when exploring an unfamiliar table - it's the fastest way to see all its columns and a sample row.</li>
+        <li>Aliases created with <code>AS</code> automatically become the field captions in bound forms and reports, so pick names your users will actually see.</li>
+        <li>You don't need to select columns in the same order as the table definition - the SELECT list controls output order, not the table.</li>
+        <li>Switch between Design View and SQL View (<em>View</em> menu) to hand-edit complex expressions faster than building them in the grid.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="sampledata">
+    <h2>Sample Data &amp; Worked Examples</h2>
+    <p class="desc">These four tables are used as the running example dataset for every query result shown throughout this document. All queries reference only these tables and columns.</p>
+
+    <h3 id="sampledata-customers">Customers</h3>
+    <table>
+      <tr><th>CustomerID</th><th>CompanyName</th><th>City</th><th>Country</th><th>CreditLimit</th></tr>
+      <tr><td>1</td><td>Acme Ltd</td><td>Johannesburg</td><td>South Africa</td><td>5000</td></tr>
+      <tr><td>2</td><td>Blue Sky Traders</td><td>London</td><td>UK</td><td>12000</td></tr>
+      <tr><td>3</td><td>Cape Exports</td><td>Cape Town</td><td>South Africa</td><td>8000</td></tr>
+      <tr><td>4</td><td>Delta Goods</td><td>New York</td><td>USA</td><td>15000</td></tr>
+      <tr><td>5</td><td>Everest Supplies</td><td>London</td><td>UK</td><td>3000</td></tr>
+    </table>
+
+    <h3 id="sampledata-orders">Orders</h3>
+    <table>
+      <tr><th>OrderID</th><th>CustomerID</th><th>EmployeeID</th><th>OrderDate</th><th>ShippedDate</th><th>OrderAmount</th><th>DiscountPct</th></tr>
+      <tr><td>101</td><td>1</td><td>2</td><td>2026-01-15</td><td>2026-01-18</td><td>250.00</td><td>0</td></tr>
+      <tr><td>102</td><td>2</td><td>3</td><td>2026-02-03</td><td><em>NULL</em></td><td>780.00</td><td>0.05</td></tr>
+      <tr><td>103</td><td>1</td><td>2</td><td>2026-02-20</td><td>2026-02-25</td><td>120.00</td><td>0</td></tr>
+      <tr><td>104</td><td>3</td><td>4</td><td>2026-03-05</td><td><em>NULL</em></td><td>990.00</td><td>0.1</td></tr>
+      <tr><td>105</td><td>4</td><td>3</td><td>2026-03-10</td><td>2026-03-15</td><td>460.00</td><td>0</td></tr>
+      <tr><td>106</td><td>2</td><td>2</td><td>2026-03-18</td><td><em>NULL</em></td><td>300.00</td><td>0</td></tr>
+    </table>
+
+    <h3 id="sampledata-products">Products</h3>
+    <table>
+      <tr><th>ProductID</th><th>ProductName</th><th>CategoryID</th><th>UnitPrice</th><th>UnitsInStock</th><th>Discontinued</th></tr>
+      <tr><td>1</td><td>Widget A</td><td>1</td><td>12.50</td><td>40</td><td>No</td></tr>
+      <tr><td>2</td><td>Widget B</td><td>1</td><td>9.75</td><td>0</td><td>Yes</td></tr>
+      <tr><td>3</td><td>Gadget X</td><td>2</td><td>45.00</td><td>15</td><td>No</td></tr>
+      <tr><td>4</td><td>Gadget Y</td><td>2</td><td>60.00</td><td>5</td><td>No</td></tr>
+      <tr><td>5</td><td>Tool Z</td><td>3</td><td>22.00</td><td>100</td><td>No</td></tr>
+    </table>
+
+    <h3 id="sampledata-employees">Employees</h3>
+    <table>
+      <tr><th>EmployeeID</th><th>FirstName</th><th>LastName</th><th>ReportsTo</th></tr>
+      <tr><td>1</td><td>Johan</td><td>Botha</td><td><em>NULL</em></td></tr>
+      <tr><td>2</td><td>Priya</td><td>Naidoo</td><td>1</td></tr>
+      <tr><td>3</td><td>Sipho</td><td>Khumalo</td><td>1</td></tr>
+      <tr><td>4</td><td>Ravi</td><td>Pillay</td><td>2</td></tr>
+    </table>
+    <div class="note">Botha is the top manager (no one to report to); Naidoo and Khumalo report to Botha; Pillay reports to Naidoo.</div>
+
+    <h3 id="sampledata-example-1-filter-and-sort">Example 1 - Filter &amp; Sort</h3>
+<pre><code>SELECT CompanyName, City, CreditLimit
+FROM Customers
+WHERE Country = 'South Africa'
+ORDER BY CreditLimit DESC;</code></pre>
+    <p class="desc">Result:</p>
+    <table>
+      <tr><th>CompanyName</th><th>City</th><th>CreditLimit</th></tr>
+      <tr><td>Cape Exports</td><td>Cape Town</td><td>8000</td></tr>
+      <tr><td>Acme Ltd</td><td>Johannesburg</td><td>5000</td></tr>
+    </table>
+
+    <h3 id="sampledata-example-2-inner-join">Example 2 - INNER JOIN</h3>
+<pre><code>SELECT o.OrderID, c.CompanyName, o.OrderAmount
+FROM Orders AS o
+INNER JOIN Customers AS c ON o.CustomerID = c.CustomerID
+ORDER BY o.OrderID;</code></pre>
+    <p class="desc">Result:</p>
+    <table>
+      <tr><th>OrderID</th><th>CompanyName</th><th>OrderAmount</th></tr>
+      <tr><td>101</td><td>Acme Ltd</td><td>250.00</td></tr>
+      <tr><td>102</td><td>Blue Sky Traders</td><td>780.00</td></tr>
+      <tr><td>103</td><td>Acme Ltd</td><td>120.00</td></tr>
+      <tr><td>104</td><td>Cape Exports</td><td>990.00</td></tr>
+      <tr><td>105</td><td>Delta Goods</td><td>460.00</td></tr>
+      <tr><td>106</td><td>Blue Sky Traders</td><td>300.00</td></tr>
+    </table>
+
+    <h3 id="sampledata-example-3-left-join-includes-customers-with-no-orders">Example 3 - LEFT JOIN (includes customers with no orders)</h3>
+<pre><code>SELECT c.CompanyName, o.OrderID
+FROM Customers AS c
+LEFT JOIN Orders AS o ON c.CustomerID = o.CustomerID;</code></pre>
+    <p class="desc">Result:</p>
+    <table>
+      <tr><th>CompanyName</th><th>OrderID</th></tr>
+      <tr><td>Acme Ltd</td><td>101</td></tr>
+      <tr><td>Acme Ltd</td><td>103</td></tr>
+      <tr><td>Blue Sky Traders</td><td>102</td></tr>
+      <tr><td>Blue Sky Traders</td><td>106</td></tr>
+      <tr><td>Cape Exports</td><td>104</td></tr>
+      <tr><td>Delta Goods</td><td>105</td></tr>
+      <tr><td>Everest Supplies</td><td><em>NULL</em></td></tr>
+    </table>
+    <div class="note">Everest Supplies has placed no orders, so the LEFT JOIN still returns the row with a Null in the OrderID column - an INNER JOIN would have dropped it entirely.</div>
+
+    <h3 id="sampledata-example-4-group-by-with-having">Example 4 - GROUP BY with HAVING</h3>
+<pre><code>SELECT c.CompanyName, SUM(o.OrderAmount) AS TotalSpent
+FROM Customers AS c
+INNER JOIN Orders AS o ON c.CustomerID = o.CustomerID
+GROUP BY c.CompanyName
+HAVING SUM(o.OrderAmount) > 400
+ORDER BY TotalSpent DESC;</code></pre>
+    <p class="desc">Result:</p>
+    <table>
+      <tr><th>CompanyName</th><th>TotalSpent</th></tr>
+      <tr><td>Blue Sky Traders</td><td>1080.00</td></tr>
+      <tr><td>Cape Exports</td><td>990.00</td></tr>
+      <tr><td>Delta Goods</td><td>460.00</td></tr>
+    </table>
+    <div class="note">Acme Ltd's total (250 + 120 = 370) is grouped and calculated correctly but excluded by HAVING, since 370 is not greater than 400.</div>
+
+    <h3 id="sampledata-example-5-subquery-above-average-price">Example 5 - Subquery (above-average price)</h3>
+<pre><code>SELECT ProductName, UnitPrice
+FROM Products
+WHERE UnitPrice > (SELECT AVG(UnitPrice) FROM Products);</code></pre>
+    <p class="desc">Result <em>(average UnitPrice across all 5 products = 29.85)</em>:</p>
+    <table>
+      <tr><th>ProductName</th><th>UnitPrice</th></tr>
+      <tr><td>Gadget X</td><td>45.00</td></tr>
+      <tr><td>Gadget Y</td><td>60.00</td></tr>
+    </table>
+
+    <h3 id="sampledata-example-6-top-n">Example 6 - TOP N</h3>
+<pre><code>SELECT TOP 3 CompanyName, CreditLimit
+FROM Customers
+ORDER BY CreditLimit DESC;</code></pre>
+    <p class="desc">Result:</p>
+    <table>
+      <tr><th>CompanyName</th><th>CreditLimit</th></tr>
+      <tr><td>Delta Goods</td><td>15000</td></tr>
+      <tr><td>Blue Sky Traders</td><td>12000</td></tr>
+      <tr><td>Cape Exports</td><td>8000</td></tr>
+    </table>
+  </section>
+
+  <section id="where">
+    <h2>2. WHERE Clause &amp; Operators</h2>
+    <table>
+      <tr><th>Operator</th><th>Example</th><th>Meaning</th></tr>
+      <tr><td><code>=  &lt;&gt;  &lt;  &gt;  &lt;=  &gt;=</code></td><td><code>WHERE Price &gt; 50</code></td><td>Standard comparisons (<code>&lt;&gt;</code> = not equal)</td></tr>
+      <tr><td><code>AND / OR / NOT</code></td><td><code>WHERE Age &gt;= 18 AND Active = True</code></td><td>Combine conditions</td></tr>
+      <tr><td><code>BETWEEN</code></td><td><code>WHERE Price BETWEEN 10 AND 20</code></td><td>Inclusive range</td></tr>
+      <tr><td><code>IN</code></td><td><code>WHERE Country IN ('UK','US','SA')</code></td><td>Match any value in a list</td></tr>
+      <tr><td><code>LIKE</code></td><td><code>WHERE Name LIKE 'A*'</code></td><td>Pattern match (Access wildcards, see below)</td></tr>
+      <tr><td><code>IS NULL / IS NOT NULL</code></td><td><code>WHERE ShippedDate IS NULL</code></td><td>Test for missing values</td></tr>
+    </table>
+    <h3 id="where-access-wildcard-characters-different-from-standard-sql">Access wildcard characters (different from standard SQL!)</h3>
+    <table>
+      <tr><th>Wildcard</th><th>Standard SQL equivalent</th><th>Meaning</th></tr>
+      <tr><td><code>*</code></td><td><code>%</code></td><td>Any number of characters</td></tr>
+      <tr><td><code>?</code></td><td><code>_</code></td><td>Any single character</td></tr>
+      <tr><td><code>#</code></td><td>-</td><td>Any single digit</td></tr>
+      <tr><td><code>[list]</code></td><td>-</td><td>Any single character in the list, e.g. <code>[A-D]</code></td></tr>
+      <tr><td><code>[!list]</code></td><td>-</td><td>Any single character NOT in the list</td></tr>
+    </table>
+<pre><code>SELECT * FROM Customers WHERE City LIKE 'Lon*';
+SELECT * FROM Products WHERE ProductCode LIKE '?A#';</code></pre>
+    <div class="note">In VBA/query design view Access defaults to <code>*</code> and <code>?</code>; if the query's ANSI SQL mode is set to "ANSI-92", use <code>%</code> and <code>_</code> instead. Most .accdb files use the classic (ANSI-89) wildcards by default.</div>
+
+    <h3 id="where-five-examples-different-cases">Five Examples - Different Cases</h3>
+    <ol>
+      <li><strong>Numeric comparison:</strong>
+<pre><code>SELECT ProductName, UnitPrice FROM Products WHERE UnitPrice > 50;</code></pre>
+        <table>
+          <tr><th>ProductName</th><th>UnitPrice</th></tr>
+          <tr><td>Gadget Y</td><td>60.00</td></tr>
+        </table>
+      </li>
+      <li><strong>Text pattern with wildcard:</strong>
+<pre><code>SELECT CompanyName FROM Customers WHERE CompanyName LIKE 'B*';</code></pre>
+        <table>
+          <tr><th>CompanyName</th></tr>
+          <tr><td>Blue Sky Traders</td></tr>
+        </table>
+      </li>
+      <li><strong>List membership:</strong>
+<pre><code>SELECT CompanyName, Country FROM Customers WHERE Country IN ('UK','USA');</code></pre>
+        <table>
+          <tr><th>CompanyName</th><th>Country</th></tr>
+          <tr><td>Blue Sky Traders</td><td>UK</td></tr>
+          <tr><td>Delta Goods</td><td>USA</td></tr>
+          <tr><td>Everest Supplies</td><td>UK</td></tr>
+        </table>
+      </li>
+      <li><strong>Null check:</strong>
+<pre><code>SELECT OrderID, CustomerID FROM Orders WHERE ShippedDate IS NULL;</code></pre>
+        <table>
+          <tr><th>OrderID</th><th>CustomerID</th></tr>
+          <tr><td>102</td><td>2</td></tr>
+          <tr><td>104</td><td>3</td></tr>
+          <tr><td>106</td><td>2</td></tr>
+        </table>
+      </li>
+      <li><strong>Combined AND/OR with grouping parentheses:</strong>
+<pre><code>SELECT CompanyName, Country, CreditLimit FROM Customers
+WHERE (Country = 'UK' OR Country = 'USA')
+  AND CreditLimit > 5000;</code></pre>
+        <p class="desc">Result <em>(Everest Supplies is UK but its 3000 limit fails the second condition, so it's excluded)</em>:</p>
+        <table>
+          <tr><th>CompanyName</th><th>Country</th><th>CreditLimit</th></tr>
+          <tr><td>Blue Sky Traders</td><td>UK</td><td>12000</td></tr>
+          <tr><td>Delta Goods</td><td>USA</td><td>15000</td></tr>
+        </table>
+      </li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li>Always parenthesize mixed <code>AND</code>/<code>OR</code> conditions - Access evaluates <code>AND</code> before <code>OR</code>, so <code>WHERE A OR B AND C</code> almost never means what it looks like.</li>
+        <li>Never compare to Null with <code>=</code> or <code>&lt;&gt;</code> - both always evaluate to Null (not True/False). Use <code>IS NULL</code> / <code>IS NOT NULL</code> instead.</li>
+        <li><code>IN (...)</code> is easier to read and maintain than a long chain of <code>OR</code> comparisons on the same column.</li>
+        <li><code>NOT LIKE '*text*'</code> is a quick way to exclude rows containing a substring anywhere in a field.</li>
+        <li>For date ranges, <code>BETWEEN #1/1/2026# AND #12/31/2026#</code> is both inclusive and easier to read than two separate comparisons.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="sorting">
+    <h2>3. Sorting, TOP &amp; DISTINCT</h2>
+<pre><code>SELECT TOP 10 ProductName, UnitPrice
+FROM Products
+ORDER BY UnitPrice DESC;
+
+-- Percent version
+SELECT TOP 25 PERCENT * FROM Orders ORDER BY OrderDate DESC;
+
+-- Unique combinations only
+SELECT DISTINCT City, Country FROM Customers;</code></pre>
+    <div class="note">Access has no <code>LIMIT ... OFFSET</code> or <code>FETCH FIRST</code> - <code>TOP n</code> (optionally with <code>PERCENT</code>) is the equivalent, and it must be paired with <code>ORDER BY</code> to be meaningful.</div>
+
+    <h3 id="sorting-five-examples-different-cases">Five Examples - Different Cases</h3>
+    <ol>
+      <li><strong>Single-column sort, ascending (default):</strong>
+<pre><code>SELECT CompanyName FROM Customers ORDER BY CompanyName;</code></pre></li>
+      <li><strong>Multi-column sort with mixed direction:</strong>
+<pre><code>SELECT Country, CompanyName FROM Customers
+ORDER BY Country ASC, CompanyName DESC;</code></pre></li>
+      <li><strong>Highest N rows (TOP):</strong>
+<pre><code>SELECT TOP 5 ProductName, UnitPrice
+FROM Products ORDER BY UnitPrice DESC;</code></pre></li>
+      <li><strong>Lowest N rows (reverse the ORDER BY direction):</strong>
+<pre><code>SELECT TOP 5 ProductName, UnitPrice
+FROM Products ORDER BY UnitPrice ASC;</code></pre></li>
+      <li><strong>Unique rows only, sorted:</strong>
+<pre><code>SELECT DISTINCT Country FROM Customers ORDER BY Country;</code></pre></li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li>Access has no <code>TOP n WITH TIES</code> - if several rows tie for the last spot, only <code>n</code> rows come back and the tie-break is arbitrary. Add a secondary <code>ORDER BY</code> column to make it deterministic.</li>
+        <li>To get the "bottom N" instead of top N, keep <code>TOP n</code> but flip <code>ORDER BY</code> from <code>DESC</code> to <code>ASC</code>.</li>
+        <li>Sorting by column position (<code>ORDER BY 2 DESC</code>) works in Access but breaks silently if columns are reordered - prefer naming the column.</li>
+        <li><code>SELECT DISTINCT</code> combined with <code>TOP</code> is a quick way to get "top N unique values" without a GROUP BY.</li>
+        <li><code>TOP 1</code> with an <code>ORDER BY</code> is a handy substitute for "get the most recent record" when there's no aggregate involved.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="joins">
+    <h2>4. Joins</h2>
+    <p class="desc">Access requires parentheses around joined tables when combined with additional joins.</p>
+    <table>
+      <tr><th>Join type</th><th>Description</th></tr>
+      <tr><td><code>INNER JOIN</code></td><td>Only matching rows in both tables</td></tr>
+      <tr><td><code>LEFT JOIN</code></td><td>All rows from left table, matched rows from right (NULLs if none)</td></tr>
+      <tr><td><code>RIGHT JOIN</code></td><td>All rows from right table, matched rows from left</td></tr>
+    </table>
+<pre><code>SELECT o.OrderID, c.CompanyName
+FROM Orders AS o
+INNER JOIN Customers AS c ON o.CustomerID = c.CustomerID;
+
+SELECT c.CompanyName, o.OrderID
+FROM Customers AS c
+LEFT JOIN Orders AS o ON c.CustomerID = o.CustomerID;
+
+-- Multiple joins need nested parentheses in Access
+SELECT o.OrderID, c.CompanyName, e.LastName
+FROM (Orders AS o
+INNER JOIN Customers AS c ON o.CustomerID = c.CustomerID)
+INNER JOIN Employees AS e ON o.EmployeeID = e.EmployeeID;</code></pre>
+    <div class="note">Access has <strong>no FULL OUTER JOIN</strong>. Simulate it with a <code>UNION</code> of a LEFT JOIN and a RIGHT JOIN (see Union section).</div>
+
+    <h3 id="joins-five-examples-different-cases">Five Examples - Different Cases</h3>
+    <ol>
+      <li><strong>Basic INNER JOIN:</strong>
+<pre><code>SELECT o.OrderID, c.CompanyName
+FROM Orders AS o
+INNER JOIN Customers AS c ON o.CustomerID = c.CustomerID;</code></pre></li>
+      <li><strong>LEFT JOIN to include unmatched rows:</strong>
+<pre><code>SELECT c.CompanyName, o.OrderID
+FROM Customers AS c
+LEFT JOIN Orders AS o ON c.CustomerID = o.CustomerID;</code></pre></li>
+      <li><strong>Anti-join - find rows with NO match:</strong>
+<pre><code>SELECT c.CompanyName
+FROM Customers AS c
+LEFT JOIN Orders AS o ON c.CustomerID = o.CustomerID
+WHERE o.OrderID IS NULL;</code></pre></li>
+      <li><strong>Self-join - employees and their managers:</strong>
+<pre><code>SELECT e.LastName AS Employee, m.LastName AS Manager
+FROM Employees AS e
+INNER JOIN Employees AS m ON e.ReportsTo = m.EmployeeID;</code></pre></li>
+      <li><strong>Three-table join (note the nested parentheses):</strong>
+<pre><code>SELECT o.OrderID, c.CompanyName, e.LastName
+FROM (Orders AS o
+INNER JOIN Customers AS c ON o.CustomerID = c.CustomerID)
+INNER JOIN Employees AS e ON o.EmployeeID = e.EmployeeID;</code></pre></li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li>Always alias every table (<code>AS o</code>, <code>AS c</code>) in a join - it keeps column references short and avoids ambiguity errors on shared column names.</li>
+        <li>The "LEFT JOIN + WHERE right.key IS NULL" pattern is the standard Access way to find orphaned or unmatched records (customers with no orders, products never sold, etc.).</li>
+        <li>Three or more tables always need nested parentheses in Access's FROM clause - the query grid adds these automatically, but hand-written SQL must include them.</li>
+        <li>A self-join (joining a table to itself with two aliases) is the go-to technique for hierarchical data like employee/manager or category/parent-category relationships.</li>
+        <li>If a query design view join won't let you pick LEFT vs RIGHT, just switch to SQL View and edit the JOIN keyword directly - it's fully editable there.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="singlerow">
+    <h2>4b. Single-Row (Scalar) Functions</h2>
+    <p class="desc">Single-row functions operate on <strong>one row at a time</strong> and return exactly one value per row - as opposed to aggregate functions (next section), which collapse many rows into one summary value per group. A single-row function can be used anywhere an expression is allowed: SELECT list, WHERE, ORDER BY, or nested inside another function.</p>
+
+    <h3 id="singlerow-string-functions">String functions</h3>
+    <table>
+      <tr><th>Function</th><th>Purpose</th><th>Example</th><th>Result</th></tr>
+      <tr><td><code>Len(text)</code></td><td>Length of a string</td><td><code>Len("Widget A")</code></td><td>8</td></tr>
+      <tr><td><code>Left(text,n) / Right(text,n)</code></td><td>First/last n characters</td><td><code>Left("Widget A",6)</code></td><td>"Widget"</td></tr>
+      <tr><td><code>Mid(text,start,len)</code></td><td>Substring from a position</td><td><code>Mid("Widget A",8,1)</code></td><td>"A"</td></tr>
+      <tr><td><code>Trim / LTrim / RTrim</code></td><td>Remove leading/trailing spaces</td><td><code>Trim("  hi  ")</code></td><td>"hi"</td></tr>
+      <tr><td><code>UCase / LCase</code></td><td>Convert case</td><td><code>UCase("acme")</code></td><td>"ACME"</td></tr>
+      <tr><td><code>InStr(text,sub)</code></td><td>Position of first match (0 if none)</td><td><code>InStr("a@b.com","@")</code></td><td>2</td></tr>
+      <tr><td><code>Replace(text,find,rep)</code></td><td>Replace all matches</td><td><code>Replace("2026-03-10","-","/")</code></td><td>"2026/03/10"</td></tr>
+      <tr><td><code>StrComp(text1,text2)</code></td><td>Compare two strings (-1/0/1)</td><td><code>StrComp("A","B")</code></td><td>-1</td></tr>
+    </table>
+
+    <h3 id="singlerow-numeric-functions">Numeric functions</h3>
+    <table>
+      <tr><th>Function</th><th>Purpose</th><th>Example</th><th>Result</th></tr>
+      <tr><td><code>Abs(number)</code></td><td>Absolute value</td><td><code>Abs(-45)</code></td><td>45</td></tr>
+      <tr><td><code>Round(number,digits)</code></td><td>Round to n decimal places</td><td><code>Round(29.847,1)</code></td><td>29.8</td></tr>
+      <tr><td><code>Int(number)</code></td><td>Truncate down toward negative infinity</td><td><code>Int(-4.3)</code></td><td>-5</td></tr>
+      <tr><td><code>Fix(number)</code></td><td>Truncate toward zero</td><td><code>Fix(-4.3)</code></td><td>-4</td></tr>
+      <tr><td><code>Sqr(number)</code></td><td>Square root</td><td><code>Sqr(81)</code></td><td>9</td></tr>
+      <tr><td><code>Sgn(number)</code></td><td>Sign of a number (-1, 0, 1)</td><td><code>Sgn(-12)</code></td><td>-1</td></tr>
+    </table>
+
+    <h3 id="singlerow-date-time-conversion-and-null-handling-covered-in-detail-elsewhere">Date/time, conversion &amp; null-handling (covered in detail elsewhere)</h3>
+    <p class="desc">These are also single-row functions - one result per row - but each has its own dedicated reference:</p>
+    <table>
+      <tr><th>Category</th><th>Examples</th><th>See</th></tr>
+      <tr><td>Date/time</td><td><code>Year()</code>, <code>DateAdd()</code>, <code>DateDiff()</code>, <code>Format()</code></td><td><a href="#dates">Section 10 - Dates</a></td></tr>
+      <tr><td>Type conversion</td><td><code>CStr()</code>, <code>CInt()</code>, <code>CDate()</code></td><td><a href="#conversions">Section 9b - Conversions</a></td></tr>
+      <tr><td>Conditional / null-handling</td><td><code>IIf()</code>, <code>Nz()</code>, <code>Switch()</code></td><td><a href="#functions">Section 9 - Access Functions</a></td></tr>
+    </table>
+
+    <h3 id="singlerow-worked-example-several-single-row-functions-per-row">Worked example - several single-row functions per row</h3>
+<pre><code>SELECT ProductName,
+       Len(ProductName) AS NameLength,
+       UCase(Left(ProductName,1)) & LCase(Mid(ProductName,2)) AS Formatted,
+       Round(UnitPrice,0) AS RoundedPrice,
+       Abs(UnitsInStock - 20) AS DistanceFrom20
+FROM Products;</code></pre>
+    <p class="desc">Result <em>(each row is calculated independently - no grouping occurs)</em>:</p>
+    <table>
+      <tr><th>ProductName</th><th>NameLength</th><th>Formatted</th><th>RoundedPrice</th><th>DistanceFrom20</th></tr>
+      <tr><td>Widget A</td><td>8</td><td>Widget a</td><td>13</td><td>20</td></tr>
+      <tr><td>Widget B</td><td>8</td><td>Widget b</td><td>10</td><td>20</td></tr>
+      <tr><td>Gadget X</td><td>8</td><td>Gadget x</td><td>45</td><td>5</td></tr>
+      <tr><td>Gadget Y</td><td>8</td><td>Gadget y</td><td>60</td><td>15</td></tr>
+      <tr><td>Tool Z</td><td>6</td><td>Tool z</td><td>22</td><td>80</td></tr>
+    </table>
+    <div class="note">Contrast this with Example 4 in the Sample Data section: <code>SUM(o.OrderAmount)</code> is an aggregate function that returns one row per <em>group</em>, while every function here returns one row per <em>row of the source table</em> - five rows in, five rows out.</div>
+
+    <h3 id="singlerow-five-more-examples-different-cases">Five More Examples - Different Cases</h3>
+    <ol>
+      <li><strong>Extract initials from two fields:</strong>
+<pre><code>SELECT Left(FirstName,1) & Left(LastName,1) AS Initials
+FROM Employees;</code></pre></li>
+      <li><strong>Find and flag records missing an "@" in an email field:</strong>
+<pre><code>SELECT Email, InStr(Email,"@") AS AtPosition
+FROM Customers
+WHERE InStr(Email,"@") = 0;</code></pre></li>
+      <li><strong>Clean up inconsistent spacing and casing:</strong>
+<pre><code>SELECT Trim(UCase(CompanyName)) AS CleanName
+FROM Customers;</code></pre></li>
+      <li><strong>Round a price down/up differently depending on sign:</strong>
+<pre><code>SELECT UnitPrice, Int(UnitPrice) AS FloorPrice, Fix(UnitPrice) AS TruncPrice
+FROM Products;</code></pre></li>
+      <li><strong>Mask part of a value (e.g. a reference code) for display:</strong>
+<pre><code>SELECT OrderID, "ORD-" & Right("0000" & OrderID, 4) AS OrderRef
+FROM Orders;</code></pre></li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li><code>Right("0000" & Number, 4)</code> is a classic zero-padding hack when Access has no built-in <code>PAD()</code> function - pad first, then take the rightmost N characters.</li>
+        <li><code>Int()</code> and <code>Fix()</code> only differ on negative numbers - for positive prices and quantities they behave identically; reach for <code>Fix()</code> if you specifically need "toward zero" truncation.</li>
+        <li>Nest <code>Trim()</code> around <code>UCase()</code>/<code>LCase()</code> to normalize messy imported text data (extra spaces plus inconsistent case) in a single expression.</li>
+        <li><code>InStr()</code> returning 0 means "not found" - test for that explicitly rather than assuming a positive number always comes back.</li>
+        <li>Single-row functions can be nested arbitrarily deep (as in the Initials example), but for readability, pull very long nested expressions into a saved query or a VBA function instead.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="aggregate">
+    <h2>5. Aggregate Functions &amp; GROUP BY</h2>
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>COUNT(*)</code> / <code>COUNT(col)</code></td><td>Number of rows / non-null values</td></tr>
+      <tr><td><code>SUM(col)</code></td><td>Total of numeric column</td></tr>
+      <tr><td><code>AVG(col)</code></td><td>Average value</td></tr>
+      <tr><td><code>MIN(col)</code> / <code>MAX(col)</code></td><td>Smallest / largest value</td></tr>
+      <tr><td><code>First(col)</code> / <code>Last(col)</code></td><td>Access-specific: first/last value encountered</td></tr>
+      <tr><td><code>StDev(col)</code> / <code>Var(col)</code></td><td>Standard deviation / variance</td></tr>
+    </table>
+<pre><code>SELECT Country, COUNT(*) AS NumCustomers, AVG(CreditLimit) AS AvgLimit
+FROM Customers
+GROUP BY Country
+HAVING COUNT(*) > 5
+ORDER BY NumCustomers DESC;</code></pre>
+
+    <h3 id="aggregate-five-examples-different-cases">Five Examples - Different Cases</h3>
+    <ol>
+      <li><strong>Simple count and sum:</strong>
+<pre><code>SELECT COUNT(*) AS TotalOrders, SUM(OrderAmount) AS Revenue
+FROM Orders;</code></pre></li>
+      <li><strong>Group by one column with multiple aggregates:</strong>
+<pre><code>SELECT CustomerID, COUNT(*) AS OrderCount, SUM(OrderAmount) AS Total
+FROM Orders
+GROUP BY CustomerID;</code></pre></li>
+      <li><strong>Group by two columns:</strong>
+<pre><code>SELECT CategoryID, Discontinued, AVG(UnitPrice) AS AvgPrice
+FROM Products
+GROUP BY CategoryID, Discontinued;</code></pre></li>
+      <li><strong>Conditional ("distinct-style") count using IIf inside SUM:</strong>
+<pre><code>SELECT CustomerID,
+       SUM(IIf(OrderAmount > 500, 1, 0)) AS BigOrders
+FROM Orders
+GROUP BY CustomerID;</code></pre></li>
+      <li><strong>Filter groups with HAVING on a calculated total:</strong>
+<pre><code>SELECT CustomerID, SUM(OrderAmount) AS Total
+FROM Orders
+GROUP BY CustomerID
+HAVING SUM(OrderAmount) > 1000;</code></pre></li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li>Access has <strong>no <code>COUNT(DISTINCT col)</code></strong> - the standard workaround is <code>SELECT COUNT(*) FROM (SELECT DISTINCT col FROM Table)</code>, or a <code>GROUP BY</code> subquery.</li>
+        <li>Remember <code>WHERE</code> filters rows <em>before</em> grouping and <code>HAVING</code> filters groups <em>after</em> - put row-level conditions in WHERE for better performance, and only use HAVING for conditions on the aggregate itself.</li>
+        <li><code>SUM(IIf(condition, 1, 0))</code> is the standard Access "conditional count" pattern, since there's no <code>COUNT(CASE WHEN...)</code> syntax.</li>
+        <li>Every non-aggregated column in the SELECT list must appear in <code>GROUP BY</code>, or Access will raise an error - unlike some engines that silently pick an arbitrary value.</li>
+        <li><code>First()</code>/<code>Last()</code> depend on the underlying storage/retrieval order, which isn't guaranteed - don't rely on them for anything order-sensitive without an explicit subquery ordering first.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="subqueries">
+    <h2>6. Subqueries</h2>
+<pre><code>-- In WHERE
+SELECT ProductName FROM Products
+WHERE UnitPrice > (SELECT AVG(UnitPrice) FROM Products);
+
+-- With IN
+SELECT CustomerID FROM Customers
+WHERE CustomerID IN (SELECT CustomerID FROM Orders WHERE OrderDate > #1/1/2026#);
+
+-- EXISTS
+SELECT CompanyName FROM Customers AS c
+WHERE EXISTS (SELECT 1 FROM Orders AS o WHERE o.CustomerID = c.CustomerID);
+
+-- As a derived table
+SELECT Country, AvgPrice
+FROM (SELECT Country, AVG(UnitPrice) AS AvgPrice FROM Products GROUP BY Country) AS T
+WHERE AvgPrice > 20;</code></pre>
+
+    <h3 id="subqueries-five-examples-different-cases">Five Examples - Different Cases</h3>
+    <ol>
+      <li><strong>Scalar subquery in WHERE:</strong>
+<pre><code>SELECT ProductName FROM Products
+WHERE UnitPrice > (SELECT AVG(UnitPrice) FROM Products);</code></pre></li>
+      <li><strong>Subquery in the SELECT list:</strong>
+<pre><code>SELECT CompanyName,
+       (SELECT COUNT(*) FROM Orders WHERE Orders.CustomerID = Customers.CustomerID) AS OrderCount
+FROM Customers;</code></pre></li>
+      <li><strong>NOT IN - customers who have never ordered:</strong>
+<pre><code>SELECT CompanyName FROM Customers
+WHERE CustomerID NOT IN (SELECT CustomerID FROM Orders);</code></pre></li>
+      <li><strong>Correlated EXISTS:</strong>
+<pre><code>SELECT CompanyName FROM Customers AS c
+WHERE EXISTS (SELECT 1 FROM Orders AS o WHERE o.CustomerID = c.CustomerID);</code></pre></li>
+      <li><strong>Subquery as a derived table (FROM clause):</strong>
+<pre><code>SELECT Country, AvgPrice
+FROM (SELECT Country, AVG(UnitPrice) AS AvgPrice FROM Products GROUP BY Country) AS T
+WHERE AvgPrice > 20;</code></pre></li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li><strong>Careful with <code>NOT IN</code> and Nulls:</strong> if the subquery's column can ever return a Null, <code>NOT IN</code> silently returns zero rows for the whole query. Add <code>WHERE col IS NOT NULL</code> inside the subquery, or use <code>NOT EXISTS</code> instead - it doesn't have this trap.</li>
+        <li><code>EXISTS</code>/<code>NOT EXISTS</code> often perform better than <code>IN</code>/<code>NOT IN</code> on larger tables because Access can stop scanning as soon as one match is found.</li>
+        <li>A correlated subquery in the SELECT list (Example 2) runs once per outer row - fine for small tables, but for large ones a <code>LEFT JOIN</code> + <code>GROUP BY</code> is usually faster.</li>
+        <li>Derived tables (subqueries in FROM) must always have an alias in Access - <code>FROM (...) AS T</code> - leaving it off raises a syntax error.</li>
+        <li>Save a frequently reused subquery as its own named query object, then reference that query by name in FROM - it's easier to maintain than repeating the same subquery everywhere.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="modify">
+    <h2>7. INSERT, UPDATE, DELETE</h2>
+    <h3 id="modify-insert">INSERT</h3>
+<pre><code>INSERT INTO Customers (CompanyName, City, Country)
+VALUES ('Acme Ltd', 'Johannesburg', 'South Africa');
+
+-- Insert from another table (append query)
+INSERT INTO ArchivedOrders
+SELECT * FROM Orders WHERE OrderDate < #1/1/2020#;</code></pre>
+    <h3 id="modify-update">UPDATE</h3>
+<pre><code>UPDATE Products
+SET UnitPrice = UnitPrice * 1.1
+WHERE CategoryID = 3;</code></pre>
+    <h3 id="modify-delete">DELETE</h3>
+<pre><code>DELETE FROM Orders
+WHERE OrderDate < #1/1/2015#;</code></pre>
+    <div class="note">Access runs these as "action queries" - when executed from Query Design view it will prompt with a confirmation dialog unless warnings are disabled.</div>
+
+    <h3 id="modify-five-examples-different-cases">Five Examples - Different Cases</h3>
+    <ol>
+      <li><strong>Insert a single explicit row:</strong>
+<pre><code>INSERT INTO Customers (CompanyName, City, Country)
+VALUES ('Acme Ltd', 'Johannesburg', 'South Africa');</code></pre></li>
+      <li><strong>Insert multiple rows at once (Access lacks multi-row VALUES, so UNION ALL is the workaround):</strong>
+<pre><code>INSERT INTO Customers (CompanyName, City, Country)
+SELECT 'Blue Sky Traders', 'London', 'UK'
+UNION ALL SELECT 'Delta Goods', 'New York', 'USA'
+UNION ALL SELECT 'Cape Exports', 'Cape Town', 'South Africa';</code></pre></li>
+      <li><strong>Update using values from a joined table:</strong>
+<pre><code>UPDATE Products AS p
+INNER JOIN Categories AS c ON p.CategoryID = c.CategoryID
+SET p.UnitPrice = p.UnitPrice * 1.05
+WHERE c.CategoryName = 'Beverages';</code></pre></li>
+      <li><strong>Delete rows matched via a subquery:</strong>
+<pre><code>DELETE FROM Orders
+WHERE CustomerID IN (SELECT CustomerID FROM Customers WHERE Country = 'Discontinued');</code></pre></li>
+      <li><strong>Create a brand-new table directly from a query (make-table query):</strong>
+<pre><code>SELECT * INTO HighValueOrders
+FROM Orders
+WHERE OrderAmount > 1000;</code></pre></li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li>Access has <strong>no multi-row <code>INSERT INTO ... VALUES (...), (...), (...)</code></strong> syntax like MySQL/Postgres - chain <code>SELECT ... UNION ALL SELECT ...</code> instead, as in Example 2.</li>
+        <li><code>SELECT ... INTO NewTable</code> is Access's "make-table query" - it creates the table and populates it in one step, which is handy for quick snapshots or staging tables.</li>
+        <li>Action queries (INSERT/UPDATE/DELETE) can't easily be undone - test the equivalent SELECT first to confirm exactly which rows will be affected before converting it.</li>
+        <li>Go to <em>File → Options → Client Settings → Confirm → uncheck "Action Queries"</em> only in a controlled environment; leaving warnings off is risky for shared databases.</li>
+        <li>UPDATE with a JOIN needs the join built into the UPDATE statement itself (as in Example 3) - Access does not support UPDATE ... FROM syntax the way SQL Server does.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="ddl">
+    <h2>8. Creating &amp; Altering Tables (DDL)</h2>
+<pre><code>CREATE TABLE Employees (
+    EmployeeID AUTOINCREMENT PRIMARY KEY,
+    FirstName TEXT(50),
+    LastName TEXT(50),
+    HireDate DATE,
+    Salary CURRENCY,
+    IsActive YESNO
+);
+
+ALTER TABLE Employees ADD COLUMN Email TEXT(100);
+ALTER TABLE Employees DROP COLUMN Email;
+ALTER TABLE Employees ALTER COLUMN Salary CURRENCY;
+
+DROP TABLE Employees;</code></pre>
+    <h3 id="ddl-common-access-data-types">Common Access data types</h3>
+    <table>
+      <tr><th>Type</th><th>Use for</th></tr>
+      <tr><td><code>TEXT(n)</code></td><td>Short text, max length n (≤255)</td></tr>
+      <tr><td><code>MEMO / LONGTEXT</code></td><td>Long text</td></tr>
+      <tr><td><code>INTEGER / LONG / BYTE</code></td><td>Whole numbers</td></tr>
+      <tr><td><code>SINGLE / DOUBLE</code></td><td>Floating point numbers</td></tr>
+      <tr><td><code>CURRENCY</code></td><td>Monetary values</td></tr>
+      <tr><td><code>DATE / DATETIME</code></td><td>Date and/or time values</td></tr>
+      <tr><td><code>YESNO</code></td><td>Boolean (True/False)</td></tr>
+      <tr><td><code>AUTOINCREMENT</code></td><td>Auto-numbering primary key</td></tr>
+      <tr><td><code>OLEOBJECT</code></td><td>Embedded objects (images, files)</td></tr>
+    </table>
+
+    <h3 id="ddl-five-examples-different-cases">Five Examples - Different Cases</h3>
+    <ol>
+      <li><strong>Create a table with a primary key:</strong>
+<pre><code>CREATE TABLE Employees (
+    EmployeeID AUTOINCREMENT PRIMARY KEY,
+    FirstName TEXT(50),
+    LastName TEXT(50)
+);</code></pre></li>
+      <li><strong>Create a table with a foreign key constraint:</strong>
+<pre><code>CREATE TABLE Orders (
+    OrderID AUTOINCREMENT PRIMARY KEY,
+    CustomerID INTEGER,
+    OrderDate DATE,
+    CONSTRAINT FK_Customer FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);</code></pre></li>
+      <li><strong>Add a new column to an existing table:</strong>
+<pre><code>ALTER TABLE Employees ADD COLUMN Email TEXT(100);</code></pre></li>
+      <li><strong>Change an existing column's data type:</strong>
+<pre><code>ALTER TABLE Employees ALTER COLUMN Salary CURRENCY;</code></pre></li>
+      <li><strong>Create an index to speed up lookups:</strong>
+<pre><code>CREATE INDEX idx_LastName ON Employees (LastName);</code></pre></li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li><code>AUTOINCREMENT</code> is Access's equivalent of an identity/serial column - combine it with <code>PRIMARY KEY</code> in one line, as shown, rather than adding the key separately.</li>
+        <li>DDL statements like <code>CREATE TABLE</code>/<code>ALTER TABLE</code> must be run from a query in SQL View saved as a "Data Definition" query type - they can't be built in the graphical Query Design grid.</li>
+        <li><code>ALTER TABLE ... DROP COLUMN</code> permanently deletes the column and its data with no undo - always back up (or export) the table first.</li>
+        <li>Setting a sensible <code>TEXT(n)</code> length up front avoids costly ALTER COLUMN operations later on large tables - err slightly larger than you think you need.</li>
+        <li>For relationships you plan to maintain visually, it's often easier to define foreign keys through the Relationships window (Database Tools → Relationships) than through raw SQL - Access enforces referential integrity checkboxes there automatically.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="functions">
+    <h2>9. Access-Specific Functions</h2>
+    <div class="grid2">
+      <table>
+        <tr><th>Function</th><th>Example</th></tr>
+        <tr><td><code>IIf(cond, true, false)</code></td><td><code>IIf(Score&gt;=50,'Pass','Fail')</code></td></tr>
+        <tr><td><code>Nz(value, alt)</code></td><td><code>Nz([Discount],0)</code> - replaces Null</td></tr>
+        <tr><td><code>Format(value, fmt)</code></td><td><code>Format([Date],'dd-mmm-yyyy')</code></td></tr>
+        <tr><td><code>Left / Right / Mid</code></td><td><code>Left([Name],3)</code></td></tr>
+        <tr><td><code>Len(text)</code></td><td><code>Len([Description])</code></td></tr>
+      </table>
+      <table>
+        <tr><th>Function</th><th>Example</th></tr>
+        <tr><td><code>InStr(str, sub)</code></td><td><code>InStr([Email],'@')</code></td></tr>
+        <tr><td><code>Trim / LTrim / RTrim</code></td><td><code>Trim([Name])</code></td></tr>
+        <tr><td><code>UCase / LCase</code></td><td><code>UCase([Code])</code></td></tr>
+        <tr><td><code>Val(text)</code></td><td>Converts text to number</td></tr>
+        <tr><td><code>CStr / CInt / CDbl / CDate</code></td><td>Type conversion functions</td></tr>
+      </table>
+    </div>
+<pre><code>SELECT ProductName,
+       IIf(UnitsInStock=0,'Out of Stock','In Stock') AS StockStatus,
+       Nz(Discontinued, False) AS DiscontinuedFlag
+FROM Products;</code></pre>
+
+    <h3 id="functions-five-examples-different-cases">Five Examples - Different Cases</h3>
+    <ol>
+      <li><strong>Simple IIf for a pass/fail flag:</strong>
+<pre><code>SELECT StudentName, IIf(Score >= 50, 'Pass', 'Fail') AS Result
+FROM Scores;</code></pre></li>
+      <li><strong>Nested IIf for three or more outcomes (a poor man's CASE):</strong>
+<pre><code>SELECT ProductName,
+       IIf(UnitsInStock=0,'Out of Stock', IIf(UnitsInStock<10,'Low Stock','In Stock')) AS Status
+FROM Products;</code></pre></li>
+      <li><strong>Switch() as an alternative to nested IIf:</strong>
+<pre><code>SELECT ProductName,
+       Switch(UnitsInStock=0,'Out of Stock', UnitsInStock<10,'Low Stock', True,'In Stock') AS Status
+FROM Products;</code></pre></li>
+      <li><strong>Nz to substitute a default for missing values:</strong>
+<pre><code>SELECT OrderID, Nz(DiscountPct, 0) AS Discount
+FROM Orders;</code></pre></li>
+      <li><strong>Nz used inside a calculation to avoid a Null propagating:</strong>
+<pre><code>SELECT OrderID, OrderAmount * (1 - Nz(DiscountPct,0)) AS NetAmount
+FROM Orders;</code></pre></li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li>Access has no <code>CASE WHEN</code> - <code>Switch()</code> is usually more readable than deeply nested <code>IIf()</code> once you have more than two outcomes.</li>
+        <li><code>Switch()</code> evaluates every condition/value pair even after finding a match, so avoid putting expensive function calls in later branches - the last branch is often <code>True, defaultValue</code> as a catch-all.</li>
+        <li>Wrap any numeric field that can contain Nulls in <code>Nz(...)</code> before using it in arithmetic - a single Null in a calculation turns the whole result into Null.</li>
+        <li><code>IIf()</code> always evaluates both the true and false branches (unlike short-circuiting in some languages) - avoid calling something with side effects or a slow subquery in either branch.</li>
+        <li>Give <code>Nz(field, 0)</code> a matching type to the field (<code>Nz(field, "")</code> for text, <code>Nz(field, 0)</code> for numbers) or Access may raise a type-mismatch error downstream.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="conversions">
+    <h2>9b. Data Type Conversion Functions</h2>
+    <p class="desc">Access provides a full set of "C" (convert) functions to force a value into a specific data type - useful in calculations, concatenations, and when a field's stored type doesn't match what an expression needs.</p>
+    <table>
+      <tr><th>Function</th><th>Converts to</th><th>Example</th><th>Result</th></tr>
+      <tr><td><code>CStr(value)</code></td><td>Text (String)</td><td><code>CStr(45.5)</code></td><td>"45.5"</td></tr>
+      <tr><td><code>CInt(value)</code></td><td>Integer (rounds)</td><td><code>CInt(45.5)</code></td><td>46</td></tr>
+      <tr><td><code>CLng(value)</code></td><td>Long integer (rounds)</td><td><code>CLng(99999.6)</code></td><td>100000</td></tr>
+      <tr><td><code>CDbl(value)</code></td><td>Double (floating point)</td><td><code>CDbl("12.75")</code></td><td>12.75</td></tr>
+      <tr><td><code>CSng(value)</code></td><td>Single (floating point)</td><td><code>CSng("3.14")</code></td><td>3.14</td></tr>
+      <tr><td><code>CCur(value)</code></td><td>Currency</td><td><code>CCur("1250")</code></td><td>1250.00</td></tr>
+      <tr><td><code>CDate(value)</code></td><td>Date/Time</td><td><code>CDate("3/10/2026")</code></td><td>10-Mar-2026</td></tr>
+      <tr><td><code>CBool(value)</code></td><td>Boolean</td><td><code>CBool(0)</code></td><td>False</td></tr>
+      <tr><td><code>CByte(value)</code></td><td>Byte (0–255)</td><td><code>CByte(200)</code></td><td>200</td></tr>
+      <tr><td><code>CVar(value)</code></td><td>Variant</td><td><code>CVar([SomeField])</code></td><td>-</td></tr>
+    </table>
+    <div class="note"><code>CInt</code> and <code>CLng</code> round to the nearest whole number using "banker's rounding" (round-half-to-even), so <code>CInt(0.5)</code> returns 0, not 1 - different from <code>Int()</code>, which simply truncates.</div>
+
+    <h3 id="conversions-related-non-c-conversions">Related non-"C" conversions</h3>
+    <table>
+      <tr><th>Function</th><th>Purpose</th><th>Example</th></tr>
+      <tr><td><code>Val(text)</code></td><td>Reads leading numeric characters from text; stops at the first non-numeric character</td><td><code>Val("42px")</code> → 42</td></tr>
+      <tr><td><code>Str(number)</code></td><td>Converts a number to text (always includes a leading space for positive numbers)</td><td><code>Str(42)</code> → " 42"</td></tr>
+      <tr><td><code>Format(value, fmt)</code></td><td>Converts and formats in one step, for display</td><td><code>Format(1250,"Currency")</code> → $1,250.00</td></tr>
+      <tr><td><code>Nz(value, alt)</code></td><td>Converts Null to a usable value/type before another operation</td><td><code>Nz([Discount],0)</code></td></tr>
+    </table>
+
+    <h3 id="conversions-worked-example-converting-for-display-and-calculation">Worked example - converting for display and calculation</h3>
+<pre><code>SELECT ProductName,
+       UnitPrice,
+       CStr(UnitPrice) AS PriceAsText,
+       CInt(UnitPrice) AS PriceRounded,
+       Format(UnitPrice,"Currency") AS PriceFormatted
+FROM Products
+WHERE ProductID IN (3,4);</code></pre>
+    <p class="desc">Result <em>(using the Products sample table)</em>:</p>
+    <table>
+      <tr><th>ProductName</th><th>UnitPrice</th><th>PriceAsText</th><th>PriceRounded</th><th>PriceFormatted</th></tr>
+      <tr><td>Gadget X</td><td>45.00</td><td>45</td><td>45</td><td>$45.00</td></tr>
+      <tr><td>Gadget Y</td><td>60.00</td><td>60</td><td>60</td><td>$60.00</td></tr>
+    </table>
+
+    <h3 id="conversions-worked-example-mixing-types-safely-with-and-and-cstr">Worked example - mixing types safely with &amp; and CStr</h3>
+<pre><code>SELECT CompanyName & " (Limit: " & CStr(CreditLimit) & ")" AS Summary
+FROM Customers
+WHERE CustomerID = 2;</code></pre>
+    <p class="desc">Result:</p>
+    <table>
+      <tr><th>Summary</th></tr>
+      <tr><td>Blue Sky Traders (Limit: 12000)</td></tr>
+    </table>
+    <div class="note">The <code>&amp;</code> operator implicitly converts numbers to text anyway, so the explicit <code>CStr()</code> here isn't strictly required - but it's good practice when the underlying field could contain Null, since <code>&amp;</code> treats Null as an empty string while <code>+</code> would propagate it.</div>
+
+    <h3 id="conversions-five-more-examples-different-cases">Five More Examples - Different Cases</h3>
+    <ol>
+      <li><strong>Force text to a number for comparison:</strong>
+<pre><code>SELECT * FROM Products WHERE CDbl(SKU) > 1000;</code></pre></li>
+      <li><strong>Convert a text field to a real Date for date math:</strong>
+<pre><code>SELECT OrderID, DateDiff("d", CDate(OrderDateText), Date()) AS DaysOld
+FROM ImportedOrders;</code></pre></li>
+      <li><strong>Round to whole units for a rounded display column:</strong>
+<pre><code>SELECT ProductName, CInt(UnitPrice) AS RoundedPrice
+FROM Products;</code></pre></li>
+      <li><strong>Convert Yes/No to text for a report:</strong>
+<pre><code>SELECT ProductName, IIf(Discontinued, 'Discontinued', 'Active') AS Status
+FROM Products;</code></pre></li>
+      <li><strong>Safely extract a number from mixed text:</strong>
+<pre><code>SELECT RawCode, Val(RawCode) AS NumericPart
+FROM ImportedCodes;</code></pre></li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li><code>Val()</code> stops at the first non-numeric character and never raises an error - safer than <code>CDbl()</code> for messy imported text that might not be a clean number.</li>
+        <li><code>CDbl()</code>/<code>CInt()</code>/<code>CDate()</code> all raise a runtime error on genuinely invalid input (e.g. <code>CDate("not a date")</code>) - wrap risky conversions in <code>IIf(IsDate(field), CDate(field), Null)</code> when the source data isn't guaranteed clean.</li>
+        <li>Use <code>Format()</code> instead of a raw <code>C*</code> conversion whenever the goal is display formatting rather than a genuine type change - <code>Format(Price,"Currency")</code> keeps the underlying value numeric for further calculation while still looking right on screen.</li>
+        <li>When importing text-based CSV data, converting date-like text columns with <code>CDate()</code> early (in the first query layer) avoids repeated implicit conversions in every downstream query.</li>
+        <li>Test conversions on a few sample rows with a <code>SELECT TOP 5</code> before running them as part of an UPDATE - a bad conversion in an action query can corrupt an entire column at once.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="dates">
+    <h2>10. Date &amp; Time Functions</h2>
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>Date()</code></td><td>Current date</td></tr>
+      <tr><td><code>Now()</code></td><td>Current date and time</td></tr>
+      <tr><td><code>DateAdd("d",7,[OrderDate])</code></td><td>Add interval to a date (d=day, m=month, yyyy=year, ww=week)</td></tr>
+      <tr><td><code>DateDiff("yyyy",[Birth],Date())</code></td><td>Difference between two dates</td></tr>
+      <tr><td><code>DatePart("m",[OrderDate])</code></td><td>Extract part of a date</td></tr>
+      <tr><td><code>Year() / Month() / Day()</code></td><td>Extract year, month, or day</td></tr>
+      <tr><td><code>Weekday([Date])</code></td><td>Day of week as a number</td></tr>
+    </table>
+<pre><code>SELECT OrderID, OrderDate
+FROM Orders
+WHERE OrderDate BETWEEN #1/1/2026# AND #3/31/2026#;
+
+SELECT CustomerID, DateDiff("yyyy",[BirthDate],Date()) AS Age
+FROM Customers;</code></pre>
+    <div class="note">Access date literals are wrapped in <code>#...#</code> (e.g. <code>#12/31/2025#</code>) rather than single quotes used by most other SQL dialects.</div>
+
+    <h3 id="dates-five-examples-different-cases">Five Examples - Different Cases</h3>
+    <ol>
+      <li><strong>Filter by a date range:</strong>
+<pre><code>SELECT OrderID, OrderDate FROM Orders
+WHERE OrderDate BETWEEN #1/1/2026# AND #3/31/2026#;</code></pre></li>
+      <li><strong>Calculate age in years:</strong>
+<pre><code>SELECT CustomerID, DateDiff("yyyy",[BirthDate],Date()) AS Age
+FROM Customers;</code></pre></li>
+      <li><strong>Find the first day of the current month:</strong>
+<pre><code>SELECT DateSerial(Year(Date()), Month(Date()), 1) AS FirstOfMonth;</code></pre></li>
+      <li><strong>Find the last day of a given month (add a month, subtract a day):</strong>
+<pre><code>SELECT DateAdd("d", -1, DateSerial(Year(Date()), Month(Date())+1, 1)) AS LastOfMonth;</code></pre></li>
+      <li><strong>Get a weekday name for display:</strong>
+<pre><code>SELECT OrderID, Format(OrderDate,"dddd") AS DayName
+FROM Orders;</code></pre></li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li>The "add a month, then subtract a day" trick (Example 4) is the standard Access hack for finding a month's last day - there's no dedicated <code>EndOfMonth()</code> function.</li>
+        <li><code>DateSerial(year, month, day)</code> is safer than building a date string when the year/month/day come from separate calculated values - it avoids locale-dependent string parsing issues entirely.</li>
+        <li><code>Format(date,"dddd")</code>/<code>"mmmm"</code> return the weekday/month name in whatever language the user's Windows regional settings are set to - don't rely on this for exports intended for a fixed audience.</li>
+        <li>To add "business days" (skipping weekends), there's no built-in function - loop with <code>DateAdd("d",1,...)</code> in VBA and skip Saturday/Sunday via <code>Weekday()</code>, or maintain a calendar table.</li>
+        <li>Always compare dates with <code>#...#</code> delimiters, not quotes - <code>WHERE OrderDate = '1/1/2026'</code> can silently misbehave depending on the field's stored format, while <code>#1/1/2026#</code> is unambiguous.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="params">
+    <h2>11. Parameters &amp; Crosstab Queries</h2>
+<pre><code>-- Parameter query (prompts the user for input)
+PARAMETERS [Enter Country] TEXT;
+SELECT * FROM Customers WHERE Country = [Enter Country];
+
+-- Crosstab (PIVOT) query
+TRANSFORM SUM(OrderAmount)
+SELECT CustomerID
+FROM Orders
+GROUP BY CustomerID
+PIVOT Format([OrderDate],"yyyy");</code></pre>
+
+    <h3 id="params-five-examples-different-cases">Five Examples - Different Cases</h3>
+    <ol>
+      <li><strong>Single text parameter:</strong>
+<pre><code>PARAMETERS [Enter Country] TEXT;
+SELECT * FROM Customers WHERE Country = [Enter Country];</code></pre></li>
+      <li><strong>Typed numeric parameter with a comparison:</strong>
+<pre><code>PARAMETERS [Min Credit Limit] CURRENCY;
+SELECT * FROM Customers WHERE CreditLimit >= [Min Credit Limit];</code></pre></li>
+      <li><strong>Two parameters for a date range:</strong>
+<pre><code>PARAMETERS [Start Date] DATETIME, [End Date] DATETIME;
+SELECT * FROM Orders WHERE OrderDate BETWEEN [Start Date] AND [End Date];</code></pre></li>
+      <li><strong>Crosstab summarizing by year:</strong>
+<pre><code>TRANSFORM SUM(OrderAmount)
+SELECT CustomerID
+FROM Orders
+GROUP BY CustomerID
+PIVOT Format([OrderDate],"yyyy");</code></pre></li>
+      <li><strong>Crosstab with a fixed, ordered column list:</strong>
+<pre><code>TRANSFORM SUM(OrderAmount)
+SELECT CustomerID
+FROM Orders
+GROUP BY CustomerID
+PIVOT Format([OrderDate],"mmm") IN ("Jan","Feb","Mar","Apr");</code></pre></li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li>Declaring explicit types in <code>PARAMETERS</code> (as in Examples 2–3) makes Access validate and convert the user's input automatically - skip the declaration and Access still prompts, but with looser type checking.</li>
+        <li>Parameter prompts appear in the order they're declared - for two related values like a date range, declare the earlier one first so the dialogs make sense to the user.</li>
+        <li>A crosstab's column headers are generated dynamically from the data unless you add <code>IN (...)</code> (Example 5) - pin them explicitly whenever the query feeds a fixed report or chart layout.</li>
+        <li>Crosstab queries can't be the source of another query's FROM clause directly in the same way a normal SELECT can - if you need to build on top of one, save it first, then reference the saved crosstab by name.</li>
+        <li>Parameter queries are the easiest way to build a single reusable "filter" query behind a form, instead of writing separate near-identical queries for every possible filter combination.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="union">
+    <h2>12. UNION &amp; Simulated FULL JOIN</h2>
+<pre><code>SELECT CompanyName, City FROM Customers
+UNION
+SELECT CompanyName, City FROM Suppliers;
+
+-- UNION ALL keeps duplicate rows
+SELECT ProductName FROM ProductsUK
+UNION ALL
+SELECT ProductName FROM ProductsUS;
+
+-- Simulated FULL OUTER JOIN
+SELECT c.CustomerID, o.OrderID FROM Customers AS c
+LEFT JOIN Orders AS o ON c.CustomerID = o.CustomerID
+UNION
+SELECT c.CustomerID, o.OrderID FROM Customers AS c
+RIGHT JOIN Orders AS o ON c.CustomerID = o.CustomerID;</code></pre>
+
+    <h3 id="union-five-examples-different-cases">Five Examples - Different Cases</h3>
+    <ol>
+      <li><strong>Combine two similar tables, removing duplicates:</strong>
+<pre><code>SELECT CompanyName, City FROM Customers
+UNION
+SELECT CompanyName, City FROM Suppliers;</code></pre></li>
+      <li><strong>UNION ALL to keep every row, including duplicates:</strong>
+<pre><code>SELECT ProductName FROM ProductsUK
+UNION ALL
+SELECT ProductName FROM ProductsUS;</code></pre></li>
+      <li><strong>Add a literal "source" label to tell combined rows apart:</strong>
+<pre><code>SELECT CompanyName, 'Customer' AS SourceType FROM Customers
+UNION ALL
+SELECT CompanyName, 'Supplier' AS SourceType FROM Suppliers;</code></pre></li>
+      <li><strong>Simulated FULL OUTER JOIN:</strong>
+<pre><code>SELECT c.CustomerID, o.OrderID FROM Customers AS c
+LEFT JOIN Orders AS o ON c.CustomerID = o.CustomerID
+UNION
+SELECT c.CustomerID, o.OrderID FROM Customers AS c
+RIGHT JOIN Orders AS o ON c.CustomerID = o.CustomerID;</code></pre></li>
+      <li><strong>Build multi-row INSERT data with UNION ALL (see also the Modify section):</strong>
+<pre><code>INSERT INTO Regions (RegionName)
+SELECT 'North' UNION ALL SELECT 'South' UNION ALL SELECT 'East' UNION ALL SELECT 'West';</code></pre></li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li>Every <code>SELECT</code> in a UNION must return the <strong>same number of columns</strong> in a compatible order - column names come from the first SELECT only, so alias there if you want a specific output name.</li>
+        <li><code>UNION</code> deduplicates by comparing entire rows, which can be slow on large datasets - use <code>UNION ALL</code> whenever you know duplicates aren't possible or don't matter, for a real performance gain.</li>
+        <li>Adding a literal string column (Example 3) is the standard way to tag which source table each combined row came from, since UNION otherwise loses that information.</li>
+        <li>Only the final SELECT in a UNION chain can have an <code>ORDER BY</code> - it sorts the whole combined result, not just the last piece.</li>
+        <li>The "UNION as a multi-row VALUES substitute" trick (Example 5) is worth remembering - it's the cleanest way to seed a small lookup/reference table in one statement.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="normalization">
+    <h2>13. Database Normalization Techniques</h2>
+    <p class="desc">Normalization is the process of organizing tables so each fact is stored once, in the right place - it removes redundancy, prevents update/insert/delete anomalies, and is what turns a messy spreadsheet-style table into a proper relational database ready for Access SQL.</p>
+
+    <table>
+      <tr><th>Normal Form</th><th>Rule</th><th>What it fixes</th></tr>
+      <tr><td><strong>1NF</strong><br>First Normal Form</td><td>Every column holds a single, atomic value. No repeating groups or comma-separated lists in one field.</td><td>Multi-valued / repeating columns</td></tr>
+      <tr><td><strong>2NF</strong><br>Second Normal Form</td><td>Must already be in 1NF, <em>and</em> every non-key column depends on the <strong>whole</strong> primary key (only relevant when the key is composite, e.g. OrderID + ProductID).</td><td>Partial dependencies</td></tr>
+      <tr><td><strong>3NF</strong><br>Third Normal Form</td><td>Must already be in 2NF, <em>and</em> no non-key column depends on <strong>another non-key column</strong> instead of the key.</td><td>Transitive dependencies</td></tr>
+      <tr><td><strong>BCNF</strong><br>Boyce–Codd (optional)</td><td>A stricter version of 3NF: every determinant (any column that determines another) must itself be a candidate key.</td><td>Rare edge cases 3NF misses</td></tr>
+    </table>
+    <div class="note">Most real-world Access databases only need to reach <strong>3NF</strong>. Going further (BCNF and beyond) is usually academic unless you have unusual overlapping candidate keys.</div>
+
+    <h3 id="normalization-step-by-step-worked-example-unnormalized-1nf-2nf-3nf">Step-by-Step Worked Example: Unnormalized → 1NF → 2NF → 3NF</h3>
+    <p class="desc">Starting point - a single flat "OrderData" table exactly as it might arrive from an Excel export. It mixes order info, customer info, and a repeating list of products into one row per order.</p>
+    <table>
+      <tr><th>OrderID</th><th>OrderDate</th><th>CustomerName</th><th>CustomerPhone</th><th>Products (Name : Qty : Price)</th></tr>
+      <tr><td>1001</td><td>05/01/2026</td><td>Jane Doe</td><td>555-1234</td><td>Choco Bar:3:2.00, Choco Bites:1:5.00</td></tr>
+      <tr><td>1002</td><td>06/01/2026</td><td>Willy Wonka</td><td>555-9876</td><td>Almond Bar:2:3.50</td></tr>
+    </table>
+
+    <p><strong>Step 1 - Apply 1NF:</strong> split the repeating "Products" list so each product on an order gets its own row. The primary key becomes composite: <code>(OrderID, ProductID)</code>.</p>
+<pre><code>OrderID | OrderDate  | CustomerName | CustomerPhone | ProductName  | Qty | Price
+1001    | 05/01/2026 | Jane Doe     | 555-1234       | Choco Bar    | 3   | 2.00
+1001    | 05/01/2026 | Jane Doe     | 555-1234       | Choco Bites  | 1   | 5.00
+1002    | 06/01/2026 | Willy Wonka  | 555-9876       | Almond Bar   | 2   | 3.50</code></pre>
+    <p>Atomic values now - no more comma-separated lists. But <code>CustomerName</code>, <code>CustomerPhone</code>, <code>OrderDate</code> repeat on every product line, and <code>ProductName</code>/<code>Price</code> only really depend on the product, not on the order.</p>
+
+    <p><strong>Step 2 - Apply 2NF:</strong> the primary key is <code>(OrderID, ProductID)</code>, but <code>ProductName</code> and <code>Price</code> depend only on <code>ProductID</code> - a <em>partial</em> dependency on part of the key. Pull those into their own <code>Products</code> table.</p>
+<pre><code>-- Orders (one row per order - OrderDate/Customer still repeated per line item, fixed in 3NF)
+OrderID | OrderDate  | CustomerName | CustomerPhone
+1001    | 05/01/2026 | Jane Doe     | 555-1234
+1002    | 06/01/2026 | Willy Wonka  | 555-9876
+
+-- OrderDetails (composite key OrderID + ProductID, only order-specific facts remain)
+OrderID | ProductID | Qty
+1001    | 1         | 3
+1001    | 2         | 1
+1002    | 3         | 2
+
+-- Products (ProductID is the whole key now, so no partial dependency)
+ProductID | ProductName  | Price
+1         | Choco Bar    | 2.00
+2         | Choco Bites  | 5.00
+3         | Almond Bar   | 3.50</code></pre>
+
+    <p><strong>Step 3 - Apply 3NF:</strong> in the <code>Orders</code> table, <code>CustomerPhone</code> depends on <code>CustomerName</code>, not on <code>OrderID</code> - a <em>transitive</em> dependency (OrderID → CustomerName → CustomerPhone). Split customers into their own table.</p>
+<pre><code>-- Customers (CustomerPhone now depends only on the key, CustomerID)
+CustomerID | CustomerName | CustomerPhone
+1          | Jane Doe     | 555-1234
+2          | Willy Wonka  | 555-9876
+
+-- Orders (transitive dependency removed - just a foreign key)
+OrderID | OrderDate  | CustomerID
+1001    | 05/01/2026 | 1
+1002    | 06/01/2026 | 2</code></pre>
+    <p>Final 3NF schema - four tables, each fact stored exactly once, built in Access with:</p>
+<pre><code>CREATE TABLE Customers (
+    CustomerID    AUTOINCREMENT PRIMARY KEY,
+    CustomerName  TEXT(255),
+    CustomerPhone TEXT(20)
+);
+
+CREATE TABLE Products (
+    ProductID   AUTOINCREMENT PRIMARY KEY,
+    ProductName TEXT(255),
+    Price       CURRENCY
+);
+
+CREATE TABLE Orders (
+    OrderID    AUTOINCREMENT PRIMARY KEY,
+    OrderDate  DATETIME,
+    CustomerID LONG,
+    CONSTRAINT FK_Orders_Customers FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+CREATE TABLE OrderDetails (
+    OrderID   LONG,
+    ProductID LONG,
+    Qty       LONG,
+    CONSTRAINT PK_OrderDetails PRIMARY KEY (OrderID, ProductID),
+    CONSTRAINT FK_OD_Orders   FOREIGN KEY (OrderID)   REFERENCES Orders(OrderID),
+    CONSTRAINT FK_OD_Products FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);</code></pre>
+    <div class="note">In the Access desktop app you'd typically build these visually in <strong>Database Tools → Relationships</strong> rather than typing <code>FOREIGN KEY</code> DDL by hand, but the SQL above is exactly what that dialog generates behind the scenes.</div>
+
+    <h3 id="normalization-five-examples-different-normalization-scenarios">Five Examples - Different Normalization Scenarios</h3>
+    <ol>
+      <li><strong>1NF - fixing a repeating/multivalued column:</strong> a <code>Customers</code> table with a single <code>PhoneNumbers</code> field like <code>"555-1234, 555-9876"</code> violates 1NF. Fix by moving phone numbers to their own table so each number is one atomic row:
+<pre><code>CREATE TABLE CustomerPhones (
+    PhoneID    AUTOINCREMENT PRIMARY KEY,
+    CustomerID LONG,
+    Phone      TEXT(20),
+    PhoneType  TEXT(20)
+);</code></pre></li>
+      <li><strong>2NF - removing a partial dependency:</strong> an <code>Enrollments</code> table keyed on <code>(StudentID, CourseID)</code> also stores <code>CourseName</code> and <code>Credits</code>, which depend only on <code>CourseID</code>. Move them out:
+<pre><code>CREATE TABLE Courses (
+    CourseID   TEXT(10) PRIMARY KEY,
+    CourseName TEXT(255),
+    Credits    LONG
+);
+CREATE TABLE Enrollments (
+    StudentID LONG,
+    CourseID  TEXT(10),
+    Grade     TEXT(2),
+    CONSTRAINT PK_Enroll PRIMARY KEY (StudentID, CourseID)
+);</code></pre></li>
+      <li><strong>3NF - removing a transitive dependency:</strong> an <code>Employees</code> table stores <code>DepartmentID</code>, <code>DepartmentName</code> and <code>DepartmentBudget</code>. The latter two depend on <code>DepartmentID</code>, not on <code>EmployeeID</code>. Split out a <code>Departments</code> table and keep only the foreign key on <code>Employees</code>:
+<pre><code>CREATE TABLE Departments (
+    DepartmentID     AUTOINCREMENT PRIMARY KEY,
+    DepartmentName   TEXT(255),
+    DepartmentBudget CURRENCY
+);
+CREATE TABLE Employees (
+    EmployeeID   AUTOINCREMENT PRIMARY KEY,
+    EmployeeName TEXT(255),
+    DepartmentID LONG
+);</code></pre></li>
+      <li><strong>Many-to-many relationship → junction table:</strong> "a student can take many courses, a course can have many students" can't be modeled with a foreign key on either side alone. Add a junction (bridge) table - this is exactly what <code>OrderDetails</code> and <code>Enrollments</code> above already are:
+<pre><code>CREATE TABLE StudentCourses (
+    StudentID LONG,
+    CourseID  TEXT(10),
+    DateEnrolled DATETIME,
+    CONSTRAINT PK_SC PRIMARY KEY (StudentID, CourseID)
+);</code></pre></li>
+      <li><strong>Deliberate denormalization for reporting:</strong> after normalizing, a reporting query that joins four tables every time can be slow. Rather than storing redundant data long-term, build a query (or a saved "reporting" table refreshed on a schedule) that flattens it back out - normalize the base tables, denormalize the view:
+<pre><code>SELECT o.OrderID, c.CustomerName, p.ProductName, od.Qty, p.Price, (od.Qty * p.Price) AS LineTotal
+FROM ((Orders AS o
+INNER JOIN Customers AS c ON o.CustomerID = c.CustomerID)
+INNER JOIN OrderDetails AS od ON o.OrderID = od.OrderID)
+INNER JOIN Products AS p ON od.ProductID = p.ProductID;</code></pre></li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li>A quick smell test for 1NF: if you're tempted to store a comma-separated list, a slash-separated pair, or "Product1/Product2" style columns in one field, it needs its own table instead.</li>
+        <li>2NF only ever matters when the primary key is <strong>composite</strong> (two or more columns) - a table with a single-column AutoNumber key is automatically in 2NF as long as it's in 1NF.</li>
+        <li>A fast way to spot a transitive dependency (3NF violation): ask "if I delete every order for a customer, do I lose the customer's phone number too?" If yes, that fact belongs in its own table.</li>
+        <li>Always enforce the relationships you've designed in Access's <strong>Relationships</strong> window with <em>Enforce Referential Integrity</em> switched on - normalization on paper doesn't stop bad data entry without it.</li>
+        <li>Normalize for data entry and integrity, then denormalize (via queries, not by redesigning the tables) for reporting and performance - don't skip straight to a flat table just because the final report needs one.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="indexing">
+    <h2>14. Indexing</h2>
+    <p class="desc">An index is a separate, sorted lookup structure Access maintains alongside a table so it can find matching rows without scanning every record - essential once a table grows past a few hundred rows, and directly controllable from SQL View with <code>CREATE INDEX</code>.</p>
+<pre><code>-- Basic index (speeds up WHERE / ORDER BY / JOIN on this column)
+CREATE INDEX idxCustomerID ON Orders (CustomerID);
+
+-- Unique index (also blocks duplicate values, like a business-rule constraint)
+CREATE UNIQUE INDEX idxEmail ON Customers (Email);
+
+-- Composite (multi-column) index
+CREATE INDEX idxNameState ON Customers (CustomerName, State);
+
+-- Remove an index
+DROP INDEX idxCustomerID ON Orders;</code></pre>
+    <div class="note">A <strong>Primary Key</strong> automatically gets a unique index for free - you never need to <code>CREATE INDEX</code> on top of it. <code>CREATE INDEX</code> is for the columns you filter, sort, or join on that <em>aren't</em> already the primary key.</div>
+
+    <h3 id="indexing-step-by-step-worked-example-indexing-the-normalized-schema">Step-by-Step Worked Example: Indexing the Normalized Schema</h3>
+    <p class="desc">Using the <code>Customers / Products / Orders / OrderDetails</code> schema from the Normalization section, here's how to decide what to index and add it.</p>
+    <ol>
+      <li><strong>Identify the columns actually used to filter, sort, or join.</strong> In this schema that's: <code>Orders.CustomerID</code> (join target), <code>OrderDetails.ProductID</code> (join target), and <code>Customers.Email</code> (must be unique, looked up on login).</li>
+      <li><strong>Foreign keys first</strong> - Access indexes primary keys automatically, but a foreign key column on the "many" side of a relationship is <em>not</em> indexed automatically unless you enforce referential integrity in the Relationships window. Add it explicitly in SQL View:
+<pre><code>CREATE INDEX idxOrdersCustomerID ON Orders (CustomerID);
+CREATE INDEX idxDetailsProductID ON OrderDetails (ProductID);</code></pre></li>
+      <li><strong>Enforce a business rule with a unique index</strong> - no two customers should share an email address:
+<pre><code>CREATE UNIQUE INDEX idxCustomerEmail ON Customers (Email) WITH DISALLOW NULL;</code></pre></li>
+      <li><strong>Composite index for a common two-column filter</strong> - if reports regularly filter Orders by date range <em>and</em> customer, put the more selective column first:
+<pre><code>CREATE INDEX idxOrdersCustDate ON Orders (CustomerID, OrderDate);</code></pre></li>
+      <li><strong>Verify in the Access UI:</strong> open the table in Design View → <em>Indexes</em> button (or ribbon <em>Design → Indexes</em>) to see everything you just created, including which are marked <em>Unique</em> and <em>Primary</em>.</li>
+    </ol>
+
+    <h3 id="indexing-five-examples-different-cases">Five Examples - Different Cases</h3>
+    <ol>
+      <li><strong>Single-column index to speed up a foreign key lookup:</strong>
+<pre><code>CREATE INDEX idxOrdersCustomerID ON Orders (CustomerID);</code></pre>
+Without this, every query joining <code>Orders</code> to <code>Customers</code> forces Access to scan the entire <code>Orders</code> table for each customer.</li>
+      <li><strong>Unique index enforcing a business rule, disallowing Nulls:</strong>
+<pre><code>CREATE UNIQUE INDEX idxProductSKU ON Products (SKU) WITH DISALLOW NULL;</code></pre>
+Guarantees every product has a SKU and that no two products share one - an insert violating either fails outright.</li>
+      <li><strong>Unique index that tolerates Nulls (optional-but-unique field):</strong>
+<pre><code>CREATE UNIQUE INDEX idxSecondaryEmail ON Customers (SecondaryEmail) WITH IGNORE NULL;</code></pre>
+Useful when a field is optional (many customers leave it blank) but must still be unique whenever it <em>is</em> filled in - <code>IGNORE NULL</code> excludes blank entries from the uniqueness check instead of rejecting them.</li>
+      <li><strong>Composite index matching a real query pattern:</strong>
+<pre><code>CREATE INDEX idxOrdersCustDate ON Orders (CustomerID, OrderDate);
+
+-- This query benefits directly - it filters on the leading column
+-- and sorts on the second, both covered by the same index:
+SELECT * FROM Orders
+WHERE CustomerID = 51
+ORDER BY OrderDate DESC;</code></pre></li>
+      <li><strong>Dropping an index that's no longer earning its keep:</strong>
+<pre><code>DROP INDEX idxOrdersCustDate ON Orders;</code></pre>
+Do this for indexes on columns that turned out to be rarely queried but are frequently updated - every index adds overhead to every INSERT/UPDATE/DELETE.</li>
+    </ol>
+    <div class="note">
+      <strong>Tips &amp; hacks:</strong>
+      <ul>
+        <li>Column order matters in a composite index - Access can use the leading column(s) alone (a "left-to-right prefix"), but a query filtering only on the <em>second</em> column of <code>(CustomerID, OrderDate)</code> won't benefit from it.</li>
+        <li>Access has a quiet default: any field named exactly <code>ID</code>, or starting/ending with <code>key</code>, <code>code</code>, <code>num</code>, or <code>id</code> (e.g. <code>ProductID</code>) gets auto-indexed when you create it in Table Design view, unless you turn this off under <em>Options → Object Designers → AutoIndex on Import/Create</em>. Fields created purely via SQL DDL don't get this treatment automatically.</li>
+        <li>Don't index every column "just in case" - each extra index makes every write (INSERT/UPDATE/DELETE) slower because Access has to update all of them, and low-selectivity columns (e.g. a Yes/No field) rarely benefit from an index at all.</li>
+        <li>Run <strong>Database Tools → Analyze Performance</strong> periodically - it will actively suggest missing indexes based on the queries and relationships already in the database.</li>
+        <li>An index on a Memo/Long Text field isn't supported the same way as short text - for searching large text fields, keep a separate short "tag" or "category" column indexed instead of indexing the memo field itself.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="gotchas">
+    <h2>15. Key Access SQL Quirks to Remember</h2>
+    <table>
+      <tr><th>Topic</th><th>Access behavior</th></tr>
+      <tr><td>String concatenation</td><td>Use <code>&amp;</code> (works with Nulls too), not <code>||</code> or <code>CONCAT()</code></td>
+      <tr><td>String literals</td><td>Single quotes <code>'text'</code> (double quotes also generally work)</td></tr>
+      <tr><td>Date literals</td><td><code>#mm/dd/yyyy#</code>, not <code>'yyyy-mm-dd'</code></td></tr>
+      <tr><td>Boolean values</td><td><code>True</code>/<code>False</code> stored as -1/0</td></tr>
+      <tr><td>Identifiers with spaces</td><td>Square brackets <code>[Order Date]</code></td></tr>
+      <tr><td>Row limiting</td><td><code>TOP n</code>, no <code>LIMIT</code>/<code>OFFSET</code></td></tr>
+      <tr><td>Full outer join</td><td>Not supported - simulate with UNION</td></tr>
+      <tr><td>Wildcards</td><td><code>*</code> and <code>?</code> by default, not <code>%</code>/<code>_</code></td></tr>
+      <tr><td>Case sensitivity</td><td>Access is generally case-insensitive for text comparisons</td></tr>
+      <tr><td>Running SQL directly</td><td>Enter/edit in Query Design View → SQL View</td></tr>
+    </table>
+  </section>
+
+  </main>
+</div>
+
+<footer>
+  Microsoft Access SQL Cheat Sheet - quick reference for Access SQL View syntax
+</footer>
+
+<script>
+  (function () {
+    var toggle = document.getElementById('tocToggle');
+    if (!toggle) return;
+
+    // Close the drawer after tapping a link inside the TOC (mobile only)
+    document.querySelectorAll('.toc a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        toggle.checked = false;
+      });
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && toggle.checked) {
+        toggle.checked = false;
+      }
+    });
+
+    // Keep the "Contents" toggle bar pinned directly beneath the sticky
+    // header, whatever height the header renders at (it varies with
+    // viewport width / text wrapping).
+    var headerEl = document.querySelector('header');
+    var toggleBtn = document.querySelector('.toc-toggle-btn');
+    if (headerEl && toggleBtn) {
+      var syncOffset = function () {
+        toggleBtn.style.top = headerEl.offsetHeight + 'px';
+      };
+      syncOffset();
+      window.addEventListener('resize', syncOffset);
+      if (window.ResizeObserver) {
+        new ResizeObserver(syncOffset).observe(headerEl);
+      }
+    }
+  })();
+</script>
+
+<script>
+  // ---- pagination: show one top-level section at a time ----
+  (function () {
+    var main = document.querySelector('main');
+    if (!main) return;
+    var sections = Array.prototype.slice.call(main.querySelectorAll(':scope > section[id]'));
+    if (!sections.length) return;
+
+    function buildNav() {
+      var nav = document.createElement('div');
+      nav.className = 'page-nav';
+
+      var prevBtn = document.createElement('button');
+      prevBtn.type = 'button';
+      prevBtn.className = 'page-prev';
+      prevBtn.textContent = '← Previous';
+
+      var indicator = document.createElement('span');
+      indicator.className = 'page-indicator';
+
+      var nextBtn = document.createElement('button');
+      nextBtn.type = 'button';
+      nextBtn.className = 'page-next';
+      nextBtn.textContent = 'Next →';
+
+      nav.appendChild(prevBtn);
+      nav.appendChild(indicator);
+      nav.appendChild(nextBtn);
+
+      prevBtn.addEventListener('click', function () {
+        var curIdx = sections.findIndex(function (s) { return s.classList.contains('page-active'); });
+        if (curIdx > 0) navigateTo(sections[curIdx - 1].id);
+      });
+      nextBtn.addEventListener('click', function () {
+        var curIdx = sections.findIndex(function (s) { return s.classList.contains('page-active'); });
+        if (curIdx < sections.length - 1) navigateTo(sections[curIdx + 1].id);
+      });
+
+      return nav;
+    }
+
+    // Give every section its own prev/next footer
+    sections.forEach(function (s) { s.appendChild(buildNav()); });
+
+    function syncNavButtons(activeIdx) {
+      sections.forEach(function (s, i) {
+        var nav = s.querySelector(':scope > .page-nav');
+        if (!nav) return;
+        nav.querySelector('.page-prev').disabled = (i === 0);
+        nav.querySelector('.page-next').disabled = (i === sections.length - 1);
+        nav.querySelector('.page-indicator').textContent = 'Page ' + (i + 1) + ' of ' + sections.length;
+      });
+    }
+
+    function updateTocHighlight(activeId) {
+      document.querySelectorAll('.toc a.current-page').forEach(function (a) {
+        a.classList.remove('current-page');
+      });
+      var link = document.querySelector('.toc a[href="#' + activeId + '"]');
+      if (link) {
+        link.classList.add('current-page');
+        var details = link.closest('details');
+        if (details) details.open = true;
+      }
+    }
+
+    function showSectionById(id, skipScroll) {
+      var idx = sections.findIndex(function (s) { return s.id === id; });
+      if (idx === -1) return;
+      sections.forEach(function (s, i) { s.classList.toggle('page-active', i === idx); });
+      syncNavButtons(idx);
+      updateTocHighlight(id);
+      if (!skipScroll) window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }
+
+    function navigateTo(id, skipScroll) {
+      showSectionById(id, skipScroll);
+      history.replaceState(null, '', '#' + id);
+    }
+
+    // Intercept every TOC link: jump to its page instead of scrolling a long document
+    document.querySelectorAll('.toc a').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var href = this.getAttribute('href') || '';
+        if (href.charAt(0) !== '#') return;
+        e.preventDefault();
+        var targetId = href.slice(1);
+        var targetEl = document.getElementById(targetId);
+        if (!targetEl) return;
+        var sectionEl = targetEl.closest('section[id]');
+        if (!sectionEl) return;
+        var isSubLink = sectionEl.id !== targetId;
+        navigateTo(sectionEl.id, isSubLink);
+        if (isSubLink) {
+          requestAnimationFrame(function () {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        }
+      });
+    });
+
+    // Work out the starting page: deep-link hash if present, else the first section
+    var initialId = sections[0].id;
+    if (location.hash) {
+      var h = location.hash.slice(1);
+      var el = document.getElementById(h);
+      if (el) {
+        var sec = el.closest('section[id]');
+        if (sec) initialId = sec.id;
+      }
+    }
+    showSectionById(initialId, true);
+  })();
+
+  // ---- toc search ----
+  (function () {
+    var input = document.getElementById('tocSearchInput');
+    if (!input) return;
+    var tocDetails = document.querySelectorAll('.toc details');
+    var tocLeafs = document.querySelectorAll('.toc-leaf');
+    
+    input.addEventListener('input', function(e) {
+      var query = e.target.value.toLowerCase();
+      
+      tocDetails.forEach(function(detail) {
+        var summary = detail.querySelector('summary').textContent.toLowerCase();
+        var links = detail.querySelectorAll('li a');
+        var matchFound = summary.includes(query);
+        
+        links.forEach(function(link) {
+          if (link.textContent.toLowerCase().includes(query)) {
+            matchFound = true;
+            link.style.display = '';
+          } else {
+            link.style.display = query ? 'none' : '';
+          }
+        });
+        
+        detail.style.display = matchFound ? '' : 'none';
+        if (query && matchFound) {
+          detail.open = true;
+        } else if (!query) {
+          detail.open = false;
+        }
+      });
+      
+      tocLeafs.forEach(function(leaf) {
+        if (leaf.textContent.toLowerCase().includes(query)) {
+          leaf.style.display = '';
+        } else {
+          leaf.style.display = query ? 'none' : '';
+        }
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
