@@ -524,6 +524,18 @@
   .modal-head .modal-head-left{
     display:flex;align-items:center;gap:.7rem;
   }
+  .modal-head-right{display:flex;align-items:center;gap:.65rem;}
+  .modal-fullscreen{
+    display:inline-flex;align-items:center;gap:.35rem;
+    background:var(--panel-2);color:var(--ink);border:1px solid var(--line);
+    border-radius:6px;padding:.3rem .55rem;font:12px 'IBM Plex Mono',monospace;
+    cursor:pointer;transition:.15s ease;
+  }
+  .modal-fullscreen:hover{border-color:var(--cyan);color:var(--cyan);}
+  .modal-overlay:fullscreen{padding:0;overflow:hidden;background:var(--bg);}
+  .modal-overlay:fullscreen .modal-box{width:100%;max-width:none;height:100%;max-height:none;border:0;border-radius:0;box-shadow:none;}
+  .modal-overlay:fullscreen .modal-head{border-radius:0;}
+  .modal-overlay:fullscreen .modal-body{flex:1;min-height:0;}
   .modal-timer{
     font-family:'IBM Plex Mono',monospace;font-size:12.5px;
     font-variant-numeric:tabular-nums;
@@ -688,9 +700,12 @@
     <div class="modal-head">
       <div class="modal-head-left">
         <span>Mock paper</span>
-        <span class="modal-timer" id="mock-timer">180:00</span>
       </div>
-      <button class="modal-close" id="mock-modal-close" aria-label="Close">✕</button>
+      <div class="modal-head-right">
+        <span class="modal-timer" id="mock-timer">180:00</span>
+        <button class="modal-fullscreen" id="mock-modal-fullscreen" type="button" aria-label="Enter full screen" title="Enter full screen">⛶</button>
+        <button class="modal-close" id="mock-modal-close" aria-label="Close">✕</button>
+      </div>
     </div>
     <div class="modal-body" id="mock-container"></div>
   </div>
@@ -896,6 +911,7 @@
   const mockPapers = [
 {
       title:"Mock 1 - Applied Schema Design", subtitle:"Normalisation from an unnormalised sales-invoice extract, ER modelling of the resulting schema, and Microsoft Access SQL reporting over a conference database.",
+      summary:"Invoice normalisation, ER diagrams and conference SQL.",
       duration:180, marks:{mcq:10, norm:15, erd:10, sql:20},
       mcq:[
         ["Which of the following best describes a weak entity in ER modelling?",["An entity with no attributes","An entity that cannot be uniquely identified without the primary key of another entity","An entity involved in a many-to-many relationship","An entity with only foreign keys"],1,"A weak entity has no candidate key of its own and borrows part of its identifier from its owner entity."],
@@ -915,6 +931,7 @@
     },
 {
       title:"Mock 2 - Dependencies & Reporting", subtitle:"Resolving a chain of transitive dependencies in a single-key property table, ER design of the result, and Microsoft Access SQL over a courier-delivery database.",
+      summary:"Transitive dependencies, ER diagrams and courier SQL.",
       duration:180, marks:{mcq:10, norm:15, erd:10, sql:20},
       mcq:[
         ["Which normal form requires that every determinant in a table be a candidate key (i.e. eliminates dependencies on non-candidate-key attributes)?",["2NF","3NF","BCNF","1NF"],2,"BCNF strengthens 3NF by requiring every determinant to be a candidate key, closing cases 3NF still allows."],
@@ -934,6 +951,7 @@
     },
 {
       title:"Mock 3 - Keys, Hierarchies & SQL", subtitle:"Second- and third-normal-form decomposition of a student-results table, ER design of the result, and Microsoft Access SQL over an organisational hierarchy with a recursive relationship.",
+      summary:"2NF/3NF, ER diagrams and hierarchy SQL.",
       duration:180, marks:{mcq:10, norm:15, erd:10, sql:20},
       mcq:[
         ["Which normalisation concern does 4th Normal Form (4NF) primarily address?",["Partial dependencies on a composite key","Transitive dependencies between non-key attributes","Independent multivalued dependencies within a single relation","Missing primary keys"],2,"4NF removes independent multivalued dependencies, which can cause redundancy even in a table that is already in BCNF."],
@@ -1026,6 +1044,7 @@
   const mockModalOverlay = document.getElementById('mock-modal-overlay');
   const mockModalClose = document.getElementById('mock-modal-close');
   const mockTimerEl = document.getElementById('mock-timer');
+  const mockFullscreenButton = document.getElementById('mock-modal-fullscreen');
 
   let mockTimerInterval = null;
   let mockTimerDeadline = null;
@@ -1060,6 +1079,23 @@
   }
 
 
+  function updateMockFullscreenButton(){
+    const isFullscreen = document.fullscreenElement === mockModalOverlay;
+    const label = isFullscreen ? 'Exit full screen' : 'Enter full screen';
+    mockFullscreenButton.setAttribute('aria-label', label);
+    mockFullscreenButton.title = label;
+  }
+  async function toggleMockFullscreen(){
+    try{
+      if(document.fullscreenElement === mockModalOverlay) await document.exitFullscreen();
+      else if(!document.fullscreenElement) await mockModalOverlay.requestFullscreen();
+    }catch(error){
+      console.warn('Full screen mode is unavailable.', error);
+    }
+  }
+  document.addEventListener('fullscreenchange', updateMockFullscreenButton);
+  mockFullscreenButton.addEventListener('click', toggleMockFullscreen);
+
   function openMockModal(i){
     renderSelectedPaper(i);
     mockModalOverlay.classList.add('open');
@@ -1071,6 +1107,7 @@
     mockModalOverlay.classList.remove('open');
     document.body.style.overflow = '';
     stopMockTimer();
+    if(document.fullscreenElement === mockModalOverlay) document.exitFullscreen().catch(()=>{});
   }
   mockModalClose.addEventListener('click', closeMockModal);
   mockModalOverlay.addEventListener('click', e=>{
@@ -1083,7 +1120,7 @@
   mockPapers.forEach((p,i)=>{
     const pill = document.createElement('button');
     pill.className = 'pill' + (i===0 ? ' active' : '');
-    pill.innerHTML = `<b>${p.title}</b><span class="sub">${p.subtitle}</span>`;
+    pill.innerHTML = `<b>${p.title}</b><span class="sub">${p.summary}</span>`;
     pill.addEventListener('click', ()=>{
       document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
       pill.classList.add('active');

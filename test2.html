@@ -3,36 +3,984 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Test 2 | INFO2001A</title>
+<title>Test 2 | Systems Design + Database Design | INFO2001A</title>
 <link rel="icon" type="image/png" href="icons8-server-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css">
-<script src="assets/site-nav.js" defer></script>
+<link rel="stylesheet" href="assets/grid-bg.css">
+<style>
+  :root{
+    --bg:#10141c;
+    --panel:#171d29;
+    --panel-2:#1c2433;
+    --line:#2a3242;
+    --ink:#d7dee8;
+    --muted:#8a94a3;
+    --card:#f3ebd8;
+    --card-ink:#241f14;
+    --card-line:#d9cba3;
+    --cyan:#6fa8ea;
+    --cyan-ink:#0d1526;
+    --amber:#e8a04c;
+    --amber-ink:#2b1704;
+    --blue:#6fa8ea;
+    --blue-ink:#0d1526;
+    --yellow:#e8a04c;
+    --yellow-ink:#2b1704;
+    --green:#5cb87a;
+    --rose:#e2665b;
+    --radius:10px;
+  }
+  *{
+    box-sizing:border-box;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--muted);
+  }
+  body{
+    margin:0;
+    background: var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.6;
+  }
+  .wrap{max-width:980px;margin:0 auto;padding:2.5rem 1.5rem 5rem;}
+
+  /* ---- header, letterhead-style ---- */
+  header{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--panel);
+    padding:1.75rem 2rem;
+    margin-bottom:2rem;
+    position:relative;
+    overflow:hidden;
+  }
+  header::before{
+    content:"";
+    position:absolute;top:0;left:0;right:0;height:4px;
+    background:linear-gradient(90deg,var(--blue) 0 50%, var(--yellow) 50% 100%);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:.08em;
+    color:var(--muted);
+    text-transform:uppercase;
+    margin:0 0 .6rem;
+  }
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(26px,4vw,36px);
+    margin:0 0 .5rem;
+    letter-spacing:-.01em;
+  }
+  header p.sub{color:var(--muted);margin:0;font-size:15px;max-width:60ch;}
+  .meta-row{
+    display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;
+    margin-top:1.1rem;padding-top:1.1rem;
+    border-top:1px dashed var(--line);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;color:var(--muted);
+  }
+  .meta-row b{color:var(--ink);font-weight:500;}
+
+  /* ---- app shell: collapsible hover sidebar + content column ---- */
+  :root{
+    --sb-collapsed:3.05rem;
+    --sb-expanded:15rem;
+  }
+  .nav-toggle-state{display:none;}
+  .nav-toggle-btn{
+    display:none;align-items:center;gap:.5rem;
+    background:var(--panel);border-bottom:1px solid var(--line);
+    color:var(--cyan);font-family:'Space Grotesk', sans-serif;
+    font-weight:600;font-size:.85rem;
+    padding:.75rem 1rem;cursor:pointer;
+    position:sticky;top:0;z-index:1001;user-select:none;
+  }
+  .nav-toggle-icon{font-size:1.05rem;line-height:1;}
+  .nav-toggle-icon-open{display:none;}
+  .nav-toggle-state:checked ~ .nav-toggle-btn .nav-toggle-icon-closed{display:none;}
+  .nav-toggle-state:checked ~ .nav-toggle-btn .nav-toggle-icon-open{display:inline;}
+  .nav-toggle-state:checked ~ .nav-toggle-btn{display:none;}
+  .nav-sidebar-overlay{display:none;}
+  .nav-sidebar-close-btn{display:none;}
+  body:has(.nav-toggle-state:checked){overflow:hidden;}
+
+  .view-shell{display:flex;align-items:stretch;min-height:100vh;}
+
+  /* The <nav> only reserves the collapsed rail in the layout; the visible
+     panel is fixed and grows over the content on hover (no layout shift). */
+  .view-sidebar{
+    flex:0 0 var(--sb-collapsed);
+    width:var(--sb-collapsed);
+    position:relative;z-index:40;
+  }
+  .sb-panel{
+    position:fixed;top:0;left:0;
+    width:var(--sb-collapsed);
+    height:100vh;height:100dvh;
+    display:flex;flex-direction:column;
+    background:var(--panel);
+    border-right:1px solid var(--line);
+    color:var(--muted);
+    overflow:hidden;
+    transition:width .2s ease-out, box-shadow .2s ease-out;
+  }
+
+  /* header: avatar + name + chevrons (org-switcher style) */
+  .sb-header{
+    position:relative;flex:0 0 54px;height:54px;
+    display:flex;align-items:center;
+    padding:.5rem;
+    border-bottom:1px solid var(--line);
+  }
+  .sb-org{
+    display:flex;align-items:center;gap:.5rem;
+    height:2.25rem;max-width:100%;
+    padding:0 .5rem;
+    background:transparent;color:var(--ink);
+    border:none;border-radius:6px;cursor:pointer;
+    font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;
+    white-space:nowrap;
+    transition:background .15s;
+  }
+  .sb-org:hover,.sb-org[aria-expanded="true"]{background:var(--panel-2);}
+  .sb-avatar{
+    display:grid;place-items:center;flex-shrink:0;
+    width:16px;height:16px;border-radius:4px;
+    background:var(--panel-2);color:var(--ink);
+    font-size:10px;font-weight:600;line-height:1;
+  }
+  .sb-org:hover .sb-avatar,.sb-org[aria-expanded="true"] .sb-avatar{background:var(--line);}
+  .sb-chevrons{width:16px;height:16px;flex-shrink:0;color:var(--muted);opacity:.6;}
+
+  /* dropdown */
+  .sb-menu{
+    position:absolute;top:calc(100% + 4px);left:.5rem;right:.5rem;z-index:50;
+    padding:.25rem;
+    background:var(--panel-2);
+    border:1px solid var(--line);border-radius:8px;
+    box-shadow:0 10px 30px rgba(0,0,0,.45);
+    animation:sbMenuIn .12s ease-out;
+  }
+  .sb-menu[hidden]{display:none;}
+  @keyframes sbMenuIn{
+    from{opacity:0;transform:translateY(-4px) scale(.97);}
+    to{opacity:1;transform:none;}
+  }
+  .sb-menu-label{
+    padding:.375rem .5rem;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  }
+  .sb-menu-item{
+    display:flex;align-items:center;gap:.5rem;
+    width:100%;padding:.375rem .5rem;
+    background:transparent;color:var(--ink);
+    border:none;border-radius:5px;cursor:pointer;text-align:left;
+    font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;
+  }
+  .sb-menu-item:hover,.sb-menu-item:focus-visible{background:var(--line);outline:none;}
+  .sb-menu-item svg{width:16px;height:16px;flex-shrink:0;}
+  .sb-menu-item .txt{display:flex;flex-direction:column;min-width:0;line-height:1.25;}
+  .sb-menu-item .txt small{
+    color:var(--muted);font-weight:400;font-size:12px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+
+  /* nav list */
+  .sb-scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:.5rem;}
+  .sb-nav{display:flex;flex-direction:column;gap:.25rem;}
+  .sb-sep{height:1px;background:var(--line);flex-shrink:0;}
+  .sb-foot{padding:.5rem;}
+  .sb-item{
+    display:flex;align-items:center;
+    width:100%;height:2rem;
+    padding:.375rem .5rem;
+    background:transparent;color:var(--muted);
+    border:none;border-radius:6px;cursor:pointer;text-align:left;text-decoration:none;
+    font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;
+    white-space:nowrap;
+    transition:background .15s,color .15s;
+  }
+  .sb-item:hover{background:var(--panel-2);color:var(--ink);}
+  .sb-item.active{background:var(--panel-2);color:var(--cyan);}
+  .sb-item:focus-visible,.sb-org:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px;}
+  .sb-item .side-icon{display:flex;flex-shrink:0;width:16px;height:16px;color:inherit;}
+  .sb-item .side-icon svg{width:100%;height:100%;}
+  .sb-item .side-label{margin-left:.5rem;}
+  .sb-badge{
+    margin-left:.5rem;padding:0 .375rem;
+    font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;line-height:16px;
+    color:var(--cyan);background:rgba(111,168,234,.14);border-radius:4px;
+  }
+  .sb-ext{width:14px;height:14px;margin-left:auto;flex-shrink:0;opacity:.5;}
+
+  /* labels fade/slide in with a small stagger when the rail expands */
+  .sb-fade{
+    opacity:0;transform:translateX(-20px);
+    transition:opacity .2s ease-out, transform .2s ease-out;
+  }
+  .sb-chevrons.sb-fade{opacity:0;}
+
+  @media(min-width:901px){
+    .view-sidebar:is(:hover,:has(:focus-visible),.menu-open) .sb-panel{
+      width:var(--sb-expanded);
+      box-shadow:6px 0 24px rgba(0,0,0,.35);
+    }
+    .view-sidebar:is(:hover,:has(:focus-visible),.menu-open) .sb-fade{
+      opacity:1;transform:none;
+      transition-delay:calc(var(--i,0) * 30ms + 20ms);
+    }
+    .view-sidebar:is(:hover,:has(:focus-visible),.menu-open) .sb-chevrons.sb-fade{opacity:.6;}
+    .view-sidebar:is(:hover,:has(:focus-visible),.menu-open) .sb-ext.sb-fade{opacity:.5;}
+  }
+
+  .view-outer{flex:1;min-width:0;}
+  section.view{display:none;}
+  section.view.active{display:block;}
+
+  @media(max-width:900px){
+    .nav-toggle-btn{display:flex;}
+    .view-shell{flex-direction:column;}
+    .view-sidebar{position:static;z-index:auto;flex:none;width:0;height:0;}
+    .sb-panel{
+      width:82%;max-width:280px;
+      transform:translateX(-100%);
+      transition:transform .28s ease;
+      z-index:1000;
+      box-shadow:4px 0 18px rgba(0,0,0,.45);
+    }
+    .nav-toggle-state:checked ~ .view-shell .sb-panel{transform:translateX(0);}
+    /* the drawer is always "expanded" on small screens */
+    .sb-fade{opacity:1;transform:none;}
+    .sb-chevrons.sb-fade{opacity:.6;}
+    .sb-ext.sb-fade{opacity:.5;}
+    .nav-sidebar-overlay{
+      display:block;position:fixed;inset:0;
+      background:rgba(4,7,14,.6);
+      opacity:0;pointer-events:none;
+      transition:opacity .28s ease;
+      z-index:999;
+    }
+    .nav-toggle-state:checked ~ .view-shell .nav-sidebar-overlay{
+      opacity:1;pointer-events:auto;
+    }
+    .nav-sidebar-close-btn{
+      display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+      flex:0 0 auto;
+      padding:.6rem .85rem;
+      color:var(--cyan);font-weight:600;font-size:.85rem;
+      border-bottom:1px solid var(--line);
+      cursor:pointer;user-select:none;
+    }
+    .nav-sidebar-close-btn .icon{font-size:1.1rem;line-height:1;}
+    .view-outer{max-width:100%;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .sb-panel,.sb-fade,.sb-menu{transition:none !important;animation:none !important;}
+  }
+
+  h2.section-title{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:20px;font-weight:600;margin:0 0 .3rem;
+  }
+  p.section-desc{color:var(--muted);font-size:14.5px;margin:0 0 1.5rem;}
+
+  /* ---- flashcards ---- */
+  #flash-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem;}
+  #flash-controls .count{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted);}
+  #flash-controls button{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+    background:transparent;color:var(--cyan);border:1px solid var(--cyan);
+    border-radius:6px;padding:.45rem .9rem;cursor:pointer;
+  }
+  .select-wrap{position:relative;margin-bottom:1.25rem;max-width:320px;}
+  .cyber-select{
+    appearance:none;-webkit-appearance:none;-moz-appearance:none;
+    width:100%;font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+    background:transparent;color:var(--cyan);
+    border:1px solid var(--line);border-radius:8px;
+    padding:.6rem 2.2rem .6rem .9rem;cursor:pointer;
+    transition:border-color .15s;
+  }
+  .cyber-select:hover,.cyber-select:focus{border-color:var(--cyan);outline:none;}
+  .cyber-select option{background:var(--bg);color:var(--cyan);}
+  .select-wrap::after{
+    content:'';position:absolute;right:.95rem;top:50%;
+    width:7px;height:7px;
+    border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);
+    transform:translateY(-70%) rotate(45deg);
+    pointer-events:none;
+  }
+  @media(max-width:600px){
+    #flash-controls{gap:.6rem;}
+    .select-wrap{max-width:100%;}
+  }
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:1rem;
+    perspective:1200px;
+  }
+  .flashcard{
+    position:relative;height:150px;cursor:pointer;
+  }
+  .flashcard .inner{
+    position:absolute;inset:0;
+    transform-style:preserve-3d;
+    transition:transform .5s cubic-bezier(.4,.2,.2,1);
+  }
+  .flashcard.flipped .inner{transform:rotateY(180deg);}
+  .face{
+    position:absolute;inset:0;
+    backface-visibility:hidden;
+    border-radius:9px;
+    padding:1rem 1.1rem;
+    display:flex;flex-direction:column;justify-content:center;
+    background:var(--card);
+    color:var(--card-ink);
+    border:1px solid var(--card-line);
+    box-shadow:0 1px 0 var(--card-line), 3px 3px 0 -1px rgba(0,0,0,.15);
+  }
+  .face .tag{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    letter-spacing:.06em;text-transform:uppercase;
+    color:#8a7a4a;margin-bottom:.45rem;
+  }
+  .face.front p{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;margin:0;}
+  .face.back{transform:rotateY(180deg);background:#efe6cd;}
+  .face.back p{font-size:13.3px;margin:0;}
+  .flashcard .hint{position:absolute;bottom:8px;right:10px;font-size:10.5px;font-family:'IBM Plex Mono',monospace;color:#a89968;}
+
+  /* ---- quiz ---- */
+  .quiz-score{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;
+    background:var(--panel-2);border:1px solid var(--line);
+    border-radius:8px;padding:.6rem 1rem;display:inline-block;margin-bottom:1.25rem;
+  }
+  .q-block{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:1.1rem 1.3rem;margin-bottom:1rem;
+  }
+  .q-block .q-text{font-weight:500;margin:0 0 .8rem;font-size:15px;}
+  .q-block .q-text .qnum{color:var(--cyan);font-family:'IBM Plex Mono',monospace;margin-right:.4rem;}
+  .options{display:flex;flex-direction:column;gap:.5rem;}
+  .opt{
+    text-align:left;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    color:var(--ink);
+    border-radius:7px;
+    padding:.6rem .85rem;
+    font-size:14px;
+    cursor:pointer;
+    font-family:'IBM Plex Sans',sans-serif;
+  }
+  .opt:hover{border-color:var(--cyan);}
+  .opt.correct{border-color:var(--green);background:rgba(92,184,122,.15);}
+  .opt.incorrect{border-color:var(--rose);background:rgba(226,102,91,.15);}
+  .opt[disabled]{cursor:default;}
+  .explain{margin-top:.65rem;font-size:13px;color:var(--muted);display:none;}
+  .explain.show{display:block;}
+
+  /* ---- mock paper selector ---- */
+  .pill-row{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:.85rem;
+    margin-bottom:1.5rem;
+    align-items:stretch;
+  }
+  .pill{
+    display:flex;flex-direction:column;gap:.35rem;
+    background:var(--panel);color:var(--ink);
+    border:1px solid var(--line);border-radius:14px;
+    padding:1rem 1.15rem;cursor:pointer;text-align:left;
+    transition:.15s ease;
+  }
+  .pill:hover{border-color:var(--cyan);}
+  .pill b{
+    font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14.5px;
+    letter-spacing:-.01em;
+  }
+  .pill span.sub{
+    display:block;color:var(--muted);font-size:12.5px;
+    font-family:'IBM Plex Sans',sans-serif;line-height:1.45;
+  }
+  .pill.active{background:var(--cyan);color:var(--bg);border-color:var(--cyan);}
+  .pill.active span.sub{color:var(--cyan-ink);}
+
+  @media(max-width:820px){
+    .pill-row{grid-template-columns:repeat(2,1fr);}
+  }
+  @media(max-width:520px){
+    .pill-row{grid-template-columns:1fr;}
+  }
+
+  /* ---- mock test ---- */
+  .exam-section{
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+    margin-bottom:1.75rem;
+    overflow:hidden;
+  }
+  .exam-section .head{
+    padding:.85rem 1.3rem;
+    font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .exam-section.blue .head{background:rgba(111,168,234,.16);color:#cfe1fa;border-bottom:1px solid var(--line);}
+  .exam-section.yellow .head{background:rgba(232,160,76,.16);color:#f3d3a3;border-bottom:1px solid var(--line);}
+  .exam-section .badge{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    padding:.25rem .55rem;border-radius:5px;letter-spacing:.05em;
+  }
+  .exam-section.blue .badge{background:var(--blue);color:#fff;}
+  .exam-section.yellow .badge{background:var(--yellow);color:var(--yellow-ink);}
+  .exam-body{padding:1.3rem;background:var(--panel);}
+  .scenario{
+    background:var(--panel-2);border:1px solid var(--line);border-radius:8px;
+    padding:1rem 1.15rem;font-size:14px;color:var(--muted);margin-bottom:1.1rem;
+  }
+  .scenario b{color:var(--ink);}
+  .diagram-wrap{
+    background:#fff;border:1px solid var(--line);border-radius:8px;
+    padding:1rem;margin-bottom:1.1rem;text-align:center;
+  }
+  .diagram-wrap img{max-width:100%;height:auto;display:inline-block;}
+  .diagram-wrap svg{max-width:100%;height:auto;display:inline-block;}
+  .rel{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;
+    background:#0d1420;border:1px solid var(--line);border-radius:6px;
+    padding:.7rem .9rem;margin:.4rem 0;color:#cfe1fa;
+  }
+  .qitem{margin-bottom:1.25rem;}
+  .qitem .qtitle{font-weight:500;font-size:14.5px;margin:0 0 .55rem;}
+  .qitem .qtitle .marks{color:var(--muted);font-weight:400;font-size:12.5px;}
+  .reveal-btn{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;
+    background:transparent;border:1px solid var(--cyan);color:var(--cyan);
+    border-radius:6px;padding:.4rem .8rem;cursor:pointer;
+  }
+  .model-answer{
+    display:none;margin-top:.8rem;font-size:13.5px;
+    background:#0d1420;border:1px solid var(--line);
+    border-radius:6px;padding:.85rem 1rem;color:#d5dfef;
+  }
+  .model-answer.show{display:block;}
+  .model-answer .rel{color:#cfe1fa;}
+  code.inline{
+    font-family:'IBM Plex Mono',monospace;background:#0d1420;
+    padding:.1rem .35rem;border-radius:4px;font-size:12.5px;color:#f3d3a3;
+  }
+  pre.sql{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+    background:#0d1420;border:1px solid var(--line);border-radius:6px;
+    padding:.8rem 1rem;overflow-x:auto;color:#cfe1fa;margin:.5rem 0 0;
+  }
+  svg text{font-family:'IBM Plex Mono',monospace;}
+
+  /* ---- mock paper modal ---- */
+  .modal-overlay{
+    position:fixed;inset:0;z-index:9999;
+    background:rgba(6,10,18,.72);
+    display:none;align-items:flex-start;justify-content:center;
+    padding:3.5rem 1.25rem;overflow-y:auto;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    position:relative;width:100%;max-width:900px;
+    background:var(--bg);border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 24px 70px rgba(0,0,0,.55);
+    display:flex;flex-direction:column;max-height:100%;
+  }
+  .modal-head{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:1rem;padding:.9rem 1.1rem;
+    border-bottom:1px solid var(--line);
+    position:sticky;top:0;background:var(--bg);border-radius:14px 14px 0 0;
+  }
+  .modal-head span{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  }
+  .modal-head .modal-head-left{
+    display:flex;align-items:center;gap:.7rem;
+  }
+  .modal-head-right{display:flex;align-items:center;gap:.65rem;}
+  .modal-fullscreen{
+    display:inline-flex;align-items:center;gap:.35rem;
+    background:var(--panel-2);color:var(--ink);border:1px solid var(--line);
+    border-radius:6px;padding:.3rem .55rem;font:12px 'IBM Plex Mono',monospace;
+    cursor:pointer;transition:.15s ease;
+  }
+  .modal-fullscreen:hover{border-color:var(--cyan);color:var(--cyan);}
+  .modal-overlay:fullscreen{padding:0;overflow:hidden;background:var(--bg);}
+  .modal-overlay:fullscreen .modal-box{width:100%;max-width:none;height:100%;max-height:none;border:0;border-radius:0;box-shadow:none;}
+  .modal-overlay:fullscreen .modal-head{border-radius:0;}
+  .modal-overlay:fullscreen .modal-body{flex:1;min-height:0;}
+  .modal-timer{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+    font-variant-numeric:tabular-nums;
+    background:var(--panel-2);border:1px solid var(--line);color:var(--cyan);
+    border-radius:6px;padding:.3rem .6rem;letter-spacing:.02em;
+    display:inline-flex;align-items:center;gap:.4rem;
+  }
+  .modal-timer::before{
+    content:"";width:6px;height:6px;border-radius:50%;
+    background:var(--cyan);flex-shrink:0;
+  }
+  .modal-timer.low{color:var(--amber);border-color:var(--amber);}
+  .modal-timer.low::before{background:var(--amber);}
+  .modal-timer.done{color:var(--rose);border-color:var(--rose);}
+  .modal-timer.done::before{background:var(--rose);animation:none;}
+  .modal-close{
+    background:var(--panel-2);color:var(--ink);border:1px solid var(--line);
+    border-radius:8px;width:32px;height:32px;font-size:15px;line-height:1;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;transition:.15s ease;
+  }
+  .modal-close:hover{border-color:var(--rose);color:var(--rose);}
+  .modal-body{overflow-y:auto;padding:1.4rem 1.5rem 1.75rem;}
+
+  /* ---- footer ---- */
+  footer.site-footer{
+    display:flex;justify-content:center;margin-top:2.5rem;
+    padding-top:1.5rem;border-top:1px dashed var(--line);
+  }
+  footer.site-footer a{
+    display:inline-flex;align-items:center;gap:.5rem;
+    color:var(--muted);text-decoration:none;
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+    padding:.5rem .9rem;border-radius:8px;
+    border:1px solid transparent;transition:.15s ease;
+  }
+  footer.site-footer a:hover{color:var(--ink);border-color:var(--line);background:var(--panel);}
+  footer.site-footer svg{width:18px;height:18px;fill:currentColor;flex-shrink:0;}
+
+  @media(max-width:600px){
+    header{padding:1.4rem 1.2rem;}
+    .exam-body{padding:1rem;}
+    .modal-overlay{padding:1.5rem .6rem;}
+    .modal-body{padding:1.1rem 1rem 1.5rem;}
+  }
+
+  /* ---- Test 2 additions (same palette / components as Test 1) ---- */
+  .tbl-scroll{overflow-x:auto;margin:.4rem 0 .9rem;}
+  table.flow,table.unf,table.ans-table{border-collapse:collapse;width:100%;font-size:13.5px;}
+  table.flow th,table.flow td,table.unf th,table.unf td,table.ans-table th,table.ans-table td{
+    border:1px solid var(--line);padding:.5rem .7rem;text-align:left;vertical-align:top;
+  }
+  table.flow th,table.unf th,table.ans-table th{background:var(--panel-2);font-family:'Space Grotesk',sans-serif;font-weight:600;color:#cfe1fa;}
+  table.flow td{background:var(--panel);}
+  table.unf{font-family:'IBM Plex Mono',monospace;font-size:11.5px;}
+  table.unf td{background:var(--panel);white-space:nowrap;}
+  table.unf th,table.unf td{padding:.4rem .6rem;}
+  table.unf th.rg,table.unf td.rg{background:rgba(232,160,76,.16);}
+  table.unf th.rg{color:#f3d3a3;}
+  table.ans-table td:first-child{white-space:nowrap;font-weight:500;color:#cfe1fa;}
+  table.ans-table ul{margin:0;padding-left:1.1rem;}
+  .diagram-wrap.wide{overflow-x:auto;text-align:left;}
+  .diagram-wrap.wide svg{max-width:none;}
+  .diagram-wrap svg.dg text{font-family:'IBM Plex Sans',sans-serif;}
+  table.paper-tbl{border-collapse:collapse;width:100%;font-size:14px;margin:.5rem 0;}
+  table.paper-tbl td{border:1px solid var(--ink);padding:.45rem .7rem;height:2.4rem;}
+  table.paper-tbl td:last-child{text-align:center;width:28%;color:var(--muted);}
+  .scroll-hint{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6b7686;text-align:left;margin-bottom:.4rem;}
+  .note-small{font-size:12.5px !important;color:var(--muted);}
+  .model-answer ul{margin:.4rem 0 .6rem;padding-left:1.2rem;}
+  .model-answer p{margin:.6rem 0 0;}
+  .part-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;margin:1.6rem 0 .8rem;padding-top:1.1rem;border-top:1px dashed var(--line);}
+  .part-title:first-child{margin-top:0;padding-top:0;border-top:0;}
+  .instr{font-size:13.5px;color:var(--muted);}
+  .instr ol{margin:.4rem 0 0;padding-left:1.2rem;}
+  .time-hint{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);margin:0 0 1rem;}
+  .qitem .qnum-tag{color:var(--cyan);font-family:'IBM Plex Mono',monospace;margin-right:.45rem;}
+  @media(max-width:600px){ table.flow{font-size:12.5px;} }
+</style>
 </head>
 <body>
+<input type="checkbox" id="navToggle" class="nav-toggle-state">
+<label for="navToggle" class="nav-toggle-btn" aria-label="Toggle menu">
+  <span class="nav-toggle-icon nav-toggle-icon-closed">&#9776;</span>
+  <span class="nav-toggle-icon nav-toggle-icon-open">&#10005;</span>
+  <span>Menu</span>
+</label>
 
-<main class="page" style="--accent:#5cb87a">
-  <p class="eyebrow">Test 2 &middot; INFO2001A</p>
-  <h1 class="page-title">Test 2</h1>
-  <p class="page-sub">SQL + Database Design + System Design + C#</p>
+<div class="view-shell">
+  <label for="navToggle" class="nav-sidebar-overlay" aria-hidden="true"></label>
+  <nav class="view-sidebar" aria-label="Primary">
+    <div class="sb-panel">
+      <label for="navToggle" class="nav-sidebar-close-btn" aria-label="Close menu">
+        <span>Menu</span> <span class="icon">&#10005;</span>
+      </label>
 
-  <section class="soon">
-    <span class="badge"><i></i>In the works</span>
-    <h2>Test 2 content is being built</h2>
-    <p>The C# + SQL cards will land here first, followed by flashcards, quizzes and mock papers covering system design. Check back soon.</p>
-    <a class="back" href="index.html">&larr; Back to home</a>
-    <img class="art" src="assets/art-test2.svg" alt="" aria-hidden="true">
+      <div class="sb-header">
+        <button type="button" class="sb-org" id="sbOrgBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="sbOrgMenu">
+          <span class="sb-avatar" aria-hidden="true">I</span>
+          <span class="sb-fade" style="--i:0">INFO2001A</span>
+          <svg class="sb-chevrons sb-fade" style="--i:1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+        </button>
+        <div class="sb-menu" id="sbOrgMenu" role="menu" aria-label="Mock papers" hidden></div>
+      </div>
+
+      <div class="sb-scroll">
+        <div class="sb-nav">
+          <a class="sb-item" href="index.html">
+            <span class="side-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H10v-5.5h4v5.5h3.5a1 1 0 0 0 1-1V10"/></svg></span>
+            <span class="side-label sb-fade" style="--i:2">Home</span>
+          </a>
+          <div class="sb-sep" role="separator"></div>
+          <button type="button" class="sb-item active" data-view="mock" aria-current="page">
+            <span class="side-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span>
+            <span class="side-label sb-fade" style="--i:2">Mock test</span>
+            <span class="sb-badge sb-fade" id="mock-count" style="--i:3">3</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="sb-foot">
+        <a class="sb-item" href="https://github.com/sphe-hlongwa" target="_blank" rel="noopener noreferrer">
+          <span class="side-icon"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></span>
+          <span class="side-label sb-fade" style="--i:7">sphe-hlongwa</span>
+          <svg class="sb-ext sb-fade" style="--i:8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="view-outer">
+  <div class="wrap">
+
+  <header>
+    <p class="eyebrow">Test 2 &middot; Systems Design + Database Design &middot; INFO2001A</p>
+    <h1>Systems Design &amp; Database Mock Exams</h1>
+    <div class="meta-row">
+      <span>Topics: <b>Normalisation &middot; ERDs &middot; Access SQL &middot; 3-layer sequence diagrams &middot; UI &middot; Reports</b></span>
+      <span>Mock set: <b>1 paper &middot; 100 marks</b></span>
+    </div>
+  </header>
+
+    <main class="view-content">
+
+  <!-- MOCK TEST -->
+  <section class="view active" id="mock">
+    <h2 class="section-title">Mock papers</h2>
+    <p class="section-desc">A full 100-mark paper in the new three-section format (A: concepts, B: database analysis &amp; SQL, C: systems design). Select a paper to open it &mdash; the timer starts at once.</p>
+    <div class="pill-row" id="mock-pills"></div>
   </section>
 
-  <footer class="site-footer">
-    <a href="https://github.com/sphe-hlongwa" target="_blank" rel="noopener noreferrer">
-      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-      <span>sphe-hlongwa</span>
-    </a>
-  </footer>
-</main>
 
+    </main>
+  </div>
+  <!-- closes .wrap -->
+  </div>
+  <!-- closes .view-outer -->
+</div>
+<!-- closes .view-shell -->
+
+<!-- MOCK PAPER MODAL -->
+<div class="modal-overlay" id="mock-modal-overlay">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-label="Mock paper">
+    <div class="modal-head">
+      <div class="modal-head-left">
+        <span>Mock paper</span>
+      </div>
+      <div class="modal-head-right">
+        <span class="modal-timer" id="mock-timer">180:00</span>
+        <button class="modal-fullscreen" id="mock-modal-fullscreen" type="button" aria-label="Enter full screen" title="Enter full screen">⛶</button>
+        <button class="modal-close" id="mock-modal-close" aria-label="Close">✕</button>
+      </div>
+    </div>
+    <div class="modal-body" id="mock-container"></div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <a href="https://github.com/sphe-hlongwa" target="_blank" rel="noopener noreferrer">
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+    </svg>
+    <span>sphe-hlongwa</span>
+  </a>
+</footer>
+
+<script>
+  // ---- sidebar nav ----
+  function showView(name){
+    document.querySelectorAll('.view-sidebar [data-view]').forEach(b=>{
+      const on = b.dataset.view === name;
+      b.classList.toggle('active', on);
+      if(on) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+    });
+    document.querySelectorAll('section.view').forEach(v=>v.classList.toggle('active', v.id === name));
+  }
+  document.querySelectorAll('.view-sidebar [data-view]').forEach(btn=>{
+    btn.addEventListener('click', ()=> showView(btn.dataset.view));
+  });
+
+  // ---- mock paper data ----
+  const mockPapers = [ {"title": "Mock 1 - TechLend Equipment Loans", "subtitle": "A comprehensive paper on a campus equipment-loan system: relational concepts and usability theory (Section A), normalisation, ERD translation and Access SQL (Section B), and a full three-layer sequence diagram, form wireframe and report design (Section C).", "summary": "Normalisation, ERDs, SQL, 3-layer DSD, UI and reporting.", "duration": 180, "sections": [{"key": "A", "title": "Section A - Multiple Choice & Short Conceptual Questions", "marks": 25, "color": "blue", "time": "about 40 minutes", "parts": [{"type": "mcq", "heading": "A1 - Multiple choice, Block 1: Relational databases (10 marks)", "intro": "Answer all 10 questions. Each question carries 1 mark.", "start": 1, "items": [["A set of one or more attributes that uniquely identifies every row, but which may still contain attributes that are not needed for uniqueness, is called a __________.", ["Super key", "Candidate key", "Foreign key", "Surrogate key"], 0, "A super key is any attribute set that uniquely identifies rows. A candidate key is a <i>minimal<\/i> super key (nothing can be removed without losing uniqueness)."], ["LoanNo is generated automatically by the DBMS (AutoNumber) and has no business meaning. LoanNo is best described as a __________.", ["Natural key", "Surrogate key", "Composite key", "Alternate key"], 1, "A system-generated identifier with no real-world meaning is a surrogate key."], ["In BORROWER, both BorrowerEmail and IDNumber are unique and never empty. BorrowerNo is chosen as the primary key. BorrowerEmail and IDNumber are therefore __________.", ["Alternate keys", "Foreign keys", "Composite keys", "Surrogate keys"], 0, "Candidate keys that were not chosen as the primary key are called alternate keys."], ["A clerk tries to INSERT a row into LOAN_ITEM with LoanNo = 9999, but no LOAN row has LoanNo 9999. Which integrity rule stops this?", ["Entity integrity", "Cardinality integrity", "Domain integrity", "Referential integrity"], 3, "Referential integrity: a foreign key value must match an existing primary key value in the parent table (or be NULL)."], ["Which integrity rule states that no part of a primary key may be NULL?", ["Referential integrity", "Entity integrity", "Domain integrity", "Transaction integrity"], 1, "Entity integrity: every row must be identifiable, so primary key values can never be NULL."], ["LOAN_ITEM(<u>LoanNo, AssetNo<\/u>, ReturnDate, AssetDesc) has a composite primary key, but AssetDesc depends only on AssetNo. This is a __________ dependency.", ["Partial", "Transitive", "Multivalued", "Full functional"], 0, "A non-key attribute that depends on only part of a composite key is a partial dependency (a 2NF violation)."], ["In ASSET(<u>AssetNo<\/u>, AssetDesc, CategoryCode, CategoryName), CategoryName is determined by CategoryCode, which is in turn determined by AssetNo. This is a __________ dependency.", ["Partial", "Multivalued", "Transitive", "Full functional"], 2, "Non-key &rarr; non-key dependency (AssetNo &rarr; CategoryCode &rarr; CategoryName) is a transitive dependency (a 3NF violation)."], ["A borrower can have several phone numbers and, independently, several email addresses. Storing every phone/email combination as separate rows in one table creates a __________ dependency.", ["Partial", "Multivalued", "Transitive", "Referential"], 1, "Two independent sets of values for the same key (phones and emails) form a multivalued dependency, which forces redundant row combinations."], ["LOAN_ITEM has 10 rows, of which 3 have a NULL ReturnDate. What do <code class=\"inline\">SELECT COUNT(*)<\/code> and <code class=\"inline\">SELECT COUNT(ReturnDate)<\/code> return?", ["10 and 10", "7 and 10", "7 and 7", "10 and 7"], 3, "COUNT(*) counts every row (10). COUNT(column) ignores NULLs in that column (10 &minus; 3 = 7)."], ["Which WHERE clause correctly finds loan items that have not yet been returned?", ["WHERE ReturnDate = NULL", "WHERE ReturnDate = 0", "WHERE ReturnDate IS NULL", "WHERE ReturnDate = ''"], 2, "NULL is never equal to anything (even NULL), so it must be tested with IS NULL."]]}, {"type": "mcq", "heading": "A2 - Multiple choice, Block 2: Design, ADO.NET and usability (10 marks)", "intro": "Answer all 10 questions. Each question carries 1 mark.", "start": 11, "items": [["In a three-layer design sequence diagram, which type of object coordinates the interaction between the form and the domain (entity) classes, e.g. <i>:LoanHandler<\/i>?", ["Boundary object", "Controller object", "Entity object", "Actor"], 1, "The controller (handler) receives requests from the boundary, applies the logic and calls the entity objects."], ["Which statement about the three-layer architecture is correct?", ["Boundary objects send SQL directly to the database", "Controller objects are drawn as stick figures", "Entity objects display messages to the user", "Boundary objects communicate with entity objects only through a controller"], 3, "Boundary objects handle the UI only. They never talk to entity objects directly; the controller sits between them."], ["Which ADO.NET command method should be used to run an INSERT statement?", ["ExecuteReader", "ExecuteScalar", "ExecuteNonQuery", "Fill"], 2, "ExecuteNonQuery runs INSERT/UPDATE/DELETE statements and returns the number of rows affected."], ["Which ADO.NET command method is best suited to <code class=\"inline\">SELECT COUNT(*) FROM LOAN WHERE DueDate &lt; Date()<\/code>, which returns a single value?", ["ExecuteScalar", "ExecuteNonQuery", "ExecuteReader", "Update"], 0, "ExecuteScalar returns the first column of the first row, which is ideal for one aggregate value."], ["Which ADO.NET method returns a forward-only, read-only stream of rows, e.g. to fill a list of borrower names?", ["ExecuteScalar", "ExecuteNonQuery", "ExecuteReader", "ExecuteBatch"], 2, "ExecuteReader returns an OleDbDataReader that is read row by row with Read()."], ["A ComboBox must show BorrowerName, but the code needs the BorrowerNo of the selected borrower. Which settings achieve this?", ["DisplayMember = \"BorrowerNo\"; ValueMember = \"BorrowerName\"", "DataSource = \"BorrowerNo\"", "Text = \"BorrowerName\"; Tag = \"BorrowerNo\" only", "DisplayMember = \"BorrowerName\"; ValueMember = \"BorrowerNo\""], 3, "DisplayMember is what the user sees; ValueMember is what SelectedValue returns."], ["After clicking Issue Loan, the form shows \"Saving&hellip;\" and then \"Loan 2045 issued successfully\". Which of Nielsen's heuristics is mainly supported?", ["Visibility of system status", "Consistency and standards", "Flexibility and efficiency of use", "Aesthetic and minimalist design"], 0, "Keeping the user informed about what the system is doing through timely feedback is <i>visibility of system status<\/i>."], ["An Undo button lets a clerk restore an asset that was removed from the loan list by accident. Which of Shneiderman's Eight Golden Rules does this follow?", ["Strive for consistency", "Permit easy reversal of actions", "Reduce short-term memory load", "Offer shortcuts for frequent users"], 1, "Easy reversal of actions reduces anxiety because users know mistakes can be undone."], ["Which of the following is a <b>user-experience (UX) goal<\/b> rather than a usability goal?", ["Efficient to use", "Easy to learn", "Aesthetically pleasing", "Safe to use"], 2, "Effective, efficient, safe, good utility, easy to learn and easy to remember are usability goals. Aesthetically pleasing is a (subjective) UX goal."], ["A report that the system generates automatically every Monday at 07:00 without anyone requesting it is a __________ report.", ["Ad hoc", "Interactive", "Drill-down", "Scheduled (periodic)"], 3, "Reports produced automatically on a fixed timetable are scheduled (periodic) reports; ad hoc reports are produced on request."]]}, {"type": "qs", "heading": "A3 - Short conceptual questions (5 marks)", "intro": "Answer the following short conceptual questions in your answer book.", "qs": [{"id": "A21.1", "marks": 3, "q": "When a clerk leaves the due date blank and clicks <i>Issue Loan<\/i>, the form shows the message <code class=\"inline\">System.Data.OleDb.OleDbException: Syntax error in INSERT INTO statement.<\/code><br>(a) Identify the Nielsen heuristic that this message violates. [1]<br>(b) Rewrite the message so that it follows the heuristic. [1]<br>(c) Name the heuristic that, if applied, would have prevented the error in the first place. [1]", "a": "<b>(a)<\/b> <i>Help users recognise, diagnose and recover from errors.<\/i> The message is technical jargon that does not say what is wrong or how to fix it. &#10003;<br><b>(b)<\/b> e.g. &ldquo;Due date is required. Please enter the date on which the assets will be returned.&rdquo; &mdash; plain language, states the problem and suggests the fix. &#10003;<br><b>(c)<\/b> <i>Error prevention<\/i> &mdash; validate input before the INSERT is attempted (e.g. ErrorProvider on the DueDate control, or keep Issue Loan disabled until the mandatory fields are complete). &#10003;"}, {"id": "A21.2", "marks": 2, "q": "Distinguish between a <b>usability goal<\/b> and a <b>user-experience (UX) goal<\/b>, giving one example of each from the TechLend system.", "a": "<b>Usability goals<\/b> are objective, measurable qualities of how well the system supports tasks (effective, efficient, safe, good utility, easy to learn, easy to remember). Example: a clerk can issue a loan in under a minute. &#10003;<br><b>UX goals<\/b> are subjective feelings the user has while using the system (satisfying, enjoyable, aesthetically pleasing, motivating, etc.). Example: the clerk finds the Issue Loan form pleasant and satisfying to use. &#10003;"}]}]}, {"key": "B", "title": "Section B - Database Analysis & SQL", "marks": 35, "color": "yellow", "time": "about 65 minutes", "parts": [{"type": "qs", "heading": "Question B1 - Normalisation (10 marks)", "scenario": "TechLend is a campus equipment-loan service. Clerks record every loan on a paper <b>Loan Slip<\/b>; the sample data below is the unnormalised user view <b>LOAN_SLIP<\/b>. Each slip lists one borrower and one or more assets &mdash; the shaded columns are a <i>repeating group<\/i>. A borrower's name and email depend only on the borrower; an asset's description and category depend only on the asset; a category name depends only on the category. ReturnDate is recorded for each asset on a slip (blank until that asset has been returned).", "diagram": "<div class=\"tbl-scroll\"><table class=\"unf\"><thead><tr><th>LoanNo<\/th><th>LoanDate<\/th><th>DueDate<\/th><th>BorrowerNo<\/th><th>BorrowerName<\/th><th>BorrowerEmail<\/th><th class=\"rg\">AssetNo<\/th><th class=\"rg\">AssetDesc<\/th><th class=\"rg\">CategoryCode<\/th><th class=\"rg\">CategoryName<\/th><th class=\"rg\">ReturnDate<\/th><\/tr><\/thead><tbody><tr><td rowspan=\"2\">2001<\/td><td rowspan=\"2\">03-Aug-2026<\/td><td rowspan=\"2\">10-Aug-2026<\/td><td rowspan=\"2\">14<\/td><td rowspan=\"2\">Thabo Mokoena<\/td><td rowspan=\"2\">thabo.m@example.com<\/td><td class=\"rg\">107<\/td><td class=\"rg\">Dell Latitude Laptop<\/td><td class=\"rg\">LT<\/td><td class=\"rg\">Laptops<\/td><td class=\"rg\">09-Aug-2026<\/td><\/tr><tr><td class=\"rg\">131<\/td><td class=\"rg\">Epson Projector EB-X06<\/td><td class=\"rg\">PR<\/td><td class=\"rg\">Projectors<\/td><td class=\"rg\">10-Aug-2026<\/td><\/tr><tr><td rowspan=\"3\">2002<\/td><td rowspan=\"3\">12-Aug-2026<\/td><td rowspan=\"3\">19-Aug-2026<\/td><td rowspan=\"3\">22<\/td><td rowspan=\"3\">Ayesha Patel<\/td><td rowspan=\"3\">ayesha.p@example.com<\/td><td class=\"rg\">107<\/td><td class=\"rg\">Dell Latitude Laptop<\/td><td class=\"rg\">LT<\/td><td class=\"rg\">Laptops<\/td><td class=\"rg\">18-Aug-2026<\/td><\/tr><tr><td class=\"rg\">118<\/td><td class=\"rg\">HP ProBook Laptop<\/td><td class=\"rg\">LT<\/td><td class=\"rg\">Laptops<\/td><td class=\"rg\">19-Aug-2026<\/td><\/tr><tr><td class=\"rg\">144<\/td><td class=\"rg\">Canon EOS 250D Camera<\/td><td class=\"rg\">CM<\/td><td class=\"rg\">Cameras<\/td><td class=\"rg\">17-Aug-2026<\/td><\/tr><tr><td rowspan=\"1\">2003<\/td><td rowspan=\"1\">14-Aug-2026<\/td><td rowspan=\"1\">21-Aug-2026<\/td><td rowspan=\"1\">14<\/td><td rowspan=\"1\">Thabo Mokoena<\/td><td rowspan=\"1\">thabo.m@example.com<\/td><td class=\"rg\">144<\/td><td class=\"rg\">Canon EOS 250D Camera<\/td><td class=\"rg\">CM<\/td><td class=\"rg\">Cameras<\/td><td class=\"rg\">&nbsp;<\/td><\/tr><\/tbody><\/table><\/div>", "qs": [{"id": "B1.1", "marks": 4, "q": "Convert LOAN_SLIP to First Normal Form (1NF). State the resulting relation with its primary key and list <b>all<\/b> functional dependencies, classifying each as full-key, partial or transitive.", "a": "Remove the repeating group so that every cell is atomic (one row per asset on a loan). &#10003;<br>LOAN_SLIP(<u>LoanNo, AssetNo<\/u>, LoanDate, DueDate, BorrowerNo, BorrowerName, BorrowerEmail, AssetDesc, CategoryCode, CategoryName, ReturnDate) &mdash; composite primary key {LoanNo, AssetNo}. &#10003;<br><br>Functional dependencies (&#10003;&#10003; for all of them):<ul><li>{LoanNo, AssetNo} &rarr; ReturnDate <i>(full-key)<\/i><\/li><li>LoanNo &rarr; LoanDate, DueDate, BorrowerNo <i>(partial &mdash; depends on part of the key)<\/i><\/li><li>AssetNo &rarr; AssetDesc, CategoryCode <i>(partial)<\/i><\/li><li>BorrowerNo &rarr; BorrowerName, BorrowerEmail <i>(transitive, via LoanNo &rarr; BorrowerNo)<\/i><\/li><li>CategoryCode &rarr; CategoryName <i>(transitive, via AssetNo &rarr; CategoryCode)<\/i><\/li><\/ul>"}, {"id": "B1.2", "marks": 3, "q": "Take your 1NF relation to Second Normal Form (2NF). Show each relation with its primary key and state which dependencies you removed.", "a": "2NF removes <b>partial<\/b> dependencies by splitting off what depends on only part of {LoanNo, AssetNo}:<ul><li>LOAN(<u>LoanNo<\/u>, LoanDate, DueDate, BorrowerNo, BorrowerName, BorrowerEmail) &mdash; LoanNo &rarr; &hellip; &#10003;<\/li><li>ASSET(<u>AssetNo<\/u>, AssetDesc, CategoryCode, CategoryName) &mdash; AssetNo &rarr; &hellip; &#10003;<\/li><li>LOAN_ITEM(<u>LoanNo, AssetNo<\/u>, ReturnDate) &mdash; ReturnDate depends on the whole key, so it stays &#10003;<\/li><\/ul>The transitive dependencies (BorrowerNo &rarr; BorrowerName/Email and CategoryCode &rarr; CategoryName) are still present, so the relations are in 2NF but not yet 3NF."}, {"id": "B1.3", "marks": 3, "q": "Extend your answer to Third Normal Form (3NF), giving fully labelled relations (primary and foreign keys).", "a": "3NF removes the <b>transitive<\/b> dependencies:<ul><li>BORROWER(<u>BorrowerNo<\/u>, BorrowerName, BorrowerEmail) &#10003;<\/li><li>CATEGORY(<u>CategoryCode<\/u>, CategoryName) &#10003;<\/li><li>LOAN(<u>LoanNo<\/u>, LoanDate, DueDate, <i>BorrowerNo<\/i>) &mdash; BorrowerNo is a foreign key; ASSET(<u>AssetNo<\/u>, AssetDesc, <i>CategoryCode<\/i>) &mdash; CategoryCode is a foreign key &#10003;<\/li><li>LOAN_ITEM(<u>LoanNo, AssetNo<\/u>, ReturnDate) &mdash; unchanged; LoanNo and AssetNo are both foreign keys<\/li><\/ul>Every non-key attribute now depends on <i>the key, the whole key and nothing but the key<\/i>."}]}, {"type": "qs", "heading": "Question B2 - ERD modelling and class diagram translation (10 marks)", "scenario": "TechLend's analysts extended the design from Question B1 and drew the class diagram below. Business rules: a borrower is either a student or a staff member (never both, and never neither). Borrowers are created with a status of &ldquo;new&rdquo; and become &ldquo;active&rdquo; once they have taken out a loan. A borrower may have taken out many loans (or none yet); each loan is made by exactly one borrower. A loan must include at least one asset. An asset may appear on many loans over time but need not have been loaned at all; for each asset on a loan the date it was returned is recorded. Each asset belongs to exactly one category, and a category may exist without any assets.", "diagram": "<div class=\"diagram-wrap\"><svg class=\"dg\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 900 420\" width=\"900\" height=\"420\" role=\"img\" aria-label=\"TechLend class diagram\"><defs><marker id=\"ah\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto-start-reverse\"><path d=\"M0,0 L10,5 L0,10 z\" fill=\"#2a3447\"/><\/marker><marker id=\"ao\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto-start-reverse\"><path d=\"M1,1 L9,5 L1,9\" fill=\"none\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><\/marker><\/defs><rect x=\"0\" y=\"0\" width=\"900\" height=\"420\" fill=\"#fff\"/><text x=\"450.0\" y=\"22\" font-size=\"13\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >Class Diagram: TechLend Equipment Loans<\/text><rect x=\"60\" y=\"50\" width=\"230\" height=\"100\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"60\" y=\"50\" width=\"230\" height=\"24\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"175.0\" y=\"66\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >Borrower<\/text><text x=\"68\" y=\"91\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >BorrowerNo<\/text><text x=\"68\" y=\"108\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >BorrowerName<\/text><text x=\"68\" y=\"125\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >BorrowerEmail<\/text><text x=\"68\" y=\"142\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >BorrowerStatus<\/text><rect x=\"10\" y=\"220\" width=\"190\" height=\"66\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"10\" y=\"220\" width=\"190\" height=\"24\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"105.0\" y=\"236\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >Student<\/text><text x=\"18\" y=\"261\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >StudentNo<\/text><text x=\"18\" y=\"278\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Faculty<\/text><rect x=\"230\" y=\"220\" width=\"190\" height=\"66\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"230\" y=\"220\" width=\"190\" height=\"24\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"325.0\" y=\"236\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >Staff<\/text><text x=\"238\" y=\"261\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >StaffNo<\/text><text x=\"238\" y=\"278\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Department<\/text><polygon points=\"175,150 165,168 185,168\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><line x1=\"175\" y1=\"168\" x2=\"175\" y2=\"190\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><line x1=\"105\" y1=\"190\" x2=\"325\" y2=\"190\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><line x1=\"105\" y1=\"190\" x2=\"105\" y2=\"220\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><line x1=\"325\" y1=\"190\" x2=\"325\" y2=\"220\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"189\" y=\"164\" font-size=\"10\" text-anchor=\"start\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >{disjoint, complete}<\/text><rect x=\"470\" y=\"50\" width=\"190\" height=\"83\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"470\" y=\"50\" width=\"190\" height=\"24\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"565.0\" y=\"66\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >Loan<\/text><text x=\"478\" y=\"91\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >LoanNo<\/text><text x=\"478\" y=\"108\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >LoanDate<\/text><text x=\"478\" y=\"125\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >DueDate<\/text><rect x=\"700\" y=\"200\" width=\"190\" height=\"83\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"700\" y=\"200\" width=\"190\" height=\"24\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"795.0\" y=\"216\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >Asset<\/text><text x=\"708\" y=\"241\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >AssetNo<\/text><text x=\"708\" y=\"258\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >AssetDesc<\/text><text x=\"708\" y=\"275\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >AssetStatus<\/text><rect x=\"700\" y=\"330\" width=\"190\" height=\"66\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"700\" y=\"330\" width=\"190\" height=\"24\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"795.0\" y=\"346\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >Category<\/text><text x=\"708\" y=\"371\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >CategoryCode<\/text><text x=\"708\" y=\"388\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >CategoryName<\/text><rect x=\"470\" y=\"235\" width=\"190\" height=\"50\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"470\" y=\"235\" width=\"190\" height=\"24\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"565.0\" y=\"251\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >LoanItem<\/text><text x=\"478\" y=\"276\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >ReturnDate<\/text><line x1=\"290\" y1=\"90\" x2=\"470\" y2=\"90\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"296\" y=\"84\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >1<\/text><text x=\"440\" y=\"84\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >0..*<\/text><text x=\"380\" y=\"108\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >borrows<\/text><line x1=\"660\" y1=\"105\" x2=\"790\" y2=\"200\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"668\" y=\"122\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >1..*<\/text><text x=\"752\" y=\"194\" font-size=\"11\" text-anchor=\"end\" font-weight=\"400\" fill=\"#1b2230\" >0..*<\/text><text x=\"752\" y=\"150\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >includes<\/text><line x1=\"725\" y1=\"152\" x2=\"600\" y2=\"235\" stroke=\"#5b6678\" stroke-width=\"1.2\" stroke-dasharray=\"5 4\"/><line x1=\"795\" y1=\"283\" x2=\"795\" y2=\"330\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"803\" y=\"299\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >0..*<\/text><text x=\"803\" y=\"322\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >1<\/text><text x=\"785\" y=\"312\" font-size=\"10.5\" text-anchor=\"end\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >classified as<\/text><\/svg><\/div>", "qs": [{"id": "B2.1", "marks": 8, "q": "Translate the class diagram into a fully labelled ERD. Show all entities, attributes, primary keys, foreign keys and cardinalities, resolve any many-to-many relationship, and implement the generalisation.", "a": "<div class=\"diagram-wrap\"><svg class=\"dg\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 980 500\" width=\"980\" height=\"500\" role=\"img\" aria-label=\"TechLend ERD\"><defs><marker id=\"ah\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto-start-reverse\"><path d=\"M0,0 L10,5 L0,10 z\" fill=\"#2a3447\"/><\/marker><marker id=\"ao\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto-start-reverse\"><path d=\"M1,1 L9,5 L1,9\" fill=\"none\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><\/marker><\/defs><rect x=\"0\" y=\"0\" width=\"980\" height=\"500\" fill=\"#fff\"/><text x=\"490.0\" y=\"22\" font-size=\"13\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >ERD: TechLend Equipment Loans (model answer)<\/text><rect x=\"20\" y=\"60\" width=\"200\" height=\"86\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"20\" y=\"60\" width=\"200\" height=\"26\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"120.0\" y=\"77\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >STUDENT<\/text><line x1=\"64\" y1=\"86\" x2=\"64\" y2=\"146\" stroke=\"#9aa6b8\" stroke-width=\"1\"/><text x=\"26\" y=\"100\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >PK,FK<\/text><text x=\"72\" y=\"100\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" text-decoration=\"underline\" >BorrowerNo<\/text><text x=\"72\" y=\"118\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >StudentNo<\/text><text x=\"72\" y=\"136\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Faculty<\/text><rect x=\"20\" y=\"190\" width=\"200\" height=\"86\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"20\" y=\"190\" width=\"200\" height=\"26\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"120.0\" y=\"207\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >STAFF<\/text><line x1=\"64\" y1=\"216\" x2=\"64\" y2=\"276\" stroke=\"#9aa6b8\" stroke-width=\"1\"/><text x=\"26\" y=\"230\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >PK,FK<\/text><text x=\"72\" y=\"230\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" text-decoration=\"underline\" >BorrowerNo<\/text><text x=\"72\" y=\"248\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >StaffNo<\/text><text x=\"72\" y=\"266\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Department<\/text><rect x=\"300\" y=\"110\" width=\"220\" height=\"104\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"300\" y=\"110\" width=\"220\" height=\"26\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"410.0\" y=\"127\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >BORROWER<\/text><line x1=\"344\" y1=\"136\" x2=\"344\" y2=\"214\" stroke=\"#9aa6b8\" stroke-width=\"1\"/><text x=\"306\" y=\"150\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >PK<\/text><text x=\"352\" y=\"150\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" text-decoration=\"underline\" >BorrowerNo<\/text><text x=\"352\" y=\"168\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >BorrowerName<\/text><text x=\"352\" y=\"186\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >BorrowerEmail<\/text><text x=\"352\" y=\"204\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >BorrowerStatus<\/text><rect x=\"620\" y=\"60\" width=\"200\" height=\"104\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"620\" y=\"60\" width=\"200\" height=\"26\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"720.0\" y=\"77\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >LOAN<\/text><line x1=\"664\" y1=\"86\" x2=\"664\" y2=\"164\" stroke=\"#9aa6b8\" stroke-width=\"1\"/><text x=\"626\" y=\"100\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >PK<\/text><text x=\"672\" y=\"100\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" text-decoration=\"underline\" >LoanNo<\/text><text x=\"672\" y=\"118\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >LoanDate<\/text><text x=\"672\" y=\"136\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >DueDate<\/text><text x=\"626\" y=\"154\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >FK<\/text><text x=\"672\" y=\"154\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >BorrowerNo<\/text><rect x=\"620\" y=\"235\" width=\"200\" height=\"86\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"620\" y=\"235\" width=\"200\" height=\"26\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"720.0\" y=\"252\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >LOAN_ITEM<\/text><line x1=\"664\" y1=\"261\" x2=\"664\" y2=\"321\" stroke=\"#9aa6b8\" stroke-width=\"1\"/><text x=\"626\" y=\"275\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >PK,FK<\/text><text x=\"672\" y=\"275\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" text-decoration=\"underline\" >LoanNo<\/text><text x=\"626\" y=\"293\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >PK,FK<\/text><text x=\"672\" y=\"293\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" text-decoration=\"underline\" >AssetNo<\/text><text x=\"672\" y=\"311\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >ReturnDate<\/text><rect x=\"620\" y=\"360\" width=\"220\" height=\"104\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"620\" y=\"360\" width=\"220\" height=\"26\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"730.0\" y=\"377\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >ASSET<\/text><line x1=\"664\" y1=\"386\" x2=\"664\" y2=\"464\" stroke=\"#9aa6b8\" stroke-width=\"1\"/><text x=\"626\" y=\"400\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >PK<\/text><text x=\"672\" y=\"400\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" text-decoration=\"underline\" >AssetNo<\/text><text x=\"672\" y=\"418\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >AssetDesc<\/text><text x=\"672\" y=\"436\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >AssetStatus<\/text><text x=\"626\" y=\"454\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >FK<\/text><text x=\"672\" y=\"454\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >CategoryCode<\/text><rect x=\"330\" y=\"365\" width=\"200\" height=\"68\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"330\" y=\"365\" width=\"200\" height=\"26\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"430.0\" y=\"382\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >CATEGORY<\/text><line x1=\"374\" y1=\"391\" x2=\"374\" y2=\"433\" stroke=\"#9aa6b8\" stroke-width=\"1\"/><text x=\"336\" y=\"405\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >PK<\/text><text x=\"382\" y=\"405\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" text-decoration=\"underline\" >CategoryCode<\/text><text x=\"382\" y=\"423\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >CategoryName<\/text><line x1=\"220\" y1=\"95\" x2=\"300\" y2=\"140\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"226\" y=\"88\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >0..1<\/text><text x=\"296\" y=\"132\" font-size=\"10.5\" text-anchor=\"end\" font-weight=\"400\" fill=\"#1b2230\" >1..1<\/text><text x=\"262\" y=\"108\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >is a<\/text><line x1=\"220\" y1=\"225\" x2=\"300\" y2=\"180\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"226\" y=\"244\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >0..1<\/text><text x=\"296\" y=\"196\" font-size=\"10.5\" text-anchor=\"end\" font-weight=\"400\" fill=\"#1b2230\" >1..1<\/text><text x=\"262\" y=\"222\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >is a<\/text><line x1=\"520\" y1=\"140\" x2=\"620\" y2=\"110\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"526\" y=\"132\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >1..1<\/text><text x=\"614\" y=\"104\" font-size=\"10.5\" text-anchor=\"end\" font-weight=\"400\" fill=\"#1b2230\" >0..*<\/text><text x=\"572\" y=\"138\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >borrows<\/text><line x1=\"720\" y1=\"164\" x2=\"720\" y2=\"235\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"728\" y=\"178\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >1..1<\/text><text x=\"728\" y=\"228\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >1..*<\/text><text x=\"760\" y=\"200\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >includes<\/text><line x1=\"720\" y1=\"321\" x2=\"720\" y2=\"360\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"728\" y=\"335\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >0..*<\/text><text x=\"728\" y=\"352\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >1..1<\/text><text x=\"760\" y=\"330\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >is loaned on<\/text><line x1=\"530\" y1=\"410\" x2=\"620\" y2=\"410\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"536\" y=\"402\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >1..1<\/text><text x=\"614\" y=\"402\" font-size=\"10.5\" text-anchor=\"end\" font-weight=\"400\" fill=\"#1b2230\" >0..*<\/text><text x=\"575\" y=\"426\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >classifies<\/text><text x=\"20\" y=\"488\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >PK = primary key, FK = foreign key. LOAN_ITEM is the associative entity that resolves the many-to-many between LOAN and ASSET.<\/text><\/svg><\/div><b>Marking guide (8):<\/b><ul><li>Entities with all attributes and primary keys: BORROWER, LOAN, ASSET, CATEGORY (2)<\/li><li>Many-to-many LOAN&ndash;ASSET resolved with LOAN_ITEM, composite PK {LoanNo, AssetNo} made of two FKs, plus ReturnDate (2)<\/li><li>Generalisation implemented: STUDENT and STAFF with PK/FK BorrowerNo pointing to BORROWER, carrying only their own attributes (2)<\/li><li>Foreign keys on the &ldquo;many&rdquo; side: LOAN.BorrowerNo, ASSET.CategoryCode (1)<\/li><li>Cardinalities / participation correct (1)<\/li><\/ul>"}, {"id": "B2.2", "marks": 2, "q": "Explain the strategy you used to implement the Student/Staff generalisation, and name one alternative strategy together with one of its drawbacks.", "a": "<b>Chosen strategy:<\/b> a supertype table (BORROWER) plus one subtype table per subclass (STUDENT, STAFF) that share the supertype's primary key. LOAN needs only one foreign key to BORROWER whatever the borrower type, and no type-specific column ever contains NULLs. &#10003;<br><br><b>Alternatives (any one, with drawback):<\/b><ul><li><i>Single table<\/i> with a BorrowerType discriminator: StudentNo/Faculty/StaffNo/Department become mostly-NULL columns, and the DBMS cannot enforce that the right ones are filled in. &#10003;<\/li><li><i>One table per subclass<\/i> (BORROWER attributes repeated in STUDENT and STAFF): LOAN cannot have a single foreign key to &ldquo;borrower&rdquo; and shared attributes are duplicated &mdash; a redundancy problem. &#10003;<\/li><\/ul>"}]}, {"type": "qs", "heading": "Question B3 - SQL (15 marks)", "scenario": "Use the tables of the TechLend database (your ERD from B2) to answer the SQL questions below. Use Microsoft Access SQL (the database is accessed from C# through <i>OleDb<\/i>).<div class=\"rel\">BORROWER(<u>BorrowerNo<\/u>, BorrowerName, BorrowerEmail, BorrowerStatus)<br>CATEGORY(<u>CategoryCode<\/u>, CategoryName)<br>ASSET(<u>AssetNo<\/u>, AssetDesc, AssetStatus, <i>CategoryCode<\/i>)<br>LOAN(<u>LoanNo<\/u>, LoanDate, DueDate, <i>BorrowerNo<\/i>)<br>LOAN_ITEM(<u>LoanNo, AssetNo<\/u>, ReturnDate)<\/div>Data types: BorrowerNo, LoanNo and AssetNo are numbers; LoanDate, DueDate and ReturnDate are dates (ReturnDate is NULL until the asset is returned); all other fields are text.", "qs": [{"id": "B3.1", "marks": 4, "q": "For each asset category, show the category name and the number of times assets in that category have been loaned (heading &ldquo;Times Loaned&rdquo;). Show only categories that have been loaned more than 5 times, with the most-loaned category first.", "a": "<pre class=\"sql\">SELECT c.CategoryName, COUNT(*) AS [Times Loaned]            -- 1\nFROM (CATEGORY AS c INNER JOIN ASSET AS a\n        ON c.CategoryCode = a.CategoryCode)          -- 1\n      INNER JOIN LOAN_ITEM AS li ON a.AssetNo = li.AssetNo\nGROUP BY c.CategoryName                              -- 1\nHAVING COUNT(*) &gt; 5                                  -- 1 (with ORDER BY)\nORDER BY COUNT(*) DESC;<\/pre><p class=\"note-small\">The numbers after <code class=\"inline\">--<\/code> show the marks for that line; they are not part of the SQL.<\/p><p>A comma-join with the join conditions in the WHERE clause is also acceptable. Note that Access does not allow the alias in HAVING, so the aggregate is repeated.<\/p>"}, {"id": "B3.2", "marks": 3, "q": "List the assets that have never been loaned. Show the asset number and description.", "a": "<pre class=\"sql\">SELECT a.AssetNo, a.AssetDesc\nFROM ASSET AS a\nLEFT JOIN LOAN_ITEM AS li ON a.AssetNo = li.AssetNo   -- LEFT JOIN, ASSET on the left (1) + join condition (1)\nWHERE li.LoanNo IS NULL;                              -- IS NULL on the LOAN_ITEM side (1)<\/pre><p class=\"note-small\">The numbers after <code class=\"inline\">--<\/code> show the marks for that line; they are not part of the SQL.<\/p><p>The LEFT JOIN keeps every asset; assets with no LOAN_ITEM rows get NULLs on the LOAN_ITEM side, which isolates the never-loaned assets.<\/p>"}, {"id": "B3.3", "marks": 6, "q": "The Store Manager wants to see items that have not been returned and are past their due date, for one category that the user chooses at run time. Show the loan number, borrower name, asset description, the due date formatted like <i>3-October-2026<\/i> (heading &ldquo;Due Date&rdquo;) and the number of days outstanding (heading &ldquo;Days Outstanding&rdquo;). Use a <b>positional parameter<\/b> for the category code and sort so that the longest-outstanding items appear first.", "a": "<pre class=\"sql\">SELECT l.LoanNo, b.BorrowerName, a.AssetDesc,                     -- 1\n       Format(l.DueDate, 'd-mmmm-yyyy') AS [Due Date],             -- 1\n       DateDiff('d', l.DueDate, Date()) AS [Days Outstanding]      -- 1\nFROM ((LOAN AS l INNER JOIN BORROWER AS b ON l.BorrowerNo = b.BorrowerNo)\n       INNER JOIN LOAN_ITEM AS li ON l.LoanNo = li.LoanNo)\n       INNER JOIN ASSET AS a ON li.AssetNo = a.AssetNo             -- 1 (all four tables joined)\nWHERE li.ReturnDate IS NULL                                        -- 1 (unreturned, past due)\n  AND l.DueDate &lt; Date()\n  AND a.CategoryCode = ?                                           -- 1 (parameter) \nORDER BY DateDiff('d', l.DueDate, Date()) DESC;<\/pre><p class=\"note-small\">The numbers after <code class=\"inline\">--<\/code> show the marks for that line; they are not part of the SQL.<\/p><p><code class=\"inline\">FORMAT(l.DueDate, 'd-MMMM-yyyy')<\/code> is equally acceptable (format codes are not case-sensitive for dates). ORDER BY [Days Outstanding] is also accepted in Access.<\/p>"}, {"id": "B3.4", "marks": 2, "q": "In B3.3 the category code was supplied with a <code class=\"inline\">?<\/code>. Explain what this is, how its value is supplied from C# using OleDb, and why it is preferable to building the SQL string by concatenation.", "a": "The <code class=\"inline\">?<\/code> is a <b>positional parameter placeholder<\/b>. In OleDb, parameters are matched <i>by position<\/i> (names are ignored): the value is supplied with <code class=\"inline\">cmd.Parameters.AddWithValue(\"@cat\", cboCategory.SelectedValue)<\/code>, added in the same order in which the <code class=\"inline\">?<\/code> marks appear. &#10003;<br>It is preferable because the value is passed separately from the SQL text, which prevents <b>SQL injection<\/b> and removes the need to hand-format quotes, dates and data types. &#10003;"}]}]}, {"key": "C", "title": "Section C - Systems Design & Solution Realisation", "marks": 40, "color": "blue", "time": "about 75 minutes", "parts": [{"type": "qs", "heading": "Question C1 - Use case realisation (20 marks)", "scenario": "Examine the following partial entity relationship diagram (ERD) for the database used by TechLend to manage borrowers, loans and assets.", "diagram": "<div class=\"diagram-wrap\"><svg class=\"dg\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 920 330\" width=\"920\" height=\"330\" role=\"img\" aria-label=\"Partial ERD\"><defs><marker id=\"ah\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto-start-reverse\"><path d=\"M0,0 L10,5 L0,10 z\" fill=\"#2a3447\"/><\/marker><marker id=\"ao\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto-start-reverse\"><path d=\"M1,1 L9,5 L1,9\" fill=\"none\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><\/marker><\/defs><rect x=\"0\" y=\"0\" width=\"920\" height=\"330\" fill=\"#fff\"/><text x=\"460.0\" y=\"20\" font-size=\"12.5\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >Partial Entity Relationship Diagram: TechLend Equipment Loans<\/text><rect x=\"20\" y=\"50\" width=\"220\" height=\"104\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"20\" y=\"50\" width=\"220\" height=\"26\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"130.0\" y=\"67\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >BORROWER<\/text><line x1=\"64\" y1=\"76\" x2=\"64\" y2=\"154\" stroke=\"#9aa6b8\" stroke-width=\"1\"/><text x=\"26\" y=\"90\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >PK<\/text><text x=\"72\" y=\"90\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" text-decoration=\"underline\" >BorrowerNo<\/text><text x=\"72\" y=\"108\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >BorrowerName<\/text><text x=\"72\" y=\"126\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >BorrowerEmail<\/text><text x=\"72\" y=\"144\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >BorrowerStatus<\/text><rect x=\"330\" y=\"50\" width=\"200\" height=\"104\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"330\" y=\"50\" width=\"200\" height=\"26\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"430.0\" y=\"67\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >LOAN<\/text><line x1=\"374\" y1=\"76\" x2=\"374\" y2=\"154\" stroke=\"#9aa6b8\" stroke-width=\"1\"/><text x=\"336\" y=\"90\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >PK<\/text><text x=\"382\" y=\"90\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" text-decoration=\"underline\" >LoanNo<\/text><text x=\"382\" y=\"108\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >LoanDate<\/text><text x=\"382\" y=\"126\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >DueDate<\/text><text x=\"336\" y=\"144\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >FK<\/text><text x=\"382\" y=\"144\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >BorrowerNo<\/text><rect x=\"330\" y=\"200\" width=\"200\" height=\"86\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"330\" y=\"200\" width=\"200\" height=\"26\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"430.0\" y=\"217\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >LOAN_ITEM<\/text><line x1=\"374\" y1=\"226\" x2=\"374\" y2=\"286\" stroke=\"#9aa6b8\" stroke-width=\"1\"/><text x=\"336\" y=\"240\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >PK,FK<\/text><text x=\"382\" y=\"240\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" text-decoration=\"underline\" >LoanNo<\/text><text x=\"336\" y=\"258\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >PK,FK<\/text><text x=\"382\" y=\"258\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" text-decoration=\"underline\" >AssetNo<\/text><text x=\"382\" y=\"276\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >ReturnDate<\/text><rect x=\"640\" y=\"195\" width=\"240\" height=\"104\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"640\" y=\"195\" width=\"240\" height=\"26\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"760.0\" y=\"212\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >ASSET<\/text><line x1=\"684\" y1=\"221\" x2=\"684\" y2=\"299\" stroke=\"#9aa6b8\" stroke-width=\"1\"/><text x=\"646\" y=\"235\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >PK<\/text><text x=\"692\" y=\"235\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" text-decoration=\"underline\" >AssetNo<\/text><text x=\"692\" y=\"253\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >AssetDesc<\/text><text x=\"692\" y=\"271\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >AssetStatus<\/text><text x=\"646\" y=\"289\" font-size=\"10\" text-anchor=\"start\" font-weight=\"700\" fill=\"#2f6fc4\" >FK<\/text><text x=\"692\" y=\"289\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >CategoryCode<\/text><line x1=\"240\" y1=\"100\" x2=\"330\" y2=\"100\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"246\" y=\"92\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >1..1<\/text><text x=\"324\" y=\"92\" font-size=\"10.5\" text-anchor=\"end\" font-weight=\"400\" fill=\"#1b2230\" >0..*<\/text><text x=\"285\" y=\"118\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >borrows<\/text><line x1=\"430\" y1=\"154\" x2=\"430\" y2=\"200\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"438\" y=\"168\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >1..1<\/text><text x=\"438\" y=\"194\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >1..*<\/text><text x=\"470\" y=\"168\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >includes<\/text><line x1=\"530\" y1=\"250\" x2=\"640\" y2=\"250\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"536\" y=\"242\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >0..*<\/text><text x=\"634\" y=\"242\" font-size=\"10.5\" text-anchor=\"end\" font-weight=\"400\" fill=\"#1b2230\" >1..1<\/text><text x=\"585\" y=\"270\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >is for<\/text><text x=\"20\" y=\"316\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >(The CATEGORY entity and the BORROWER sub-types have been omitted from this partial diagram.)<\/text><\/svg><\/div>", "scenario2": "Some identified business rules include: Loans are identified using a system-generated <i>LoanNo<\/i>, and assets by a unique <i>AssetNo<\/i>. A loan must include at least one asset, and an asset may be on many loans over time. Each asset has a status of &ldquo;available&rdquo;, &ldquo;on loan&rdquo; or &ldquo;in repair&rdquo;. New borrowers are created with a status of &ldquo;new&rdquo; and are considered &ldquo;active&rdquo; once they have taken out a loan. The only user role in the system is the store clerk. <br><br>The following use cases have been identified thus far: <i>Issue loan<\/i> and <i>Return asset<\/i>. The following flow of activities has been developed for the <i>Issue loan<\/i> use case:", "diagram2": "<div class=\"tbl-scroll\"><table class=\"flow\">\n<thead><tr><th style=\"width:18%\">Flow of activities:<\/th><th style=\"width:36%\">Actor<\/th><th>System<\/th><\/tr><\/thead>\n<tbody>\n<tr><td><\/td><td>1. Requests to issue a loan<\/td><td>1.1 Retrieves all borrowers and prompts for the borrower, due date and asset number(s)<\/td><\/tr>\n<tr><td><\/td><td>2. Selects the borrower, enters the due date and asset number(s)<\/td><td>2.1 For each asset number entered, retrieves the asset's details to check its status<br><i>If the asset is available<\/i><br>2.2 Adds the asset to the loan list and displays its description<\/td><\/tr>\n<tr><td><\/td><td>3. Confirms the loan<\/td><td>3.1 Receives the newly-generated <i>LoanNo<\/i> from the database management system<br>3.2 Creates the new loan in the LOAN table, including <i>LoanNo, LoanDate<\/i> (today)<i>, DueDate, BorrowerNo<\/i><br>3.3 For each asset on the loan list, creates a loan item in the LOAN_ITEM table (<i>LoanNo, AssetNo<\/i>) and sets <i>AssetStatus<\/i> = &ldquo;on loan&rdquo;<br>3.4 <i>If the borrower's status is &ldquo;new&rdquo;<\/i>, sets <i>BorrowerStatus<\/i> = &ldquo;active&rdquo;<br>3.5 Confirms that the loan has been issued<\/td><\/tr>\n<tr><td><b>Extensions:<\/b><\/td><td><\/td><td><i>If the asset is not available<\/i><br>2.2 Displays a message that the asset is unavailable and does not add it to the loan list<\/td><\/tr>\n<\/tbody><\/table><\/div>", "qs": [{"id": "C1.1", "marks": 18, "q": "Draw and fully label a design sequence diagram (three-layer: boundary, controller and entity objects) to realise the <i>Issue loan<\/i> use case.<br><b>Note:<\/b> include the boundary and controller objects, <b>all loops<\/b>, and the extension (alternative) and the optional step in your answer.", "a": "<div class=\"diagram-wrap wide\"><div class=\"scroll-hint\">&harr; scroll sideways to see the whole diagram<\/div><svg class=\"dg\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1340 1288\" width=\"1340\" height=\"1288\" role=\"img\" aria-label=\"Sequence Diagram: Issue Loan\"><defs><marker id=\"ah\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto-start-reverse\"><path d=\"M0,0 L10,5 L0,10 z\" fill=\"#2a3447\"/><\/marker><marker id=\"ao\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto-start-reverse\"><path d=\"M1,1 L9,5 L1,9\" fill=\"none\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><\/marker><\/defs><rect x=\"0\" y=\"0\" width=\"1340\" height=\"1288\" fill=\"#fff\"/><text x=\"670.0\" y=\"28\" font-size=\"13\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >Sequence Diagram: Issue Loan<\/text><circle cx=\"80\" cy=\"64\" r=\"7\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><line x1=\"80\" y1=\"71\" x2=\"80\" y2=\"90\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><line x1=\"68\" y1=\"78\" x2=\"92\" y2=\"78\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><line x1=\"80\" y1=\"90\" x2=\"70\" y2=\"104\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><line x1=\"80\" y1=\"90\" x2=\"90\" y2=\"104\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><text x=\"80\" y=\"118\" font-size=\"11\" text-anchor=\"middle\" font-weight=\"600\" fill=\"#1b2230\" >Store Clerk<\/text><line x1=\"80\" y1=\"118\" x2=\"80\" y2=\"1278\" stroke=\"#7d889b\" stroke-width=\"1\" stroke-dasharray=\"5 5\"/><rect x=\"210.0\" y=\"56\" width=\"120.0\" height=\"28\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.4\" stroke-dasharray=\"5 3\"/><text x=\"270\" y=\"74\" font-size=\"11.5\" text-anchor=\"middle\" font-weight=\"600\" fill=\"#1b2230\" text-decoration=\"underline\" >:IssueLoanForm<\/text><line x1=\"270\" y1=\"84\" x2=\"270\" y2=\"1278\" stroke=\"#7d889b\" stroke-width=\"1\" stroke-dasharray=\"5 5\"/><rect x=\"397.0\" y=\"56\" width=\"106.0\" height=\"28\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><text x=\"450\" y=\"74\" font-size=\"11.5\" text-anchor=\"middle\" font-weight=\"600\" fill=\"#1b2230\" text-decoration=\"underline\" >:LoanHandler<\/text><line x1=\"450\" y1=\"84\" x2=\"450\" y2=\"1278\" stroke=\"#7d889b\" stroke-width=\"1\" stroke-dasharray=\"5 5\"/><rect x=\"597.0\" y=\"56\" width=\"86\" height=\"28\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><text x=\"640\" y=\"74\" font-size=\"11.5\" text-anchor=\"middle\" font-weight=\"600\" fill=\"#1b2230\" text-decoration=\"underline\" >:Borrower<\/text><line x1=\"640\" y1=\"84\" x2=\"640\" y2=\"1278\" stroke=\"#7d889b\" stroke-width=\"1\" stroke-dasharray=\"5 5\"/><rect x=\"757.0\" y=\"56\" width=\"86\" height=\"28\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><text x=\"800\" y=\"74\" font-size=\"11.5\" text-anchor=\"middle\" font-weight=\"600\" fill=\"#1b2230\" text-decoration=\"underline\" >:Asset<\/text><line x1=\"800\" y1=\"84\" x2=\"800\" y2=\"1278\" stroke=\"#7d889b\" stroke-width=\"1\" stroke-dasharray=\"5 5\"/><rect x=\"907.0\" y=\"56\" width=\"86\" height=\"28\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><text x=\"950\" y=\"74\" font-size=\"11.5\" text-anchor=\"middle\" font-weight=\"600\" fill=\"#1b2230\" text-decoration=\"underline\" >:Loan<\/text><line x1=\"950\" y1=\"84\" x2=\"950\" y2=\"1278\" stroke=\"#7d889b\" stroke-width=\"1\" stroke-dasharray=\"5 5\"/><line x1=\"1100\" y1=\"850\" x2=\"1100\" y2=\"1278\" stroke=\"#7d889b\" stroke-width=\"1\" stroke-dasharray=\"5 5\"/><line x1=\"1250\" y1=\"1034\" x2=\"1250\" y2=\"1278\" stroke=\"#7d889b\" stroke-width=\"1\" stroke-dasharray=\"5 5\"/><rect x=\"194\" y=\"386\" width=\"682\" height=\"296\" fill=\"none\" stroke=\"#2a3447\" stroke-width=\"1.3\"/><path d=\"M194,386 h56 v14 l-8,8 h-48 z\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"202\" y=\"401\" font-size=\"11\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Loop<\/text><text x=\"262\" y=\"402\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" font-style=\"italic\" >[for each AssetNo entered]<\/text><rect x=\"374\" y=\"972\" width=\"952\" height=\"104\" fill=\"none\" stroke=\"#2a3447\" stroke-width=\"1.3\"/><path d=\"M374,972 h56 v14 l-8,8 h-48 z\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"382\" y=\"987\" font-size=\"11\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Loop<\/text><text x=\"442\" y=\"988\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" font-style=\"italic\" >[for each asset on loan list]<\/text><rect x=\"374\" y=\"1090\" width=\"342\" height=\"70\" fill=\"none\" stroke=\"#2a3447\" stroke-width=\"1.3\"/><path d=\"M374,1090 h52 v14 l-8,8 h-44 z\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"382\" y=\"1105\" font-size=\"11\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Opt<\/text><text x=\"438\" y=\"1106\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" font-style=\"italic\" >[BorrowerStatus = &quot;new&quot;]<\/text><rect x=\"214\" y=\"532\" width=\"642\" height=\"144\" fill=\"none\" stroke=\"#2a3447\" stroke-width=\"1.3\"/><path d=\"M214,532 h52 v14 l-8,8 h-44 z\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"222\" y=\"547\" font-size=\"11\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Alt<\/text><text x=\"278\" y=\"548\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" font-style=\"italic\" >[AssetStatus = &quot;available&quot;]<\/text><line x1=\"214\" y1=\"608\" x2=\"856\" y2=\"608\" stroke=\"#2a3447\" stroke-width=\"1.2\" stroke-dasharray=\"7 4\"/><text x=\"222\" y=\"623\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" font-style=\"italic\" >[AssetStatus &lt;&gt; &quot;available&quot;]<\/text><line x1=\"84\" y1=\"154\" x2=\"264\" y2=\"154\" stroke=\"#2a3447\" stroke-width=\"1.2\" marker-end=\"url(#ah)\"/><text x=\"172.0\" y=\"148\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >requestToIssueLoan()<\/text><line x1=\"274\" y1=\"188\" x2=\"444\" y2=\"188\" stroke=\"#2a3447\" stroke-width=\"1.2\" marker-end=\"url(#ah)\"/><text x=\"357.0\" y=\"182\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >requestToIssueLoan()<\/text><line x1=\"454\" y1=\"222\" x2=\"634\" y2=\"222\" stroke=\"#2a3447\" stroke-width=\"1.2\" marker-end=\"url(#ah)\"/><text x=\"542.0\" y=\"216\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >getAllBorrowers()<\/text><line x1=\"636\" y1=\"256\" x2=\"456\" y2=\"256\" stroke=\"#2a3447\" stroke-width=\"1.2\" stroke-dasharray=\"6 4\" marker-end=\"url(#ao)\"/><text x=\"548.0\" y=\"250\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >return borrowerList (BorrowerNo, Name, Status)<\/text><line x1=\"446\" y1=\"290\" x2=\"276\" y2=\"290\" stroke=\"#2a3447\" stroke-width=\"1.2\" stroke-dasharray=\"6 4\" marker-end=\"url(#ao)\"/><text x=\"363.0\" y=\"284\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >return borrowerList<\/text><line x1=\"266\" y1=\"324\" x2=\"86\" y2=\"324\" stroke=\"#2a3447\" stroke-width=\"1.2\" stroke-dasharray=\"6 4\" marker-end=\"url(#ao)\"/><text x=\"178.0\" y=\"318\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >show borrowers, prompt for input<\/text><line x1=\"84\" y1=\"358\" x2=\"264\" y2=\"358\" stroke=\"#2a3447\" stroke-width=\"1.2\" marker-end=\"url(#ah)\"/><text x=\"172.0\" y=\"352\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >enterLoanDetails()<\/text><line x1=\"274\" y1=\"436\" x2=\"444\" y2=\"436\" stroke=\"#2a3447\" stroke-width=\"1.2\" marker-end=\"url(#ah)\"/><text x=\"357.0\" y=\"430\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >checkAssetAvailability(AssetNo)<\/text><line x1=\"454\" y1=\"470\" x2=\"794\" y2=\"470\" stroke=\"#2a3447\" stroke-width=\"1.2\" marker-end=\"url(#ah)\"/><text x=\"622.0\" y=\"464\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >getAsset(AssetNo)<\/text><line x1=\"796\" y1=\"504\" x2=\"456\" y2=\"504\" stroke=\"#2a3447\" stroke-width=\"1.2\" stroke-dasharray=\"6 4\" marker-end=\"url(#ao)\"/><text x=\"628.0\" y=\"498\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >return AssetDetails (AssetNo, AssetDesc, AssetStatus)<\/text><line x1=\"446\" y1=\"582\" x2=\"276\" y2=\"582\" stroke=\"#2a3447\" stroke-width=\"1.2\" stroke-dasharray=\"6 4\" marker-end=\"url(#ao)\"/><text x=\"363.0\" y=\"576\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >return assetDescription (add to loan list)<\/text><line x1=\"446\" y1=\"656\" x2=\"276\" y2=\"656\" stroke=\"#2a3447\" stroke-width=\"1.2\" stroke-dasharray=\"6 4\" marker-end=\"url(#ao)\"/><text x=\"363.0\" y=\"650\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >return &quot;asset unavailable&quot; message<\/text><line x1=\"84\" y1=\"702\" x2=\"264\" y2=\"702\" stroke=\"#2a3447\" stroke-width=\"1.2\" marker-end=\"url(#ah)\"/><text x=\"172.0\" y=\"696\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >confirmLoan()<\/text><line x1=\"274\" y1=\"736\" x2=\"444\" y2=\"736\" stroke=\"#2a3447\" stroke-width=\"1.2\" marker-end=\"url(#ah)\"/><text x=\"357.0\" y=\"730\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >issueLoan(BorrowerNo, DueDate, AssetList)<\/text><line x1=\"454\" y1=\"770\" x2=\"944\" y2=\"770\" stroke=\"#2a3447\" stroke-width=\"1.2\" marker-end=\"url(#ah)\"/><text x=\"697.0\" y=\"764\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >getNextLoanNo()<\/text><line x1=\"946\" y1=\"804\" x2=\"456\" y2=\"804\" stroke=\"#2a3447\" stroke-width=\"1.2\" stroke-dasharray=\"6 4\" marker-end=\"url(#ao)\"/><text x=\"703.0\" y=\"798\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >return LoanNo<\/text><line x1=\"454\" y1=\"838\" x2=\"1044\" y2=\"838\" stroke=\"#2a3447\" stroke-width=\"1.2\" stroke-dasharray=\"6 4\" marker-end=\"url(#ah)\"/><text x=\"747.0\" y=\"832\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >createLoan(LoanDetails)<\/text><rect x=\"1057.0\" y=\"824.0\" width=\"86\" height=\"28\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><text x=\"1100\" y=\"842.0\" font-size=\"11.5\" text-anchor=\"middle\" font-weight=\"600\" fill=\"#1b2230\" text-decoration=\"underline\" >:aNewLoan<\/text><rect x=\"1080\" y=\"862\" width=\"110.4\" height=\"85\" rx=\"0\" fill=\"#fffbe6\" stroke=\"#b59b2a\" stroke-width=\"1\"/><text x=\"1088\" y=\"878\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >LoanDetails<\/text><text x=\"1088\" y=\"893\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >LoanNo<\/text><text x=\"1088\" y=\"908\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >LoanDate = today<\/text><text x=\"1088\" y=\"923\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >DueDate<\/text><text x=\"1088\" y=\"938\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >BorrowerNo<\/text><line x1=\"454\" y1=\"1022\" x2=\"1194\" y2=\"1022\" stroke=\"#2a3447\" stroke-width=\"1.2\" stroke-dasharray=\"6 4\" marker-end=\"url(#ah)\"/><text x=\"822.0\" y=\"1016\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >createLoanItem(LoanNo, AssetNo)<\/text><rect x=\"1193.5\" y=\"1008.0\" width=\"113.0\" height=\"28\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><text x=\"1250\" y=\"1026.0\" font-size=\"11.5\" text-anchor=\"middle\" font-weight=\"600\" fill=\"#1b2230\" text-decoration=\"underline\" >:aNewLoanItem<\/text><line x1=\"454\" y1=\"1056\" x2=\"794\" y2=\"1056\" stroke=\"#2a3447\" stroke-width=\"1.2\" marker-end=\"url(#ah)\"/><text x=\"622.0\" y=\"1050\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >updateAssetStatus(AssetNo, &quot;on loan&quot;)<\/text><line x1=\"454\" y1=\"1140\" x2=\"634\" y2=\"1140\" stroke=\"#2a3447\" stroke-width=\"1.2\" marker-end=\"url(#ah)\"/><text x=\"542.0\" y=\"1134\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >updateBorrowerStatus(BorrowerNo, &quot;active&quot;)<\/text><line x1=\"446\" y1=\"1180\" x2=\"276\" y2=\"1180\" stroke=\"#2a3447\" stroke-width=\"1.2\" stroke-dasharray=\"6 4\" marker-end=\"url(#ao)\"/><text x=\"363.0\" y=\"1174\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >return confirmation of loan issued (LoanNo)<\/text><line x1=\"266\" y1=\"1214\" x2=\"86\" y2=\"1214\" stroke=\"#2a3447\" stroke-width=\"1.2\" stroke-dasharray=\"6 4\" marker-end=\"url(#ao)\"/><text x=\"178.0\" y=\"1208\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >show confirmation<\/text><\/svg><\/div><b>Marking guide (18):<\/b><ul><li>Objects: actor, boundary <i>:IssueLoanForm<\/i>, controller <i>:LoanHandler<\/i>, entities <i>:Borrower, :Asset, :Loan<\/i> and the newly-created <i>:aNewLoan, :aNewLoanItem<\/i> (3)<\/li><li>Request, <i>getAllBorrowers()<\/i> and the display/prompt return messages (3)<\/li><li><b>Loop<\/b> [for each AssetNo entered]: <i>checkAssetAvailability<\/i> &rarr; <i>getAsset<\/i> &rarr; returned AssetDetails (3)<\/li><li><b>Alt<\/b> with both guards, [AssetStatus = &ldquo;available&rdquo;] and the extension [AssetStatus &lt;&gt; &ldquo;available&rdquo;] with the correct responses (3)<\/li><li><i>getNextLoanNo()<\/i> followed by creation of the new loan object with LoanDetails (2)<\/li><li><b>Loop<\/b> [for each asset on the loan list]: create loan item and <i>updateAssetStatus<\/i> (2)<\/li><li><b>Opt<\/b> [BorrowerStatus = &ldquo;new&rdquo;]: <i>updateBorrowerStatus<\/i> (1)<\/li><li>Final confirmation returned through the controller to the form and the actor; solid call arrows, dashed returns, return values labelled (1)<\/li><\/ul><p><b>Remember:<\/b> the boundary object never talks to an entity object directly &mdash; every call to <i>:Borrower<\/i>, <i>:Asset<\/i> and <i>:Loan<\/i> goes through <i>:LoanHandler<\/i>.<\/p>"}, {"id": "C1.2", "marks": 2, "q": "List two (2) post-conditions for the <i>Issue loan<\/i> use case.", "a": "<b>If the loan is issued successfully:<\/b> a new loan record exists in LOAN (system-generated LoanNo, LoanDate = today, DueDate, BorrowerNo) with one LOAN_ITEM record per asset; each of those assets has AssetStatus = &ldquo;on loan&rdquo;; and a borrower whose status was &ldquo;new&rdquo; is now &ldquo;active&rdquo;. &#10003;<br><b>Extension (asset not available):<\/b> the unavailable asset is not added to the loan list, no LOAN_ITEM is created for it and its status is unchanged; the clerk is told it is unavailable. &#10003;"}]}, {"type": "qs", "heading": "Question C2 - Functional user interface (10 marks)", "scenario": "Refer to the <i>Issue loan<\/i> use case and the partial ERD in Question C1. The form will be built in C# (Windows Forms) and the data will be retrieved through ADO.NET.", "qs": [{"id": "C2.1", "marks": 4, "q": "Draw a wireframe/prototype of the form for the <i>Issue loan<\/i> use case. Label the controls and mark which fields are mandatory.<br><b>Note:<\/b> default and system-generated values must <b>not<\/b> be captured.", "a": "<div class=\"diagram-wrap wide\"><div class=\"scroll-hint\">&harr; scroll sideways to see the whole diagram<\/div><svg class=\"dg\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 980 545\" width=\"980\" height=\"545\" role=\"img\" aria-label=\"Issue Loan wireframe\"><defs><marker id=\"ah\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto-start-reverse\"><path d=\"M0,0 L10,5 L0,10 z\" fill=\"#2a3447\"/><\/marker><marker id=\"ao\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto-start-reverse\"><path d=\"M1,1 L9,5 L1,9\" fill=\"none\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><\/marker><\/defs><rect x=\"0\" y=\"0\" width=\"980\" height=\"545\" fill=\"#fff\"/><text x=\"20\" y=\"24\" font-size=\"13\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Wireframe: Issue Loan form (model answer)<\/text><rect x=\"20\" y=\"40\" width=\"540\" height=\"460\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.6\"/><rect x=\"20\" y=\"40\" width=\"540\" height=\"28\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.6\"/><text x=\"32\" y=\"59\" font-size=\"12.5\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Issue Loan<\/text><text x=\"546\" y=\"59\" font-size=\"12\" text-anchor=\"end\" font-weight=\"400\" fill=\"#1b2230\" >✕<\/text><text x=\"40\" y=\"107\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Borrower *<\/text><rect x=\"150\" y=\"86\" width=\"250\" height=\"26\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"158\" y=\"103.0\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#5b6678\" >Select borrower…<\/text><rect x=\"374\" y=\"86\" width=\"26\" height=\"26\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><polygon points=\"381,96 393,96 387,104\" fill=\"#2a3447\"/><text x=\"40\" y=\"152\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Loan date<\/text><rect x=\"150\" y=\"131\" width=\"160\" height=\"26\" rx=\"0\" fill=\"#eceff4\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"158\" y=\"148.0\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >07 October 2026<\/text><text x=\"40\" y=\"197\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Due date *<\/text><rect x=\"150\" y=\"176\" width=\"160\" height=\"26\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"158\" y=\"193.0\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#5b6678\" >dd / mm / yyyy<\/text><rect x=\"284\" y=\"176\" width=\"26\" height=\"26\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"297\" y=\"194\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#1b2230\" >▦<\/text><text x=\"40\" y=\"242\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Asset no. *<\/text><rect x=\"150\" y=\"221\" width=\"160\" height=\"26\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"158\" y=\"238.0\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#5b6678\" >e.g. 107<\/text><rect x=\"324\" y=\"221\" width=\"76\" height=\"26\" rx=\"4\" fill=\"#dfe9fa\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"362\" y=\"238\" font-size=\"11\" text-anchor=\"middle\" font-weight=\"600\" fill=\"#1b2230\" >Add asset<\/text><text x=\"40\" y=\"276\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"600\" fill=\"#1b2230\" >Assets on this loan *<\/text><rect x=\"40\" y=\"286\" width=\"500\" height=\"24\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"50\" y=\"302\" font-size=\"11\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Asset no.<\/text><text x=\"140\" y=\"302\" font-size=\"11\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Description<\/text><text x=\"400\" y=\"302\" font-size=\"11\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Status<\/text><rect x=\"40\" y=\"310\" width=\"500\" height=\"24\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"50\" y=\"326\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >107<\/text><text x=\"140\" y=\"326\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Dell Latitude Laptop<\/text><text x=\"400\" y=\"326\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >available<\/text><rect x=\"40\" y=\"334\" width=\"500\" height=\"24\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"50\" y=\"350\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >233<\/text><text x=\"140\" y=\"350\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Tripod (aluminium)<\/text><text x=\"400\" y=\"350\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >available<\/text><rect x=\"40\" y=\"358\" width=\"500\" height=\"24\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"40\" y=\"382\" width=\"500\" height=\"24\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><rect x=\"440\" y=\"416\" width=\"100\" height=\"26\" rx=\"4\" fill=\"#fdeceb\" stroke=\"#c4423a\" stroke-width=\"1.2\"/><text x=\"490\" y=\"433\" font-size=\"10.5\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#c4423a\" >Remove selected<\/text><rect x=\"150\" y=\"456\" width=\"130\" height=\"32\" rx=\"5\" fill=\"#2f6fc4\" stroke=\"#2f6fc4\" stroke-width=\"1.2\"/><text x=\"215\" y=\"477\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#fff\" >Issue Loan<\/text><rect x=\"294\" y=\"456\" width=\"100\" height=\"32\" rx=\"5\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"344\" y=\"477\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"600\" fill=\"#1b2230\" >Clear<\/text><rect x=\"408\" y=\"456\" width=\"100\" height=\"32\" rx=\"5\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.2\"/><text x=\"458\" y=\"477\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"600\" fill=\"#1b2230\" >Cancel<\/text><circle cx=\"330\" cy=\"189\" r=\"8\" fill=\"#c4423a\"/><text x=\"330\" y=\"193\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#fff\" >!<\/text><circle cx=\"600\" cy=\"90\" r=\"11\" fill=\"#c4423a\"/><text x=\"600\" y=\"94\" font-size=\"11\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#fff\" >1<\/text><line x1=\"589\" y1=\"90\" x2=\"404\" y2=\"99\" stroke=\"#c4423a\" stroke-width=\"1\" stroke-dasharray=\"3 3\"/><text x=\"620\" y=\"88\" font-size=\"11\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >ComboBox (bound)<\/text><text x=\"620\" y=\"103\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >DisplayMember = BorrowerName<\/text><text x=\"620\" y=\"118\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >ValueMember = BorrowerNo<\/text><text x=\"620\" y=\"133\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Error if nothing selected<\/text><circle cx=\"600\" cy=\"166\" r=\"11\" fill=\"#c4423a\"/><text x=\"600\" y=\"170\" font-size=\"11\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#fff\" >2<\/text><line x1=\"589\" y1=\"166\" x2=\"312\" y2=\"144\" stroke=\"#c4423a\" stroke-width=\"1\" stroke-dasharray=\"3 3\"/><text x=\"620\" y=\"164\" font-size=\"11\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Default / system value<\/text><text x=\"620\" y=\"179\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >LoanDate = today. Not captured (disabled)<\/text><circle cx=\"600\" cy=\"212\" r=\"11\" fill=\"#c4423a\"/><text x=\"600\" y=\"216\" font-size=\"11\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#fff\" >3<\/text><line x1=\"589\" y1=\"212\" x2=\"340\" y2=\"189\" stroke=\"#c4423a\" stroke-width=\"1\" stroke-dasharray=\"3 3\"/><text x=\"620\" y=\"210\" font-size=\"11\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >ErrorProvider on DueDate<\/text><text x=\"620\" y=\"225\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Required; must be a valid date;<\/text><text x=\"620\" y=\"240\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >must be after LoanDate<\/text><circle cx=\"600\" cy=\"268\" r=\"11\" fill=\"#c4423a\"/><text x=\"600\" y=\"272\" font-size=\"11\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#fff\" >4<\/text><line x1=\"589\" y1=\"268\" x2=\"404\" y2=\"234\" stroke=\"#c4423a\" stroke-width=\"1\" stroke-dasharray=\"3 3\"/><text x=\"620\" y=\"266\" font-size=\"11\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >ErrorProvider on AssetNo<\/text><text x=\"620\" y=\"281\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Required; numeric; asset must exist<\/text><text x=\"620\" y=\"296\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >and be &quot;available&quot;<\/text><circle cx=\"600\" cy=\"348\" r=\"11\" fill=\"#c4423a\"/><text x=\"600\" y=\"352\" font-size=\"11\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#fff\" >5<\/text><line x1=\"589\" y1=\"348\" x2=\"544\" y2=\"332\" stroke=\"#c4423a\" stroke-width=\"1\" stroke-dasharray=\"3 3\"/><text x=\"620\" y=\"346\" font-size=\"11\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Loan list (DataGridView)<\/text><text x=\"620\" y=\"361\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >At least one asset required before<\/text><text x=\"620\" y=\"376\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Issue Loan is accepted<\/text><circle cx=\"600\" cy=\"473\" r=\"11\" fill=\"#c4423a\"/><text x=\"600\" y=\"477\" font-size=\"11\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#fff\" >6<\/text><line x1=\"589\" y1=\"473\" x2=\"510\" y2=\"473\" stroke=\"#c4423a\" stroke-width=\"1\" stroke-dasharray=\"3 3\"/><text x=\"620\" y=\"471\" font-size=\"11\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Buttons<\/text><text x=\"620\" y=\"486\" font-size=\"11\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Issue Loan = confirm; Clear = reset; Cancel = close<\/text><text x=\"20\" y=\"528\" font-size=\"10.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >* = mandatory. LoanNo is system-generated, so it is not captured.<\/text><\/svg><\/div><p>Answers will vary. Marks: all attributes the clerk must supply map onto the ERD (Borrower, DueDate, AssetNo) (1); suitable controls &mdash; ComboBox for borrower, date picker for due date, list for assets on the loan (1); no LoanNo / LoanDate / statuses captured (1); appropriate buttons (Add asset, Issue Loan, Clear, Cancel) (1).<\/p>"}, {"id": "C2.2", "marks": 3, "q": "Describe three (3) input validations for this form. For each, name the control, the rule, and explain how an <code class=\"inline\">ErrorProvider<\/code> would be used to inform the clerk.", "a": "Any three (&#10003; each):<ul><li><b>cboBorrower<\/b> &mdash; a borrower must be selected (SelectedIndex &ne; &minus;1): <code class=\"inline\">errProv.SetError(cboBorrower, \"Select a borrower\")<\/code><\/li><li><b>dtpDueDate<\/b> &mdash; mandatory, a valid date and later than today's LoanDate: <code class=\"inline\">errProv.SetError(dtpDueDate, \"Due date must be after today\")<\/code><\/li><li><b>txtAssetNo<\/b> &mdash; mandatory and numeric (<code class=\"inline\">int.TryParse<\/code>); the asset must exist and be &ldquo;available&rdquo;<\/li><li><b>Loan list<\/b> &mdash; at least one asset must be on the list before Issue Loan is accepted<\/li><\/ul>When a rule fails, the error is set on the control (an icon appears beside it with the message as a tooltip) and saving is blocked; when the input is corrected the error is cleared with <code class=\"inline\">errProv.SetError(control, \"\")<\/code>."}, {"id": "C2.3", "marks": 3, "q": "The form must display each borrower's <b>name<\/b>, but the controller needs the <b>BorrowerNo<\/b> of the borrower the clerk selects. State the ComboBox properties you would set and the values you would give them.", "a": "<code class=\"inline\">cboBorrower.DataSource<\/code> = the borrower <i>DataTable<\/i> returned by the handler (BorrowerNo, BorrowerName) &#10003;<br><code class=\"inline\">cboBorrower.DisplayMember = \"BorrowerName\"<\/code> &mdash; what the clerk sees &#10003;<br><code class=\"inline\">cboBorrower.ValueMember = \"BorrowerNo\"<\/code> &mdash; what <code class=\"inline\">SelectedValue<\/code> returns, which is passed to <i>issueLoan(BorrowerNo, DueDate, AssetList)<\/i> and stored as the foreign key in LOAN &#10003;"}]}, {"type": "qs", "heading": "Question C3 - Simple reporting (10 marks)", "scenario": "The Store Manager is concerned that borrowers are not returning assets on time and has no easy way of seeing which items are overdue. Refer to the scenario and the partial ERD in Question C1.", "qs": [{"id": "C3.1", "marks": 7, "q": "Use the following table to suggest a report that would be useful to the Store Manager. <b>Note:<\/b> redraw the table in your answer book. <div class=\"tbl-scroll\"><table class=\"paper-tbl\"><tbody><tr><td>Report name:<\/td><td>(&frac12; mark)<\/td><\/tr><tr><td>Report type:<\/td><td>(&frac12; mark)<\/td><\/tr><tr><td>Report format:<\/td><td>(&frac12; mark)<\/td><\/tr><tr><td>Report recipient(s):<\/td><td>(&frac12; mark)<\/td><\/tr><tr><td>Report frequency:<\/td><td>(&frac12; mark)<\/td><\/tr><tr><td>Report rationale:<\/td><td>(2 marks)<\/td><\/tr><tr><td>Decision(s) made as a result of the report:<\/td><td>(2&frac12; marks)<\/td><\/tr><\/tbody><\/table><\/div>", "a": "<b>One possible answer<\/b> (any other reasonable answer is acceptable):<div class=\"tbl-scroll\"><table class=\"ans-table\"><thead><tr><th>Field<\/th><th>Details<\/th><\/tr><\/thead><tbody><tr><td>Report name<\/td><td>Overdue Asset Loans Report<\/td><\/tr><tr><td>Report type<\/td><td>Operational / exception (status) report &mdash; lists only items that are past their due date<\/td><\/tr><tr><td>Report format<\/td><td>Tabular report, grouped/sorted by days outstanding; on-screen with PDF/print option<\/td><\/tr><tr><td>Report recipient(s)<\/td><td>Store Manager (copy to the loans clerks)<\/td><\/tr><tr><td>Report frequency<\/td><td>Weekly (every Monday morning) &mdash; or daily during exam periods<\/td><\/tr><tr><td>Report rationale<\/td><td>Shows which borrowers still hold assets after the due date, which assets they hold and for how long (calculated <i>Days Outstanding<\/i>). It lets the manager see at a glance where the equipment is, which items are at risk of being lost, and how well the loan period is being observed, without searching loan records by hand.<\/td><\/tr><tr><td>Decision(s) made as a result of the report<\/td><td><ul><li>Which borrowers to contact or send reminders to, and in what order of urgency (longest outstanding first)<\/li><li>Whether to suspend borrowing privileges for repeat or serious offenders<\/li><li>Whether a long-outstanding asset should be treated as lost and written off / replaced<\/li><li>Whether loan periods or stock levels of heavily-demanded categories need to change<\/li><\/ul><\/td><\/tr><\/tbody><\/table><\/div>"}, {"id": "C3.2", "marks": 3, "q": "Draw a rough wireframe/prototype of the report you designed in C3.1. It must show a title, the run date, sample rows and at least one <b>calculated field<\/b> (for example <i>Days Outstanding<\/i>).", "a": "<div class=\"diagram-wrap\"><svg class=\"dg\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 900 400\" width=\"900\" height=\"400\" role=\"img\" aria-label=\"Overdue asset loans report mock-up\"><defs><marker id=\"ah\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto-start-reverse\"><path d=\"M0,0 L10,5 L0,10 z\" fill=\"#2a3447\"/><\/marker><marker id=\"ao\" viewBox=\"0 0 10 10\" refX=\"9\" refY=\"5\" markerWidth=\"8\" markerHeight=\"8\" orient=\"auto-start-reverse\"><path d=\"M1,1 L9,5 L1,9\" fill=\"none\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><\/marker><\/defs><rect x=\"0\" y=\"0\" width=\"900\" height=\"400\" fill=\"#fff\"/><rect x=\"20\" y=\"14\" width=\"860\" height=\"372\" rx=\"0\" fill=\"#fff\" stroke=\"#2a3447\" stroke-width=\"1.4\"/><text x=\"450\" y=\"44\" font-size=\"12\" text-anchor=\"middle\" font-weight=\"600\" fill=\"#5b6678\" >TechLend Equipment Loans<\/text><text x=\"450\" y=\"68\" font-size=\"17\" text-anchor=\"middle\" font-weight=\"700\" fill=\"#1b2230\" >OVERDUE ASSET LOANS REPORT<\/text><text x=\"40\" y=\"96\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Run date: 07 October 2026<\/text><text x=\"860\" y=\"96\" font-size=\"11.5\" text-anchor=\"end\" font-weight=\"400\" fill=\"#1b2230\" >Prepared for: Store Manager<\/text><line x1=\"40\" y1=\"106\" x2=\"860\" y2=\"106\" stroke=\"#2a3447\" stroke-width=\"1.5\"/><rect x=\"40\" y=\"114\" width=\"820\" height=\"26\" rx=\"0\" fill=\"#e3e9f2\" stroke=\"#e3e9f2\" stroke-width=\"1.2\"/><text x=\"48\" y=\"132\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Loan No<\/text><text x=\"138\" y=\"132\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Borrower<\/text><text x=\"338\" y=\"132\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Asset<\/text><text x=\"608\" y=\"132\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Due Date<\/text><text x=\"852\" y=\"132\" font-size=\"11.5\" text-anchor=\"end\" font-weight=\"700\" fill=\"#1b2230\" >Days Outstanding<\/text><line x1=\"40\" y1=\"168\" x2=\"860\" y2=\"168\" stroke=\"#d5dbe6\" stroke-width=\"1\"/><text x=\"48\" y=\"158\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >2041<\/text><text x=\"138\" y=\"158\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Thabo Mokoena<\/text><text x=\"338\" y=\"158\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Dell Latitude Laptop<\/text><text x=\"608\" y=\"158\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >18-September-2026<\/text><text x=\"852\" y=\"158\" font-size=\"11.5\" text-anchor=\"end\" font-weight=\"700\" fill=\"#c4423a\" >19<\/text><line x1=\"40\" y1=\"196\" x2=\"860\" y2=\"196\" stroke=\"#d5dbe6\" stroke-width=\"1\"/><text x=\"48\" y=\"186\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >2047<\/text><text x=\"138\" y=\"186\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Ayesha Patel<\/text><text x=\"338\" y=\"186\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Epson Projector EB-X06<\/text><text x=\"608\" y=\"186\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >25-September-2026<\/text><text x=\"852\" y=\"186\" font-size=\"11.5\" text-anchor=\"end\" font-weight=\"700\" fill=\"#1b2230\" >12<\/text><line x1=\"40\" y1=\"224\" x2=\"860\" y2=\"224\" stroke=\"#d5dbe6\" stroke-width=\"1\"/><text x=\"48\" y=\"214\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >2051<\/text><text x=\"138\" y=\"214\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Sipho Dlamini<\/text><text x=\"338\" y=\"214\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Canon EOS 250D Camera<\/text><text x=\"608\" y=\"214\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >29-September-2026<\/text><text x=\"852\" y=\"214\" font-size=\"11.5\" text-anchor=\"end\" font-weight=\"700\" fill=\"#1b2230\" >8<\/text><line x1=\"40\" y1=\"252\" x2=\"860\" y2=\"252\" stroke=\"#d5dbe6\" stroke-width=\"1\"/><text x=\"48\" y=\"242\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >2051<\/text><text x=\"138\" y=\"242\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Sipho Dlamini<\/text><text x=\"338\" y=\"242\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Tripod (aluminium)<\/text><text x=\"608\" y=\"242\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >29-September-2026<\/text><text x=\"852\" y=\"242\" font-size=\"11.5\" text-anchor=\"end\" font-weight=\"700\" fill=\"#1b2230\" >8<\/text><line x1=\"40\" y1=\"280\" x2=\"860\" y2=\"280\" stroke=\"#d5dbe6\" stroke-width=\"1\"/><text x=\"48\" y=\"270\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >2056<\/text><text x=\"138\" y=\"270\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >Lerato Khumalo<\/text><text x=\"338\" y=\"270\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >HDMI Cable 5 m<\/text><text x=\"608\" y=\"270\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"400\" fill=\"#1b2230\" >3-October-2026<\/text><text x=\"852\" y=\"270\" font-size=\"11.5\" text-anchor=\"end\" font-weight=\"700\" fill=\"#1b2230\" >4<\/text><line x1=\"40\" y1=\"294\" x2=\"860\" y2=\"294\" stroke=\"#2a3447\" stroke-width=\"1.5\"/><text x=\"48\" y=\"316\" font-size=\"11.5\" text-anchor=\"start\" font-weight=\"700\" fill=\"#1b2230\" >Total overdue items: 5<\/text><text x=\"852\" y=\"316\" font-size=\"11.5\" text-anchor=\"end\" font-weight=\"700\" fill=\"#1b2230\" >Average days outstanding: 10.2<\/text><text x=\"450\" y=\"376\" font-size=\"10\" text-anchor=\"middle\" font-weight=\"400\" fill=\"#5b6678\" font-style=\"italic\" >Page 1 of 1   |   Days Outstanding = run date − DueDate (calculated field)   |   Sorted: longest outstanding first<\/text><\/svg><\/div><p>Marks follow the allocation: report layout with title, run date and column headings (1); sensible sample data matching the table in C3.1 (1); calculated field shown correctly &mdash; here <i>Days Outstanding<\/i> = run date &minus; due date, e.g. 7 Oct 2026 &minus; 18 Sep 2026 = 19 days (1). Totals and sorting are good extras.<\/p>"}]}]}]} ];
+
+  function qMarks(n){ return `<span class="marks">[${n} ${n===1?'mark':'marks'}]</span>`; }
+
+  function mcqHTML(items, start){
+    return items.map((x,i)=>`
+      <div class="q-block">
+        <p class="q-text"><span class="qnum">A${start+i}</span>${x[0]}</p>
+        <div class="options">${x[1].map((o,j)=>`<button class="opt mcq-opt" data-correct="${x[2]}" data-choice="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div>
+        <p class="explain">${x[3]}</p>
+      </div>`).join('');
+  }
+
+  let uid = 0;
+  function qsHTML(qs){
+    return qs.map(x=>{
+      const id = 'ans-' + (uid++);
+      return `
+        <div class="qitem">
+          <p class="qtitle"><span class="qnum-tag">${x.id}</span>${x.q} ${qMarks(x.marks)}</p>
+          <button class="reveal-btn" data-target="${id}">Show model answer</button>
+          <div class="model-answer" id="${id}">${x.a}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function partHTML(p){
+    if(p.type === 'mcq'){
+      return `<h3 class="part-title">${p.heading}</h3>
+        <div class="scenario"><b>Instructions.</b> ${p.intro}</div>
+        ${mcqHTML(p.items, p.start)}`;
+    }
+    return `<h3 class="part-title">${p.heading}</h3>
+      ${p.intro ? `<div class="scenario">${p.intro}</div>` : ''}
+      ${p.scenario ? `<div class="scenario"><b>Scenario.</b> ${p.scenario}</div>` : ''}
+      ${p.diagram ? p.diagram : ''}
+      ${p.scenario2 ? `<div class="scenario">${p.scenario2}</div>` : ''}
+      ${p.diagram2 ? p.diagram2 : ''}
+      ${qsHTML(p.qs)}`;
+  }
+
+  function renderMockExam(i){
+    const p = mockPapers[i];
+    const total = p.sections.reduce((a,s)=>a+s.marks,0);
+    return `
+      <div class="scenario"><b>${p.title}</b><br>${p.subtitle}<br><span class="sub">Total: ${total} marks &middot; ${p.duration} minutes</span></div>
+      <div class="scenario instr"><b>Instructions.</b>
+        <ol>
+          <li>Answer <b>all</b> questions and number them correctly. Sections A, B and C carry ${p.sections.map(s=>s.marks).join(', ')} marks respectively.</li>
+          <li>Diagrams may be drawn in pencil, in landscape orientation if necessary.</li>
+          <li>Section A is auto-marked below; for Sections B and C, write your answer first and then reveal the model answer to mark yourself.</li>
+        </ol>
+      </div>
+      <div id="mcq-score" class="quiz-score">Section A multiple choice: 0 / 0</div>
+      ${p.sections.map(s=>`
+        <div class="exam-section ${s.color}">
+          <div class="head"><span>${s.title}</span><span class="badge">${s.marks} MARKS</span></div>
+          <div class="exam-body">
+            <p class="time-hint">Suggested time: ${s.time}</p>
+            ${s.parts.map(partHTML).join('')}
+          </div>
+        </div>`).join('')}`;
+  }
+
+  const mockContainer = document.getElementById('mock-container');
+  const pillRow = document.getElementById('mock-pills');
+  const mockModalOverlay = document.getElementById('mock-modal-overlay');
+  const mockModalClose = document.getElementById('mock-modal-close');
+  const mockTimerEl = document.getElementById('mock-timer');
+  const mockFullscreenButton = document.getElementById('mock-modal-fullscreen');
+
+  let mockTimerInterval = null;
+  let mockTimerDeadline = null;
+
+  function formatTimer(totalSec){
+    const clamped = Math.max(0, totalSec);
+    const h = Math.floor(clamped/3600);
+    const m = Math.floor((clamped%3600)/60);
+    const s = clamped%60;
+    const pad = n => String(n).padStart(2,'0');
+    return h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+  }
+  function tickMockTimer(){
+    const remaining = Math.round((mockTimerDeadline - Date.now())/1000);
+    mockTimerEl.textContent = formatTimer(remaining);
+    mockTimerEl.classList.toggle('low', remaining <= 300 && remaining > 0);
+    mockTimerEl.classList.toggle('done', remaining <= 0);
+    if(remaining <= 0){
+      stopMockTimer();
+      closeMockModal();
+    }
+  }
+  function startMockTimer(durationMin){
+    stopMockTimer();
+    mockTimerDeadline = Date.now() + durationMin * 60 * 1000;
+    mockTimerEl.classList.remove('low','done');
+    tickMockTimer();
+    mockTimerInterval = setInterval(tickMockTimer, 1000);
+  }
+  function stopMockTimer(){
+    if(mockTimerInterval){ clearInterval(mockTimerInterval); mockTimerInterval = null; }
+  }
+
+  function updateMockFullscreenButton(){
+    const isFullscreen = document.fullscreenElement === mockModalOverlay;
+    const label = isFullscreen ? 'Exit full screen' : 'Enter full screen';
+    mockFullscreenButton.setAttribute('aria-label', label);
+    mockFullscreenButton.title = label;
+  }
+  async function toggleMockFullscreen(){
+    try{
+      if(document.fullscreenElement === mockModalOverlay) await document.exitFullscreen();
+      else if(!document.fullscreenElement) await mockModalOverlay.requestFullscreen();
+    }catch(error){
+      console.warn('Full screen mode is unavailable.', error);
+    }
+  }
+  document.addEventListener('fullscreenchange', updateMockFullscreenButton);
+  mockFullscreenButton.addEventListener('click', toggleMockFullscreen);
+
+  function openMockModal(i){
+    renderSelectedPaper(i);
+    mockModalOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    mockModalOverlay.scrollTop = 0;
+    startMockTimer(mockPapers[i].duration || 180);
+  }
+  function closeMockModal(){
+    mockModalOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+    stopMockTimer();
+    if(document.fullscreenElement === mockModalOverlay) document.exitFullscreen().catch(()=>{});
+  }
+  mockModalClose.addEventListener('click', closeMockModal);
+  mockModalOverlay.addEventListener('click', e=>{
+    if(e.target === mockModalOverlay) closeMockModal();
+  });
+  document.addEventListener('keydown', e=>{
+    if(e.key === 'Escape' && mockModalOverlay.classList.contains('open')) closeMockModal();
+  });
+
+  mockPapers.forEach((p,i)=>{
+    const pill = document.createElement('button');
+    pill.className = 'pill' + (i===0 ? ' active' : '');
+    pill.innerHTML = `<b>${p.title}</b><span class="sub">${p.summary}</span>`;
+    pill.addEventListener('click', ()=>{
+      document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
+      pill.classList.add('active');
+      openMockModal(i);
+    });
+    pillRow.appendChild(pill);
+  });
+
+  // ---- sidebar header dropdown: jump straight into a mock paper ----
+  (function(){
+    const sidebar = document.querySelector('.view-sidebar');
+    const btn  = document.getElementById('sbOrgBtn');
+    const menu = document.getElementById('sbOrgMenu');
+    const badge = document.getElementById('mock-count');
+    if(badge) badge.textContent = mockPapers.length;
+    if(!sidebar || !btn || !menu) return;
+
+    const clockIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>';
+    const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+    menu.innerHTML = '<div class="sb-menu-label">Open a mock paper</div>' +
+      mockPapers.map((p,i)=>{
+        const parts = String(p.title).split(' - ');
+        const head = parts.shift();
+        const rest = parts.join(' - ');
+        return `<button type="button" role="menuitem" class="sb-menu-item" data-mock="${i}">${clockIcon}` +
+               `<span class="txt"><span>${esc(head)}</span>${rest ? `<small>${esc(rest)}</small>` : ''}</span></button>`;
+      }).join('');
+
+    const items = () => Array.from(menu.querySelectorAll('[role="menuitem"]'));
+    function setOpen(open, focusFirst){
+      menu.hidden = !open;
+      btn.setAttribute('aria-expanded', String(open));
+      sidebar.classList.toggle('menu-open', open);
+      if(open && focusFirst){ const f = items()[0]; if(f) f.focus(); }
+    }
+
+    btn.addEventListener('click', ()=> setOpen(menu.hidden));
+    btn.addEventListener('keydown', e=>{
+      if(e.key === 'ArrowDown'){ e.preventDefault(); setOpen(true, true); }
+    });
+    menu.addEventListener('keydown', e=>{
+      const list = items(), i = list.indexOf(document.activeElement);
+      if(e.key === 'ArrowDown'){ e.preventDefault(); list[(i+1) % list.length].focus(); }
+      else if(e.key === 'ArrowUp'){ e.preventDefault(); list[(i-1+list.length) % list.length].focus(); }
+      else if(e.key === 'Escape'){ e.stopPropagation(); setOpen(false); btn.focus(); }
+      else if(e.key === 'Tab'){ setOpen(false); }
+    });
+    menu.addEventListener('click', e=>{
+      const it = e.target.closest('[data-mock]');
+      if(!it) return;
+      const i = Number(it.dataset.mock);
+      setOpen(false);
+      document.querySelectorAll('.pill').forEach((x,j)=>x.classList.toggle('active', j === i));
+      showView('mock');
+      openMockModal(i);
+    });
+    document.addEventListener('click', e=>{
+      if(!menu.hidden && !menu.contains(e.target) && !btn.contains(e.target)) setOpen(false);
+    });
+  })();
+
+  // Reveal-answer clicks are delegated once - renderSelectedPaper rewrites
+  // mock-container's innerHTML each time a paper is opened, so this must
+  // NOT be re-attached inside that function or handlers would stack up.
+  mockContainer.addEventListener('click',e=>{
+    const btn = e.target.closest('.reveal-btn');
+    if(!btn) return;
+    const target = document.getElementById(btn.dataset.target);
+    const showing = target.classList.toggle('show');
+    btn.textContent = showing ? 'Hide model answer' : 'Show model answer';
+  });
+
+  function renderSelectedPaper(i){
+    uid = 0;
+    mockContainer.innerHTML = renderMockExam(i);
+    const totalMcq = mockContainer.querySelectorAll('.q-block').length;
+    let mcqAnswered = 0, mcqCorrect = 0;
+    const scoreEl = document.getElementById('mcq-score');
+    scoreEl.textContent = `Section A multiple choice: 0 / 0 answered (${totalMcq} questions)`;
+    mockContainer.querySelectorAll('.mcq-opt').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const block = btn.closest('.q-block');
+        if(block.dataset.done) return;
+        block.dataset.done = '1';
+        const chosen = Number(btn.dataset.choice);
+        const correct = Number(btn.dataset.correct);
+        block.querySelectorAll('.mcq-opt').forEach(b=>b.disabled=true);
+        block.querySelectorAll('.mcq-opt')[correct].classList.add('correct');
+        if(chosen !== correct) btn.classList.add('incorrect');
+        block.querySelector('.explain').classList.add('show');
+        mcqAnswered++;
+        if(chosen === correct) mcqCorrect++;
+        scoreEl.textContent = `Section A multiple choice: ${mcqCorrect} / ${mcqAnswered} correct (${totalMcq} questions)`;
+      });
+    });
+  }
+
+  // default to the first paper being highlighted
+</script>
 </body>
 </html>
