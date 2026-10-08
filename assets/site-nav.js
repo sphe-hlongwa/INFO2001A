@@ -11,7 +11,7 @@
       { label: 'Test 2', sub: 'SQL + Database Design + System Design + C#', href: 'test2.html' }
     ]},
     { label: 'Learn', items: [
-      { label: 'SQL Fundamentals', sub: 'Access SQL cheat sheet', href: 'sql-fundamentals.html' },
+      { label: 'Database Fundamentals', sub: 'Access SQL + DSD blueprint', href: 'sql-fundamentals.html' },
       { label: 'C# + SQL', sub: 'Build it, understand it, practise it', href: 'csharp-sql.html' }
     ]},
     { label: 'GitHub', href: 'https://github.com/sphe-hlongwa', external: true }

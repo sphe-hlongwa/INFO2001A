@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SQL Fundamentals | INFO2001A</title>
+<title>Database Fundamentals | INFO2001A</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='2' y='3' width='20' height='6' rx='1.5' fill='%236fa8ea'/%3E%3Crect x='2' y='10' width='20' height='6' rx='1.5' fill='%234a7fc4'/%3E%3Crect x='2' y='17' width='20' height='4' rx='1.5' fill='%232f5a94'/%3E%3Ccircle cx='6' cy='6' r='1' fill='%230d1526'/%3E%3Ccircle cx='6' cy='13' r='1' fill='%230d1526'/%3E%3Ccircle cx='6' cy='19' r='1' fill='%230d1526'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -505,13 +505,67 @@
     table { font-size: 0.78rem; }
   }
   section, section h2, section h3, section h4 { scroll-margin-top: 150px; }
+  /* DSD blueprint tables hold sentences, so let them wrap instead of scrolling sideways */
+  #dsd table { white-space: normal; }
+  #dsd td, #dsd th { vertical-align: top; }
+  /* ---- DSD worked examples ---- */
+  #dsd .scenario { border-left: 3px solid var(--accent); background: var(--code-bg); padding: 12px 16px; border-radius: 0 6px 6px 0; line-height: 2; margin: 10px 0 14px; }
+  #dsd .legend { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.78rem; margin: 6px 0 14px; }
+  #dsd .hl { padding: 1px 6px; border-radius: 4px; font-weight: 600; border-bottom: 2px solid; }
+  #dsd .hl-actor    { background: rgba(232,160,76,.16);  border-color: #e8a04c; }
+  #dsd .hl-boundary { background: rgba(111,168,234,.16); border-color: #6fa8ea; }
+  #dsd .hl-ctl      { background: rgba(169,139,232,.16); border-color: #a98be8; }
+  #dsd .hl-entity   { background: rgba(92,184,122,.16);  border-color: #5cb87a; }
+  #dsd .hl-act      { background: rgba(215,222,232,.09); border-color: #8a94a3; font-style: italic; }
+  #dsd .bd { display: inline-block; min-width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; background: var(--accent); color: #10141c; font-weight: 700; font-size: 0.78rem; }
+  #dsd .pat { font-size: 0.72rem; padding: 1px 8px; border-radius: 10px; border: 1px solid var(--border); white-space: nowrap; }
+  #dsd .pat-read   { color: #6fa8ea; border-color: #6fa8ea; }
+  #dsd .pat-create { color: #5cb87a; border-color: #5cb87a; }
+  #dsd .pat-update { color: #e8a04c; border-color: #e8a04c; }
+  #dsd .pat-loop, #dsd .pat-alt, #dsd .pat-ref { color: #a98be8; border-color: #a98be8; }
+  #dsd .pat-pass, #dsd .pat-ret { color: var(--muted); }
+  #dsd .dsd-fig { overflow-x: auto; margin: 12px 0 18px; border: 1px solid var(--border); border-radius: 8px; background: var(--code-bg); padding: 6px; }
+  #dsd .dsd-fig svg { display: block; width: 100%; height: auto; }
+  #dsd .dsd-fig .lifeline { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 5; opacity: .7; }
+  #dsd .dsd-fig .msg { stroke: var(--text); stroke-width: 1.6; fill: none; }
+  #dsd .dsd-fig .msg.ret { stroke-dasharray: 7 5; }
+  #dsd .dsd-fig .mk-f { fill: var(--text); }
+  #dsd .dsd-fig .mk-o { fill: none; stroke: var(--text); stroke-width: 1.6; }
+  #dsd .dsd-fig .box { fill: #0d1526; stroke-width: 1.8; }
+  #dsd .dsd-fig .ll, #dsd .dsd-fig .lbl, #dsd .dsd-fig .kw, #dsd .dsd-fig .guard { font-family: 'SF Mono', Consolas, Menlo, monospace; }
+  #dsd .dsd-fig .ll { fill: var(--text); font-size: 12.5px; text-decoration: underline; }
+  #dsd .dsd-fig .lbl { fill: var(--text); font-size: 12.5px; paint-order: stroke; stroke: var(--code-bg); stroke-width: 5px; stroke-linejoin: round; }
+  #dsd .dsd-fig .actor-t { font-size: 13px; font-weight: 700; }
+  #dsd .dsd-fig .frame { fill: none; stroke: #e8a04c; stroke-width: 1.4; }
+  #dsd .dsd-fig .frame-tab { fill: #2a2416; stroke: #e8a04c; stroke-width: 1.4; }
+  #dsd .dsd-fig .kw { fill: #f1c68a; font-size: 12px; font-weight: 700; }
+  #dsd .dsd-fig .guard { fill: #f1c68a; font-size: 12.5px; }
+  #dsd .dsd-fig .divider { stroke: #e8a04c; stroke-width: 1.4; stroke-dasharray: 7 5; }
+  #dsd .dsd-fig .reftxt { fill: var(--text); font-size: 14px; font-weight: 600; }
+  /* Flow of Activities (use case) tables */
+  #dsd .foa-title { font-size: 0.85rem; color: var(--muted); margin: 14px 0 4px; }
+  #dsd table.foa { display: table; width: 100%; border-collapse: collapse; margin: 4px 0 14px; }
+  #dsd table.foa th, #dsd table.foa td { border: 1px solid var(--border); padding: 7px 12px; }
+  #dsd table.foa th { text-align: center; }
+  #dsd table.foa td.lab { width: 130px; font-weight: 700; background: var(--card); }
+  #dsd table.foa tr.ext td { border-top: 2px solid var(--border); }
+  #dsd table.foa td.cond { font-style: italic; color: #f1c68a; }
+  #dsd table.foa td:nth-child(2), #dsd table.foa td:nth-child(3) { width: 45%; }
+  #dsd .fig-cap { font-size: 0.85rem; color: var(--muted); margin: -8px 0 18px; }
+  #dsd .dsd-fig .card { fill: #0d1526; stroke-width: 1.6; }
+  #dsd .dsd-fig .p1-t { font-size: 14px; font-weight: 700; letter-spacing: .06em; }
+  #dsd .dsd-fig .p1-s { font-size: 12px; fill: var(--muted); }
+  #dsd .dsd-fig .p1-k { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; fill: var(--muted); }
+  #dsd .dsd-fig .p1-v { font-size: 12.5px; fill: var(--text); }
+  #dsd .dsd-fig .badge { fill: var(--accent); }
+  #dsd .dsd-fig .badge-t { fill: #10141c; font-size: 11px; font-weight: 700; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Microsoft Access SQL Cheat Sheet</h1>
-  <p>Syntax reference for Access SQL View - queries, joins, functions &amp; data definition</p>
+  <h1>Database Fundamentals</h1>
+  <p>Access SQL syntax, normalization &amp; indexing, plus the Design Sequence Diagram (DSD) blueprint</p>
 </header>
 
 <input type="checkbox" id="tocToggle" class="toc-toggle-state">
@@ -667,6 +721,24 @@
       </ul>
     </details>
     <div class="toc-leaf"><a href="#gotchas">15. Key Access SQL Quirks to Remember</a></div>
+    <details>
+      <summary><a href="#dsd">16. Design Sequence Diagram (DSD) Blueprint</a></summary>
+      <ul>
+        <li><a href="#dsd-phase-1-narrative-demolition">Phase 1: Narrative Demolition</a></li>
+        <li><a href="#dsd-phase-2-chronological-flow">Phase 2: Chronological Flow</a></li>
+        <li><a href="#dsd-phase-3-object-lifecycle-scenarios">Phase 3: Object Lifecycle Scenarios</a></li>
+        <li><a href="#dsd-phase-4-uml-syntax-rules">Phase 4: UML Syntax Rules</a></li>
+        <li><a href="#dsd-phase-5-interaction-frames">Phase 5: Interaction Frames</a></li>
+        <li><a href="#dsd-frame-loop">&nbsp;&nbsp;loop frame</a></li>
+        <li><a href="#dsd-frame-alt">&nbsp;&nbsp;alt frame</a></li>
+        <li><a href="#dsd-frame-opt">&nbsp;&nbsp;opt frame</a></li>
+        <li><a href="#dsd-frame-ref">&nbsp;&nbsp;ref frame</a></li>
+        <li><a href="#dsd-worked-examples">Worked Examples: the 5-step routine</a></li>
+        <li><a href="#dsd-reading-flow">Reading a Flow of Activities table</a></li>
+        <li><a href="#dsd-example-1-shopping-cart">Example 1: Shopping cart</a></li>
+        <li><a href="#dsd-example-2-trainer-booking">Example 2: Trainer booking</a></li>
+      </ul>
+    </details>
   </nav>
   <div class="sidebar-footer">
     <a href="https://github.com/sphe-hlongwa" target="_blank" rel="noopener noreferrer">
@@ -2013,11 +2085,563 @@ Do this for indexes on columns that turned out to be rarely queried but are freq
     </table>
   </section>
 
+  <section id="dsd">
+    <h2>16. Design Sequence Diagram (DSD) Blueprint</h2>
+    <p class="desc">A systematic, step-by-step system for turning any business narrative into a full-marks <strong>Design Sequence Diagram</strong> (Wits INFO2001A). Strip the narrative into a three-layer architecture, order the messages in time, pick the right object-lifecycle pattern, then wrap the logic in interaction frames.</p>
+
+    <h3 id="dsd-phase-1-narrative-demolition">Phase 1: The "Narrative Demolition" (Extraction)</h3>
+    <p class="desc">Before drawing a single line, strip the narrative into the <strong>Three-Layer Architecture</strong>:</p>
+<div class="dsd-fig" role="group" aria-label="Three-layer architecture">
+<svg viewBox="0 0 960 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="p1-t" style="min-width:760px"><title id="p1-t">Three-layer architecture: Actor, Boundary, Controller, Entity</title>
+<defs><marker id="p1-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker></defs>
+<rect x="30" y="20" width="204" height="290" rx="8" class="card" stroke="#e8a04c"/>
+<path d="M30 28a8 8 0 0 1 8-8h188a8 8 0 0 1 8 8V58H30z" fill="#e8a04c" opacity=".18"/>
+<text x="132.0" y="42" class="p1-t" text-anchor="middle" fill="#e8a04c">ACTOR</text>
+<text x="132.0" y="56" class="p1-s" text-anchor="middle">User layer</text>
+<text x="44" y="82" class="p1-k">NARRATIVE CLUE</text>
+<text x="44" y="99" class="p1-v">Users who start an action</text>
+<text x="44" y="115" class="p1-v">or receive the output</text>
+<text x="44" y="145" class="p1-k">NAMING / UML</text>
+<text x="44" y="162" class="p1-v">Stick figure</text>
+<text x="44" y="192" class="p1-k">PLACEMENT</text>
+<text x="44" y="209" class="p1-v">Top left of the page</text>
+<g stroke="#e8a04c" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="132.0" cy="246" r="7"/><path d="M132.0 253V272M121.0 260H143.0M132.0 272L123.0 287M132.0 272L141.0 287"/></g>
+<text x="154.0" y="270" class="p1-v" fill="#e8a04c" font-weight="700">Customer</text>
+<line x1="238" y1="165" x2="266" y2="165" class="msg" marker-end="url(#p1-f)"/>
+<rect x="270" y="20" width="204" height="290" rx="8" class="card" stroke="#6fa8ea"/>
+<path d="M270 28a8 8 0 0 1 8-8h188a8 8 0 0 1 8 8V58H270z" fill="#6fa8ea" opacity=".18"/>
+<text x="372.0" y="42" class="p1-t" text-anchor="middle" fill="#6fa8ea">BOUNDARY</text>
+<text x="372.0" y="56" class="p1-s" text-anchor="middle">Presentation layer</text>
+<text x="284" y="82" class="p1-k">NARRATIVE CLUE</text>
+<text x="284" y="99" class="p1-v">Screens, forms, dialogs,</text>
+<text x="284" y="115" class="p1-v">input devices</text>
+<text x="284" y="145" class="p1-k">NAMING / UML</text>
+<text x="284" y="162" class="p1-v">Suffix Form / UI / Page</text>
+<text x="284" y="192" class="p1-k">PLACEMENT</text>
+<text x="284" y="209" class="p1-v">Right of the Actor</text>
+<rect x="322.1" y="250" width="99.8" height="30" rx="3" class="box" stroke="#6fa8ea"/>
+<text x="372.0" y="269.5" class="ll" text-anchor="middle">:CartForm</text>
+<line x1="478" y1="165" x2="506" y2="165" class="msg" marker-end="url(#p1-f)"/>
+<rect x="510" y="20" width="204" height="290" rx="8" class="card" stroke="#a98be8"/>
+<path d="M510 28a8 8 0 0 1 8-8h188a8 8 0 0 1 8 8V58H510z" fill="#a98be8" opacity=".18"/>
+<text x="612.0" y="42" class="p1-t" text-anchor="middle" fill="#a98be8">CONTROLLER</text>
+<text x="612.0" y="56" class="p1-s" text-anchor="middle">Business logic layer</text>
+<text x="524" y="82" class="p1-k">NARRATIVE CLUE</text>
+<text x="524" y="99" class="p1-v">A request that is</text>
+<text x="524" y="115" class="p1-v">"coordinated" or "handled"</text>
+<text x="524" y="145" class="p1-k">NAMING / UML</text>
+<text x="524" y="162" class="p1-v">Suffix Handler / Controller</text>
+<text x="524" y="178" class="p1-v">+ subsystem prefix</text>
+<text x="524" y="208" class="p1-k">PLACEMENT</text>
+<text x="524" y="225" class="p1-v">Right of the Boundary</text>
+<rect x="545.7" y="250" width="132.6" height="30" rx="3" class="box" stroke="#a98be8"/>
+<text x="612.0" y="269.5" class="ll" text-anchor="middle">:salesHandler</text>
+<line x1="718" y1="165" x2="746" y2="165" class="msg" marker-end="url(#p1-f)"/>
+<rect x="750" y="20" width="204" height="290" rx="8" class="card" stroke="#5cb87a"/>
+<path d="M750 28a8 8 0 0 1 8-8h188a8 8 0 0 1 8 8V58H750z" fill="#5cb87a" opacity=".18"/>
+<text x="852.0" y="42" class="p1-t" text-anchor="middle" fill="#5cb87a">ENTITY</text>
+<text x="852.0" y="56" class="p1-s" text-anchor="middle">Persistence layer</text>
+<text x="764" y="82" class="p1-k">NARRATIVE CLUE</text>
+<text x="764" y="99" class="p1-v">Tables or records that are</text>
+<text x="764" y="115" class="p1-v">read, changed or saved</text>
+<text x="764" y="145" class="p1-k">NAMING / UML</text>
+<text x="764" y="162" class="p1-v">Singular table name</text>
+<text x="764" y="192" class="p1-k">PLACEMENT</text>
+<text x="764" y="209" class="p1-v">Right, in order of use</text>
+<rect x="806.2" y="250" width="91.6" height="30" rx="3" class="box" stroke="#5cb87a"/>
+<text x="852.0" y="269.5" class="ll" text-anchor="middle">:Product</text>
+</svg>
+</div>
+    <p class="fig-cap">Read the diagram left to right: the order of the cards is the order of the lifelines on your page.</p>
+    <table>
+      <tr><th>Element</th><th>Narrative clue</th><th>Naming / UML rule</th><th>Placement</th></tr>
+      <tr><td><strong>Actor</strong></td><td>Users who start actions or receive output: <em>"clerk enters"</em>, <em>"customer views"</em>, <em>"librarian decides"</em></td><td>Stick figure</td><td>Top left of the page</td></tr>
+      <tr><td><strong>Boundary</strong><br>(Presentation layer)</td><td>Screens, forms, dialogs, input devices: <em>"interface screen"</em>, <em>"login window"</em>, <em>"bar code scanner"</em></td><td>Suffix <code>Form</code>, <code>UI</code> or <code>Page</code><br>e.g. <code><u>:CartForm</u></code>, <code><u>:LoginForm</u></code></td><td>Immediately right of the Actor</td></tr>
+      <tr><td><strong>Controller</strong><br>(Business layer)</td><td>The UI passes a request on to be "coordinated" or "handled": <em>"passes this request to the business logic layer, which coordinates..."</em></td><td>Must end in <code>Handler</code> (or <code>Controller</code>), with a lower-camelCase subsystem prefix</td><td>Immediately right of the primary Boundary</td></tr>
+      <tr><td><strong>Entity</strong><br>(Persistence layer)</td><td>Tables or stored records that are retrieved, changed or saved: <em>"retrieves from the PRODUCT table"</em>, <em>"creates a record in the CART_ITEM table"</em></td><td>Singular class name of the table, with a leading colon, underlined<br>e.g. <code><u>:Product</u></code>, <code><u>:Booking</u></code></td><td>Right of the Controller, in order of first appearance</td></tr>
+    </table>
+
+    <p><strong>Choosing the Controller's subsystem prefix</strong> - look at the business theme of the use case:</p>
+    <table>
+      <tr><th>Theme</th><th>Controller name</th></tr>
+      <tr><td>Sales / Orders / Bookings</td><td><code>salesHandler</code></td></tr>
+      <tr><td>Stock / Catalogues / Products</td><td><code>inventoryHandler</code></td></tr>
+      <tr><td>Credit Cards / Cash</td><td><code>paymentsHandler</code></td></tr>
+    </table>
+
+    <h3 id="dsd-phase-2-chronological-flow">Phase 2: Chronological Flow &amp; Message Orchestration</h3>
+    <p class="desc">A sequence diagram is <strong>time-ordered</strong>. Read the narrative vertically from top to bottom and write the messages left to right across the layers.</p>
+<div class="dsd-fig" role="group" aria-label="Generic message progression">
+<svg viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="p2-t" style="min-width:720px"><title id="p2-t">Design sequence diagram</title>
+<defs><marker id="p2-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker><marker id="p2-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M1 1L9 5L1 9" class="mk-o"/></marker></defs>
+<line x1="95" y1="88" x2="95" y2="430" class="lifeline"/>
+<line x1="315" y1="60" x2="315" y2="430" class="lifeline"/>
+<line x1="535" y1="60" x2="535" y2="430" class="lifeline"/>
+<line x1="755" y1="60" x2="755" y2="430" class="lifeline"/>
+<line x1="95" y1="150" x2="315" y2="150" class="msg" marker-end="url(#p2-f)"/>
+<text x="205.0" y="143" class="lbl" text-anchor="middle">enterData(...)</text>
+<circle cx="15" cy="150" r="9.5" class="badge"/><text x="15" y="154" class="badge-t" text-anchor="middle">1</text>
+<line x1="315" y1="200" x2="535" y2="200" class="msg" marker-end="url(#p2-f)"/>
+<text x="425.0" y="193" class="lbl" text-anchor="middle">passRequest(data)</text>
+<circle cx="15" cy="200" r="9.5" class="badge"/><text x="15" y="204" class="badge-t" text-anchor="middle">2</text>
+<line x1="535" y1="250" x2="755" y2="250" class="msg" marker-end="url(#p2-f)"/>
+<text x="645.0" y="243" class="lbl" text-anchor="middle">getData(id)</text>
+<circle cx="15" cy="250" r="9.5" class="badge"/><text x="15" y="254" class="badge-t" text-anchor="middle">3</text>
+<line x1="755" y1="300" x2="535" y2="300" class="msg ret" marker-end="url(#p2-o)"/>
+<text x="645.0" y="293" class="lbl" text-anchor="middle">data</text>
+<circle cx="15" cy="300" r="9.5" class="badge"/><text x="15" y="304" class="badge-t" text-anchor="middle">4</text>
+<line x1="535" y1="350" x2="315" y2="350" class="msg ret" marker-end="url(#p2-o)"/>
+<text x="425.0" y="343" class="lbl" text-anchor="middle">result</text>
+<circle cx="15" cy="350" r="9.5" class="badge"/><text x="15" y="354" class="badge-t" text-anchor="middle">4</text>
+<line x1="315" y1="400" x2="95" y2="400" class="msg ret" marker-end="url(#p2-o)"/>
+<text x="205.0" y="393" class="lbl" text-anchor="middle">display result</text>
+<circle cx="15" cy="400" r="9.5" class="badge"/><text x="15" y="404" class="badge-t" text-anchor="middle">4</text>
+<g stroke="#e8a04c" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="95" cy="21" r="8"/><path d="M95 29V50M83 37H107M95 50L85 66M95 50L105 66"/></g>
+<text x="95" y="82" class="actor-t" text-anchor="middle" fill="#e8a04c">Actor</text>
+<rect x="253.0" y="30" width="124" height="30" rx="3" class="box" stroke="#6fa8ea"/>
+<text x="315" y="49.5" class="ll" text-anchor="middle">:XxxForm</text>
+<rect x="473.0" y="30" width="124" height="30" rx="3" class="box" stroke="#a98be8"/>
+<text x="535" y="49.5" class="ll" text-anchor="middle">:xxxHandler</text>
+<rect x="693.0" y="30" width="124" height="30" rx="3" class="box" stroke="#5cb87a"/>
+<text x="755" y="49.5" class="ll" text-anchor="middle">:Entity</text>
+<line x1="880" y1="110" x2="880" y2="410" class="msg" marker-end="url(#p2-f)" opacity=".5"/><text x="868" y="260" class="p1-s" transform="rotate(-90 868 260)" text-anchor="middle">time</text><line x1="150" y1="452" x2="210" y2="452" class="msg" marker-end="url(#p2-f)"/><text x="220" y="456" class="p1-v">solid line, filled head = request</text><line x1="520" y1="452" x2="580" y2="452" class="msg ret" marker-end="url(#p2-o)"/><text x="590" y="456" class="p1-v">dashed line, open head = return</text></svg>
+</div>
+    <p class="fig-cap">The numbers match the steps in the table below: 1 Actor initiates, 2 Boundary delegates, 3 Controller orchestrates, 4 confirmations return.</p>
+    <table>
+      <tr><th>Step</th><th>What happens</th></tr>
+      <tr><td><strong>1. Actor initiates</strong></td><td>The Actor triggers an action on the UI with a solid request arrow.</td></tr>
+      <tr><td><strong>2. Boundary delegates</strong></td><td>The Boundary immediately passes the input data to the Controller with a solid request arrow.</td></tr>
+      <tr><td><strong>3. Controller orchestrates</strong></td><td>The Controller sends requests (method calls) to Entity lifelines to retrieve, update or create data.</td></tr>
+      <tr><td><strong>4. Confirmations return</strong></td><td>Answers flow backwards as dashed return arrows (or variable assignments) until the Boundary shows the final output to the Actor.</td></tr>
+    </table>
+
+    <h3 id="dsd-phase-3-object-lifecycle-scenarios">Phase 3: The 3 Core Object Lifecycle Scenarios</h3>
+    <p class="desc">Every exam narrative contains at least one of these patterns. Draw each one differently to secure the marks.</p>
+    <table>
+      <tr><th>Scenario</th><th>Narrative clue</th><th>Where the entity box goes</th><th>Message(s)</th></tr>
+      <tr><td><strong>1. Search / Read</strong><br>(existing object)</td><td><em>"searches for"</em>, <em>"retrieves"</em>, <em>"reads"</em>, <em>"checks if exists"</em></td><td>At the <strong>very top</strong> of the diagram - the row already exists when the use case begins</td><td><code>getPrice(productId)</code><br><code>searchClient(mobileNo)</code></td></tr>
+      <tr><td><strong>2. Create / Instantiate</strong><br>(new object)</td><td><em>"creates a new record"</em>, <em>"instantiates"</em>, <em>"saves a new"</em></td><td><strong>Shifted down</strong> the page, level with the step where it is created. The lifeline starts beneath the box.</td><td>Solid arrow from the Controller <strong>to the new box itself</strong> (not its dotted lifeline), labelled <code>createObject(parameters)</code></td></tr>
+      <tr><td><strong>3. Update / Modify</strong><br>(existing object)</td><td><em>"updates stock"</em>, <em>"decrements"</em>, <em>"modifies details"</em>, <em>"sets status to"</em></td><td>At the <strong>top</strong> of the diagram</td><td>Solid update request such as <code>updateStock(productId, quantity)</code> or <code>setTrainerStatus("Booked")</code>, with a dashed <code>confirmation</code> return</td></tr>
+    </table>
+
+    <h3 id="dsd-phase-4-uml-syntax-rules">Phase 4: UML Syntax Rules (the "Easy Marks" Shield)</h3>
+    <p class="desc">Don't throw marks away on formatting - examiners grade these visual rules strictly. Tick each one off before you hand in.</p>
+    <table>
+      <tr><th>Element</th><th>Strict UML exam requirement</th><th>Check</th></tr>
+      <tr><td><strong>Object lifelines</strong></td><td>Enclosed in a rectangle, prefixed with a colon, and <strong>underlined</strong>: <code><u>:LoginForm</u></code> or <code><u>aCartItem:CartItem</u></code></td><td>☐</td></tr>
+      <tr><td><strong>Actor</strong></td><td>Drawn strictly as a stick figure</td><td>☐</td></tr>
+      <tr><td><strong>Request arrows</strong></td><td>Horizontal, <strong>solid</strong> line with a <strong>filled / thick</strong> arrowhead (<code>──&gt;</code>)</td><td>☐</td></tr>
+      <tr><td><strong>Return arrows</strong></td><td>Horizontal, <strong>dashed</strong> line with an <strong>open / stick</strong> arrowhead (<code>- - -&gt;</code>)</td><td>☐</td></tr>
+      <tr><td><strong>Method naming</strong></td><td>camelCase, verb-noun: <code>verifyCredentials(user, pass)</code></td><td>☐</td></tr>
+      <tr><td><strong>Variable returns</strong></td><td>If you store the return value (e.g. <code>price := getPrice(product_id)</code>), a dashed return arrow is <strong>not</strong> required - this keeps the diagram clean</td><td>☐</td></tr>
+      <tr><td><strong>No destruction trap</strong></td><td>Don't draw an "X" at the bottom of a lifeline unless the object is explicitly deleted in that step</td><td>☐</td></tr>
+    </table>
+
+    <h3 id="dsd-phase-5-interaction-frames">Phase 5: Nesting Programming Logic (Interaction Frames)</h3>
+    <p class="desc">To model structural logic, surround your messages with rectangular <strong>interaction frames</strong>.</p>
+
+    <h4 id="dsd-frame-loop">1. The <code>loop</code> frame (repetition)</h4>
+    <p><strong>Use when</strong> the narrative says <em>"for each item"</em>, <em>"repeats"</em> or <em>"loops until"</em>. Draw a rectangle around the repeating messages, put <strong><code>loop</code></strong> in the top-left tab, and write the guard in square brackets, e.g. <code>[for each product to add]</code>.</p>
+<div class="dsd-fig" role="group" aria-label="loop frame example">
+<svg viewBox="0 0 754 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fl-t" style="min-width:640px"><title id="fl-t">Design sequence diagram</title>
+<defs><marker id="fl-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker><marker id="fl-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M1 1L9 5L1 9" class="mk-o"/></marker></defs>
+<rect x="24" y="98" width="706" height="152" class="frame"/>
+<polygon points="24,98 70,98 70,109 62,118 24,118" class="frame-tab"/>
+<text x="31" y="112.5" class="kw">loop</text>
+<text x="80" y="113" class="guard">[for each item in cart]</text>
+<line x1="120" y1="60" x2="120" y2="274" class="lifeline"/>
+<line x1="370" y1="60" x2="370" y2="274" class="lifeline"/>
+<line x1="620" y1="60" x2="620" y2="274" class="lifeline"/>
+<line x1="120" y1="160" x2="370" y2="160" class="msg" marker-end="url(#fl-f)"/>
+<text x="245.0" y="153" class="lbl" text-anchor="middle">addProduct(id)</text>
+<line x1="370" y1="214" x2="620" y2="214" class="msg" marker-end="url(#fl-f)"/>
+<text x="495.0" y="207" class="lbl" text-anchor="middle">price := getPrice(id)</text>
+<rect x="58.0" y="30" width="124" height="30" rx="3" class="box" stroke="#6fa8ea"/>
+<text x="120" y="49.5" class="ll" text-anchor="middle">:SalesForm</text>
+<rect x="306.65" y="30" width="126.7" height="30" rx="3" class="box" stroke="#a98be8"/>
+<text x="370" y="49.5" class="ll" text-anchor="middle">:salesHandler</text>
+<rect x="558.0" y="30" width="124" height="30" rx="3" class="box" stroke="#5cb87a"/>
+<text x="620" y="49.5" class="ll" text-anchor="middle">:Product</text>
+</svg>
+</div>
+    <p class="fig-cap"><strong>Reads as:</strong> repeat both messages once for every item in the cart. The guard sits in square brackets next to the tab.</p>
+
+    <h4 id="dsd-frame-alt">2. The <code>alt</code> frame (if-then-else)</h4>
+    <p><strong>Use when</strong> there are mutually exclusive outcomes, e.g. <em>"if login is valid... if login is invalid..."</em>. Draw one large rectangle around both paths with <strong><code>alt</code></strong> in the top-left tab. <strong>Crucial step:</strong> split the box in two with a <strong>dashed horizontal line</strong>. The top half gets the guard <code>[isValid = true]</code>, the bottom half <code>[isValid = false]</code>.</p>
+<div class="dsd-fig" role="group" aria-label="alt frame example">
+<svg viewBox="0 0 794 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fa-t" style="min-width:660px"><title id="fa-t">Design sequence diagram</title>
+<defs><marker id="fa-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker><marker id="fa-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M1 1L9 5L1 9" class="mk-o"/></marker></defs>
+<rect x="24" y="98" width="746" height="208" class="frame"/>
+<polygon points="24,98 62,98 62,109 54,118 24,118" class="frame-tab"/>
+<text x="31" y="112.5" class="kw">alt</text>
+<text x="72" y="113" class="guard">[isValid = true]</text>
+<line x1="24" y1="214" x2="770" y2="214" class="divider"/>
+<text x="34" y="230" class="guard">[isValid = false]</text>
+<line x1="130" y1="60" x2="130" y2="318" class="lifeline"/>
+<line x1="400" y1="60" x2="400" y2="318" class="lifeline"/>
+<line x1="670" y1="60" x2="670" y2="318" class="lifeline"/>
+<line x1="130" y1="160" x2="400" y2="160" class="msg" marker-end="url(#fa-f)"/>
+<text x="265.0" y="153" class="lbl" text-anchor="middle">redirect()</text>
+<line x1="130" y1="268" x2="670" y2="268" class="msg" marker-end="url(#fa-f)"/>
+<text x="400.0" y="261" class="lbl" text-anchor="middle">redirect()</text>
+<rect x="68.0" y="30" width="124" height="30" rx="3" class="box" stroke="#6fa8ea"/>
+<text x="130" y="49.5" class="ll" text-anchor="middle">:LoginForm</text>
+<rect x="336.65" y="30" width="126.7" height="30" rx="3" class="box" stroke="#6fa8ea"/>
+<text x="400" y="49.5" class="ll" text-anchor="middle">:MainMenuForm</text>
+<rect x="590.85" y="30" width="158.3" height="30" rx="3" class="box" stroke="#6fa8ea"/>
+<text x="670" y="49.5" class="ll" text-anchor="middle">:LoginFailureForm</text>
+</svg>
+</div>
+    <p class="fig-cap"><strong>Reads as:</strong> if the login is valid go to the main menu, otherwise go to the failure screen. The <strong>dashed divider</strong> separates the two halves, and each half has its own guard.</p>
+
+    <h4 id="dsd-frame-opt">3. The <code>opt</code> frame (optional processing)</h4>
+    <p><strong>Use when</strong> the logic goes one way only, e.g. <em>"if the trainer is available, then save the booking"</em>. There is <strong>no else</strong> block. Enclose only the conditional steps, put <strong><code>opt</code></strong> in the top-left tab and add a guard such as <code>[isAvailable = true]</code>.</p>
+<div class="dsd-fig" role="group" aria-label="opt frame example">
+<svg viewBox="0 0 800 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fo-t" style="min-width:660px"><title id="fo-t">Design sequence diagram</title>
+<defs><marker id="fo-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker><marker id="fo-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M1 1L9 5L1 9" class="mk-o"/></marker></defs>
+<rect x="24" y="176" width="751" height="106" class="frame"/>
+<polygon points="24,176 62,176 62,187 54,196 24,196" class="frame-tab"/>
+<text x="31" y="190.5" class="kw">opt</text>
+<text x="72" y="191" class="guard">[isAvailable = true]</text>
+<line x1="130" y1="60" x2="130" y2="298" class="lifeline"/>
+<line x1="400" y1="60" x2="400" y2="298" class="lifeline"/>
+<line x1="670" y1="252" x2="670" y2="298" class="lifeline"/>
+<line x1="130" y1="140" x2="400" y2="140" class="msg" marker-end="url(#fo-f)"/>
+<text x="265.0" y="133" class="lbl" text-anchor="middle">isAvailable := checkAvailability(id)</text>
+<line x1="130" y1="237" x2="586.9" y2="237" class="msg" marker-end="url(#fo-f)"/>
+<text x="358.45" y="230" class="lbl" text-anchor="middle">createObject(client, trainerId)</text>
+<rect x="66.65" y="30" width="126.7" height="30" rx="3" class="box" stroke="#a98be8"/>
+<text x="130" y="49.5" class="ll" text-anchor="middle">:salesHandler</text>
+<rect x="338.0" y="30" width="124" height="30" rx="3" class="box" stroke="#5cb87a"/>
+<text x="400" y="49.5" class="ll" text-anchor="middle">:Trainer</text>
+<rect x="586.9" y="222" width="166.20000000000002" height="30" rx="3" class="box" stroke="#5cb87a"/>
+<text x="670" y="241.5" class="ll" text-anchor="middle">newBooking:Booking</text>
+</svg>
+</div>
+    <p class="fig-cap"><strong>Reads as:</strong> only if the trainer is available, create the booking. There is no else half. Note the created <code>Booking</code> box drops down to its own step.</p>
+
+    <h4 id="dsd-frame-ref">4. The <code>ref</code> frame (invoking another diagram)</h4>
+    <p><strong>Use when</strong> the scenario hands off to another complete use case, e.g. <em>"the customer's details are retrieved using another sequence diagram"</em>. Draw a clean box spanning the lifelines involved, put <strong><code>ref</code></strong> in the top-left tab and write the name of the referenced use case inside.</p>
+<div class="dsd-fig" role="group" aria-label="ref frame example">
+<svg viewBox="0 0 780 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fr-t" style="min-width:640px"><title id="fr-t">Design sequence diagram</title>
+<defs><marker id="fr-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker><marker id="fr-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M1 1L9 5L1 9" class="mk-o"/></marker></defs>
+<rect x="320" y="170" width="420" height="54" class="frame"/>
+<polygon points="320,170 358,170 358,181 350,190 320,190" class="frame-tab"/>
+<text x="327" y="184.5" class="kw">ref</text>
+<text x="530.0" y="206.0" class="reftxt" text-anchor="middle">Validate Customer</text>
+<line x1="130" y1="60" x2="130" y2="288" class="lifeline"/>
+<line x1="400" y1="60" x2="400" y2="288" class="lifeline"/>
+<line x1="670" y1="60" x2="670" y2="288" class="lifeline"/>
+<line x1="130" y1="140" x2="400" y2="140" class="msg" marker-end="url(#fr-f)"/>
+<text x="265.0" y="133" class="lbl" text-anchor="middle">bookTrainer(mobileNo)</text>
+<line x1="400" y1="262" x2="670" y2="262" class="msg" marker-end="url(#fr-f)"/>
+<text x="535.0" y="255" class="lbl" text-anchor="middle">client := searchClient(mobileNo)</text>
+<rect x="68.0" y="30" width="124" height="30" rx="3" class="box" stroke="#6fa8ea"/>
+<text x="130" y="49.5" class="ll" text-anchor="middle">:BookingForm</text>
+<rect x="336.65" y="30" width="126.7" height="30" rx="3" class="box" stroke="#a98be8"/>
+<text x="400" y="49.5" class="ll" text-anchor="middle">:salesHandler</text>
+<rect x="608.0" y="30" width="124" height="30" rx="3" class="box" stroke="#5cb87a"/>
+<text x="670" y="49.5" class="ll" text-anchor="middle">:Client</text>
+</svg>
+</div>
+    <p class="fig-cap"><strong>Reads as:</strong> at this point run the whole Validate Customer diagram, then carry on. Nothing is drawn inside the box except the name; it spans the lifelines it touches.</p>
+
+    <table>
+      <tr><th>Frame</th><th>Trigger words</th><th>Guard</th><th>Remember</th></tr>
+      <tr><td><code>loop</code></td><td>for each, repeats, until</td><td><code>[for each item]</code></td><td>Box only the repeating messages</td></tr>
+      <tr><td><code>alt</code></td><td>if / else, valid / invalid</td><td>One guard per half</td><td><strong>Dashed line</strong> between the halves</td></tr>
+      <tr><td><code>opt</code></td><td>if available, only if</td><td><code>[condition]</code></td><td>No else branch</td></tr>
+      <tr><td><code>ref</code></td><td>"using another diagram"</td><td>-</td><td>Name the referenced use case</td></tr>
+    </table>
+    <div class="note"><strong>Exam workflow:</strong> underline the Actor, Boundary, Controller and Entity nouns in the narrative first (Phase 1), then draw the lifelines, then walk the story top to bottom adding messages (Phase 2), choosing the right lifecycle pattern for each entity (Phase 3), wrapping logic in frames (Phase 5), and finally run the Phase 4 checklist.</div>
+    <h3 id="dsd-worked-examples">Worked Examples: From Flow of Activities to DSD</h3>
+    <p class="desc">In the exam the scenario arrives as a <strong>Flow of Activities</strong> table (Actor | System). The two examples below follow the same five-step routine. Use it on every exam question.</p>
+    <table>
+      <tr><th>Step</th><th>What you do</th><th>Blueprint phase</th></tr>
+      <tr><td><strong>1. Highlight &amp; extract</strong></td><td>Mark the tables (entities), action words and frame keywords. Name the lifelines, adding the Form and Handler the table never states.</td><td>Phase 1</td></tr>
+      <tr><td><strong>2. Write the flow</strong></td><td>Go row by row, top to bottom. Every row becomes one or more numbered messages with a From → To.</td><td>Phase 2</td></tr>
+      <tr><td><strong>3. Tag the patterns</strong></td><td>Mark each message Read, Create or Update, and circle anything that repeats, branches, is optional or invokes another use case.</td><td>Phase 3 and 5</td></tr>
+      <tr><td><strong>4. Place the lifelines</strong></td><td>Left to right in order of first appearance. Existing objects on the top row; created objects dropped to their step.</td><td>Phase 1 and 3</td></tr>
+      <tr><td><strong>5. Draw, frame, check</strong></td><td>Draw messages in order, wrap frames, then run the syntax checklist: underlined names, solid vs dashed, verb-noun methods.</td><td>Phase 4 and 5</td></tr>
+    </table>
+
+    <h3 id="dsd-reading-flow">Reading a Flow of Activities Table</h3>
+    <p class="desc">In the exam the scenario is not a paragraph. It is a use case table with an <strong>Actor</strong> column and a <strong>System</strong> column. Here is a typical one, highlighted the way you should mark it up:</p>
+<p class="foa-title">Use case: Create tenant</p>
+<table class="foa"><tr><th class="lab"></th><th>Actor</th><th>System</th></tr>
+<tr><td class="lab" rowspan="6">Flow of activities:</td><td>1. Requests to create tenant</td><td>1.1 Prompts for first name, last name and mobile number</td></tr>
+<tr><td>2. Enters first name, last name and mobile number</td><td>2.1 <i>Invokes</i> <span class="hl hl-act">Search tenant use case</span> to verify that no tenant with that mobile number exists</td></tr>
+<tr><td></td><td class="cond"><i><span class="hl hl-act">If tenant does not exist</span></i></td></tr>
+<tr><td></td><td>2.2 Receives newly-generated TenantID from the database management system</td></tr>
+<tr><td></td><td>2.3 <span class="hl hl-act">Creates</span> new tenant in the <span class="hl hl-entity">TENANT table</span>, including TenantID, TenantFName, TenantLName, TenantMobile, TenantStatus = "new"</td></tr>
+<tr><td></td><td>2.4 Confirms creation of new tenant</td></tr>
+<tr class="ext"><td class="lab" rowspan="2">Extensions:</td><td></td><td class="cond"><i><span class="hl hl-act">If tenant already exists</span></i></td></tr>
+<tr class="ext"><td></td><td>2.2 Confirms no tenant creation</td></tr>
+</table>
+    <div class="note"><strong>Notice what is missing:</strong> the table never mentions a screen (Boundary) or a handler (Controller). The Actor column tells you what goes <em>into</em> the system; the System column is the business logic working on entities. <strong>You</strong> add the Form and the Handler to the diagram.</div>
+
+    <p><strong>How each part of the table becomes part of the DSD</strong></p>
+    <table>
+      <tr><th>What you see in the table</th><th>What you draw</th></tr>
+      <tr><td>A numbered row in the <strong>Actor</strong> column (<em>1, 2</em>)</td><td>A message from the Actor to the Boundary, immediately passed on to the Controller</td></tr>
+      <tr><td><em>"Prompts for ..."</em> (1.1) after the actor just opens a screen</td><td>Usually nothing: the DSD starts at the first step where data actually goes in. Draw it only if your question asks for it</td></tr>
+      <tr><td><em>"Invokes <strong>X</strong> use case"</em></td><td>A <code>ref</code> frame named X</td></tr>
+      <tr><td><em>"Searches / Retrieves / Checks ..."</em></td><td>Read pattern: <code>getX(...)</code> to an entity on the top row</td></tr>
+      <tr><td><em>"Creates new X in the X table, including A, B, C"</em></td><td>Create pattern: <code>createObject(A, B, C)</code> to a new <code>aX:X</code> box that drops to this step</td></tr>
+      <tr><td><em>"Updates / Sets / Decrements ..."</em></td><td>Update pattern, with a dashed <code>confirmation</code></td></tr>
+      <tr><td><em>"Receives newly-generated ID from the DBMS"</em></td><td>No message of your own: the ID is produced when the record is created, so it simply goes into the create call (or comes back as a variable)</td></tr>
+      <tr><td><em>"Confirms ... / Displays ..."</em></td><td>Dashed return arrows back through the Handler and Form to the Actor</td></tr>
+      <tr><td>An unnumbered <em>"If ..."</em> line</td><td>The start of an <code>alt</code> frame (or <code>opt</code> if there is no extension); the condition is the guard</td></tr>
+      <tr><td><strong>Extensions:</strong> rows that <strong>reuse a step number</strong> (here <em>2.2</em> appears twice)</td><td>The <strong>other half of the <code>alt</code></strong>, below the dashed divider</td></tr>
+      <tr><td><em>"Repeat steps ... for each ..."</em></td><td>A <code>loop</code> frame around exactly those steps</td></tr>
+    </table>
+
+    <p><strong>Applied to the tenant table above</strong></p>
+    <table>
+      <tr><th>Table row</th><th>DSD element</th></tr>
+      <tr><td>2 (Actor)</td><td><code>enterTenant(fName, lName, mobileNo)</code> from the Actor to <code><u>:TenantForm</u></code>, passed on to <code><u>:tenantsHandler</u></code> (you choose the theme prefix)</td></tr>
+      <tr><td>2.1</td><td><code>ref</code> frame: <em>Search Tenant</em></td></tr>
+      <tr><td>"If tenant does not exist" with 2.2 to 2.4, plus the extension "If tenant already exists" with 2.2</td><td>One <code>alt</code>: <code>[tenant does not exist]</code> above the dashed line, <code>[tenant already exists]</code> below</td></tr>
+      <tr><td>2.2 and 2.3</td><td>One Create message in the top half: <code>createObject(tenantId, fName, lName, mobileNo, "new")</code> to a new <code><u>aTenant:Tenant</u></code> box</td></tr>
+      <tr><td>2.4</td><td>Dashed confirmation back to the Actor</td></tr>
+      <tr><td>Extension 2.2</td><td>Bottom half: a dashed "no tenant created" message back to the Actor</td></tr>
+    </table>
+
+    <h3 id="dsd-example-1-shopping-cart">Worked Example 1: Adding Items to a Shopping Cart</h3>
+    <p class="desc">Covers all three lifecycle patterns (<strong>Read</strong>, <strong>Create</strong>, <strong>Update</strong>) plus a <code>loop</code> frame.</p>
+
+    <p><strong>The use case</strong> - read it once, then read it again with a highlighter:</p>
+<p class="foa-title">Use case: Add products to cart</p>
+<table class="foa"><tr><th class="lab"></th><th>Actor</th><th>System</th></tr>
+<tr><td class="lab" rowspan="5">Flow of activities:</td><td>1. Enters product ID and quantity</td><td>1.1 <span class="hl hl-act">Retrieves</span> the price from the <span class="hl hl-entity">PRODUCT table</span></td></tr>
+<tr><td></td><td>1.2 <span class="hl hl-act">Creates</span> new item in the <span class="hl hl-entity">CART_ITEM table</span>, including ProductID, Qty and Price</td></tr>
+<tr><td></td><td>1.3 <span class="hl hl-act">Decrements</span> the stock of the product in the <span class="hl hl-entity">PRODUCT table</span></td></tr>
+<tr><td></td><td class="cond"><i><span class="hl hl-act">Repeat steps 1 to 1.3 for each product to add</span></i></td></tr>
+<tr><td>2. Finishes adding products</td><td>2.1 Displays the cart total</td></tr>
+</table>
+    <div class="legend"><span class="hl hl-entity">Entity (table)</span><span class="hl hl-act">Action / frame keyword</span></div>
+    <p><strong>Step 1 - Narrative Demolition:</strong> turn the table into lifelines (Phase 1 rules). The Boundary and Controller are not written in the table, so you supply them.</p>
+    <table>
+      <tr><th>Where you find it</th><th>Element</th><th>Lifeline you draw</th><th>Why</th></tr>
+      <tr><td>Whoever performs the Actor column</td><td>Actor</td><td>stick figure <strong>Customer</strong></td><td>Starts the use case; top left</td></tr>
+      <tr><td><em>Not written</em>: the screen the actor types into</td><td>Boundary</td><td><code><u>:CartForm</u></code></td><td>Every actor action needs a screen; name it after the use case plus <code>Form</code></td></tr>
+      <tr><td><em>Not written</em>: the System column as a whole</td><td>Controller</td><td><code><u>:salesHandler</u></code></td><td>Something must coordinate the System steps; carts are a sales theme</td></tr>
+      <tr><td>"PRODUCT table"</td><td>Entity</td><td><code><u>:Product</u></code></td><td>Singular table name; the row already exists</td></tr>
+      <tr><td>"CART_ITEM table"</td><td>Entity</td><td><code><u>aCartItem:CartItem</u></code></td><td>A <em>new</em> row is created, so it appears mid-diagram</td></tr>
+    </table>
+
+    <p><strong>Step 2 - Write out the flow of activities as messages:</strong> go row by row and turn each into one or more messages. Tag each with its pattern (Phase 3) and its frame (Phase 5).</p>
+    <table>
+      <tr><th>#</th><th>Table row</th><th>From → To</th><th>Message</th><th>Pattern</th></tr>
+      <tr><td><span class="bd">1</span></td><td>Actor 1: enters ID and quantity</td><td>Customer → CartForm</td><td><code>addProduct(productId, qty)</code></td><td><span class="pat pat-pass">Delegate</span></td></tr>
+      <tr><td><span class="bd">2</span></td><td>Actor 1 (screen hands it on)</td><td>CartForm → salesHandler</td><td><code>addProduct(productId, qty)</code></td><td><span class="pat pat-pass">Delegate</span></td></tr>
+      <tr><td><span class="bd">3</span></td><td>1.1 Retrieves the price</td><td>salesHandler → Product</td><td><code>price := getPrice(productId)</code></td><td><span class="pat pat-read">Read</span></td></tr>
+      <tr><td><span class="bd">4</span></td><td>1.2 Creates new item</td><td>salesHandler → <em>new</em> CartItem</td><td><code>createObject(productId, qty, price)</code></td><td><span class="pat pat-create">Create</span></td></tr>
+      <tr><td><span class="bd">5</span></td><td>1.3 Decrements the stock</td><td>salesHandler → Product</td><td><code>updateStock(productId, qty)</code></td><td><span class="pat pat-update">Update</span></td></tr>
+      <tr><td><span class="bd">6</span></td><td>1.3 (the change is confirmed)</td><td>Product → salesHandler</td><td><code>confirmation</code> (dashed)</td><td><span class="pat pat-ret">Return</span></td></tr>
+      <tr><td colspan="5"><strong>"Repeat steps 1 to 1.3"</strong> wraps messages 1 to 6 in <code>loop [for each product to add]</code></td></tr>
+      <tr><td><span class="bd">7</span></td><td>2.1 Displays the cart total</td><td>salesHandler → CartForm</td><td><code>cartTotal</code> (dashed)</td><td><span class="pat pat-ret">Return</span></td></tr>
+      <tr><td><span class="bd">8</span></td><td>2.1 (shown to the actor)</td><td>CartForm → Customer</td><td><code>display cart total</code> (dashed)</td><td><span class="pat pat-ret">Return</span></td></tr>
+    </table>
+
+    <p><strong>Step 3 - Place the lifelines:</strong> left to right in order of first appearance. Existing objects sit on the top row; the object that gets created drops down to the step where it is born.</p>
+<pre><code>Customer     :CartForm     :salesHandler     :Product                      &lt;- top row (already exist)
+                                                                 aCartItem:CartItem  &lt;- drops in at message 4</code></pre>
+
+    <p><strong>Step 4 - Draw it:</strong> add the lifelines, then the messages in order, then the frame. The numbered circles match the table above (don't draw them in the exam).</p>
+<div class="dsd-fig" role="group" aria-label="Design sequence diagram for adding items to a shopping cart">
+<svg viewBox="0 0 950 548" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ex1-t" style="min-width:800px"><title id="ex1-t">Design sequence diagram</title>
+<defs><marker id="ex1-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker><marker id="ex1-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M1 1L9 5L1 9" class="mk-o"/></marker></defs>
+<rect x="38" y="102" width="894" height="322" class="frame"/>
+<polygon points="38,102 84,102 84,113 76,122 38,122" class="frame-tab"/>
+<text x="45" y="116.5" class="kw">loop</text>
+<text x="94" y="117" class="guard">[for each product to add]</text>
+<line x1="80" y1="88" x2="80" y2="536" class="lifeline"/>
+<line x1="270" y1="60" x2="270" y2="536" class="lifeline"/>
+<line x1="460" y1="60" x2="460" y2="536" class="lifeline"/>
+<line x1="650" y1="60" x2="650" y2="536" class="lifeline"/>
+<line x1="840" y1="315" x2="840" y2="536" class="lifeline"/>
+<line x1="80" y1="148" x2="270" y2="148" class="msg" marker-end="url(#ex1-f)"/>
+<text x="175.0" y="141" class="lbl" text-anchor="middle">addProduct(productId, qty)</text>
+<circle cx="15" cy="148" r="9.5" class="badge"/><text x="15" y="152" class="badge-t" text-anchor="middle">1</text>
+<line x1="270" y1="194" x2="460" y2="194" class="msg" marker-end="url(#ex1-f)"/>
+<text x="365.0" y="187" class="lbl" text-anchor="middle">addProduct(productId, qty)</text>
+<circle cx="15" cy="194" r="9.5" class="badge"/><text x="15" y="198" class="badge-t" text-anchor="middle">2</text>
+<line x1="460" y1="240" x2="650" y2="240" class="msg" marker-end="url(#ex1-f)"/>
+<text x="555.0" y="233" class="lbl" text-anchor="middle">price := getPrice(productId)</text>
+<circle cx="15" cy="240" r="9.5" class="badge"/><text x="15" y="244" class="badge-t" text-anchor="middle">3</text>
+<line x1="460" y1="300" x2="756.9" y2="300" class="msg" marker-end="url(#ex1-f)"/>
+<text x="608.45" y="293" class="lbl" text-anchor="middle">createObject(productId, qty, price)</text>
+<circle cx="15" cy="300" r="9.5" class="badge"/><text x="15" y="304" class="badge-t" text-anchor="middle">4</text>
+<line x1="460" y1="358" x2="650" y2="358" class="msg" marker-end="url(#ex1-f)"/>
+<text x="555.0" y="351" class="lbl" text-anchor="middle">updateStock(productId, qty)</text>
+<circle cx="15" cy="358" r="9.5" class="badge"/><text x="15" y="362" class="badge-t" text-anchor="middle">5</text>
+<line x1="650" y1="394" x2="460" y2="394" class="msg ret" marker-end="url(#ex1-o)"/>
+<text x="555.0" y="387" class="lbl" text-anchor="middle">confirmation</text>
+<circle cx="15" cy="394" r="9.5" class="badge"/><text x="15" y="398" class="badge-t" text-anchor="middle">6</text>
+<line x1="460" y1="470" x2="270" y2="470" class="msg ret" marker-end="url(#ex1-o)"/>
+<text x="365.0" y="463" class="lbl" text-anchor="middle">cartTotal</text>
+<circle cx="15" cy="470" r="9.5" class="badge"/><text x="15" y="474" class="badge-t" text-anchor="middle">7</text>
+<line x1="270" y1="512" x2="80" y2="512" class="msg ret" marker-end="url(#ex1-o)"/>
+<text x="175.0" y="505" class="lbl" text-anchor="middle">display cart total</text>
+<circle cx="15" cy="512" r="9.5" class="badge"/><text x="15" y="516" class="badge-t" text-anchor="middle">8</text>
+<g stroke="#e8a04c" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="80" cy="21" r="8"/><path d="M80 29V50M68 37H92M80 50L70 66M80 50L90 66"/></g>
+<text x="80" y="82" class="actor-t" text-anchor="middle" fill="#e8a04c">Customer</text>
+<rect x="208.0" y="30" width="124" height="30" rx="3" class="box" stroke="#6fa8ea"/>
+<text x="270" y="49.5" class="ll" text-anchor="middle">:CartForm</text>
+<rect x="396.65" y="30" width="126.7" height="30" rx="3" class="box" stroke="#a98be8"/>
+<text x="460" y="49.5" class="ll" text-anchor="middle">:salesHandler</text>
+<rect x="588.0" y="30" width="124" height="30" rx="3" class="box" stroke="#5cb87a"/>
+<text x="650" y="49.5" class="ll" text-anchor="middle">:Product</text>
+<rect x="756.9" y="285" width="166.20000000000002" height="30" rx="3" class="box" stroke="#5cb87a"/>
+<text x="840" y="304.5" class="ll" text-anchor="middle">aCartItem:CartItem</text>
+</svg>
+</div>
+
+    <p><strong>Why it is drawn this way</strong></p>
+    <table>
+      <tr><th>Feature</th><th>Reason</th></tr>
+      <tr><td>No dashed arrow after message 3</td><td>The price is stored in a variable (<code>price :=</code>), so a separate return arrow is not required</td></tr>
+      <tr><td>Arrow 4 points at the <code>CartItem</code> <strong>box</strong></td><td>That is how an instantiation is drawn; the lifeline starts below the box</td></tr>
+      <tr><td><code>Product</code> is used twice</td><td>One lifeline, two messages (a Read and an Update); never draw it twice</td></tr>
+      <tr><td>The loop wraps only 1 to 6</td><td>The repeat note names steps 1 to 1.3; the total (step 2) happens once, after the loop</td></tr>
+      <tr><td>No separate "finishes adding" request</td><td>Actor step 2 carries no data, so the total simply comes back as the final dashed arrows</td></tr>
+      <tr><td>No "X" at the bottom of lifelines</td><td>Nothing is deleted in this use case</td></tr>
+    </table>
+
+    <h3 id="dsd-example-2-trainer-booking">Worked Example 2: Booking a Personal Trainer</h3>
+    <p class="desc">Adds a <code>ref</code> frame and an <code>alt</code> frame (main flow plus an extension), and shows Create and Update <em>inside</em> a branch.</p>
+
+    <p><strong>The use case</strong></p>
+<p class="foa-title">Use case: Book trainer</p>
+<table class="foa"><tr><th class="lab"></th><th>Actor</th><th>System</th></tr>
+<tr><td class="lab" rowspan="8">Flow of activities:</td><td>1. Requests to book a trainer</td><td>1.1 Prompts for the mobile number of the client and the trainer</td></tr>
+<tr><td>2. Enters mobile number and selects trainer</td><td>2.1 <i>Invokes</i> <span class="hl hl-act">Validate Customer use case</span> to verify the client</td></tr>
+<tr><td></td><td>2.2 <span class="hl hl-act">Searches</span> the <span class="hl hl-entity">CLIENT table</span> using the mobile number</td></tr>
+<tr><td></td><td>2.3 <span class="hl hl-act">Checks</span> whether the trainer in the <span class="hl hl-entity">TRAINER table</span> is available</td></tr>
+<tr><td></td><td class="cond"><i><span class="hl hl-act">If trainer is available</span></i></td></tr>
+<tr><td></td><td>2.4 <span class="hl hl-act">Creates</span> new booking in the <span class="hl hl-entity">BOOKING table</span>, including ClientID and TrainerID</td></tr>
+<tr><td></td><td>2.5 <span class="hl hl-act">Sets</span> trainer status to "Booked" in the <span class="hl hl-entity">TRAINER table</span></td></tr>
+<tr><td></td><td>2.6 Confirms the booking</td></tr>
+<tr class="ext"><td class="lab" rowspan="2">Extensions:</td><td></td><td class="cond"><i><span class="hl hl-act">If trainer is not available</span></i></td></tr>
+<tr class="ext"><td></td><td>2.4 Informs that the trainer is unavailable</td></tr>
+</table>
+    <div class="legend"><span class="hl hl-entity">Entity (table)</span><span class="hl hl-act">Action / frame keyword</span></div>
+    <p><strong>Step 1 - Narrative Demolition</strong></p>
+    <table>
+      <tr><th>Where you find it</th><th>Element</th><th>Lifeline you draw</th><th>Why</th></tr>
+      <tr><td>Whoever performs the Actor column</td><td>Actor</td><td>stick figure <strong>Receptionist</strong></td><td>Starts the use case; top left</td></tr>
+      <tr><td><em>Not written</em>: the screen the actor uses</td><td>Boundary</td><td><code><u>:BookingForm</u></code></td><td>Use case name plus <code>Form</code></td></tr>
+      <tr><td><em>Not written</em>: the System column as a whole</td><td>Controller</td><td><code><u>:salesHandler</u></code></td><td>Bookings fall under the Sales / Orders / Bookings theme</td></tr>
+      <tr><td>"CLIENT table"</td><td>Entity</td><td><code><u>:Client</u></code></td><td>Read-only lookup; already exists</td></tr>
+      <tr><td>"TRAINER table"</td><td>Entity</td><td><code><u>:Trainer</u></code></td><td>Read, then modified; already exists</td></tr>
+      <tr><td>"BOOKING table"</td><td>Entity</td><td><code><u>newBooking:Booking</u></code></td><td>A new row is created, so it drops down</td></tr>
+    </table>
+
+    <p><strong>Step 2 - Write out the flow of activities as messages:</strong> rows 1 and 1.1 only open and prompt the screen, so the DSD starts at row 2, where data first goes in. The story then splits in two, so mark which branch each message belongs to.</p>
+    <table>
+      <tr><th>#</th><th>Table row</th><th>From → To</th><th>Message</th><th>Pattern</th></tr>
+      <tr><td><span class="bd">1</span></td><td>Actor 2: enters number, selects trainer</td><td>Receptionist → BookingForm</td><td><code>bookTrainer(mobileNo, trainerId)</code></td><td><span class="pat pat-pass">Delegate</span></td></tr>
+      <tr><td><span class="bd">2</span></td><td>Actor 2 (screen hands it on)</td><td>BookingForm → salesHandler</td><td><code>bookTrainer(mobileNo, trainerId)</code></td><td><span class="pat pat-pass">Delegate</span></td></tr>
+      <tr><td><span class="bd">3</span></td><td>2.1 Invokes Validate Customer</td><td>spans salesHandler and Client</td><td><code>Validate Customer</code></td><td><span class="pat pat-ref">ref frame</span></td></tr>
+      <tr><td><span class="bd">4</span></td><td>2.2 Searches the CLIENT table</td><td>salesHandler → Client</td><td><code>client := searchClient(mobileNo)</code></td><td><span class="pat pat-read">Read</span></td></tr>
+      <tr><td><span class="bd">5</span></td><td>2.3 Checks the trainer</td><td>salesHandler → Trainer</td><td><code>isAvailable := checkAvailability(trainerId)</code></td><td><span class="pat pat-read">Read</span></td></tr>
+      <tr><td colspan="5"><strong>"If trainer is available" and the extension "If trainer is not available"</strong> (step 2.4 appears in both) means one <code>alt</code> frame with a dashed divider</td></tr>
+      <tr><td><span class="bd">6</span></td><td><em>[available]</em> 2.4 Creates new booking</td><td>salesHandler → <em>new</em> Booking</td><td><code>createObject(client, trainerId)</code></td><td><span class="pat pat-create">Create</span></td></tr>
+      <tr><td><span class="bd">7</span></td><td><em>[available]</em> 2.5 Sets trainer status</td><td>salesHandler → Trainer</td><td><code>setTrainerStatus("Booked")</code></td><td><span class="pat pat-update">Update</span></td></tr>
+      <tr><td><span class="bd">8</span></td><td><em>[available]</em> 2.5 (change confirmed)</td><td>Trainer → salesHandler</td><td><code>confirmation</code> (dashed)</td><td><span class="pat pat-ret">Return</span></td></tr>
+      <tr><td><span class="bd">9</span>-<span class="bd">10</span></td><td><em>[available]</em> 2.6 Confirms the booking</td><td>salesHandler → BookingForm → Receptionist</td><td><code>bookingConfirmed</code>, <code>display confirmation</code> (dashed)</td><td><span class="pat pat-ret">Return</span></td></tr>
+      <tr><td><span class="bd">11</span>-<span class="bd">12</span></td><td><em>[not available]</em> Extension 2.4 Informs unavailable</td><td>salesHandler → BookingForm → Receptionist</td><td><code>trainerUnavailable</code>, <code>display "trainer unavailable"</code> (dashed)</td><td><span class="pat pat-ret">Return</span></td></tr>
+    </table>
+
+    <p><strong>Step 3 - Place the lifelines</strong></p>
+<pre><code>Receptionist   :BookingForm   :salesHandler   :Client   :Trainer                   &lt;- top row (already exist)
+                                                                       newBooking:Booking  &lt;- drops in at message 6, inside the alt</code></pre>
+
+    <p><strong>Step 4 - Draw it:</strong> the <code>ref</code> box goes in first as a simple block between the lifelines it touches, then the <code>alt</code> frame is drawn around everything that depends on the availability check.</p>
+<div class="dsd-fig" role="group" aria-label="Design sequence diagram for booking a personal trainer">
+<svg viewBox="0 0 1096 744" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ex2-t" style="min-width:950px"><title id="ex2-t">Design sequence diagram</title>
+<defs><marker id="ex2-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker><marker id="ex2-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M1 1L9 5L1 9" class="mk-o"/></marker></defs>
+<rect x="405" y="206" width="330" height="50" class="frame"/>
+<polygon points="405,206 443,206 443,217 435,226 405,226" class="frame-tab"/>
+<text x="412" y="220.5" class="kw">ref</text>
+<text x="570.0" y="240.0" class="reftxt" text-anchor="middle">Validate Customer</text>
+<rect x="38" y="372" width="1037" height="346" class="frame"/>
+<polygon points="38,372 76,372 76,383 68,392 38,392" class="frame-tab"/>
+<text x="45" y="386.5" class="kw">alt</text>
+<text x="86" y="387" class="guard">[isAvailable = true]</text>
+<line x1="38" y1="602" x2="1075" y2="602" class="divider"/>
+<text x="48" y="618" class="guard">[isAvailable = false]</text>
+<line x1="85" y1="88" x2="85" y2="732" class="lifeline"/>
+<line x1="285" y1="60" x2="285" y2="732" class="lifeline"/>
+<line x1="475" y1="60" x2="475" y2="732" class="lifeline"/>
+<line x1="660" y1="60" x2="660" y2="732" class="lifeline"/>
+<line x1="835" y1="60" x2="835" y2="732" class="lifeline"/>
+<line x1="1005" y1="443" x2="1005" y2="732" class="lifeline"/>
+<line x1="85" y1="130" x2="285" y2="130" class="msg" marker-end="url(#ex2-f)"/>
+<text x="185.0" y="123" class="lbl" text-anchor="middle">bookTrainer(mobileNo, trainerId)</text>
+<circle cx="15" cy="130" r="9.5" class="badge"/><text x="15" y="134" class="badge-t" text-anchor="middle">1</text>
+<line x1="285" y1="176" x2="475" y2="176" class="msg" marker-end="url(#ex2-f)"/>
+<text x="380.0" y="169" class="lbl" text-anchor="middle">bookTrainer(mobileNo, trainerId)</text>
+<circle cx="15" cy="176" r="9.5" class="badge"/><text x="15" y="180" class="badge-t" text-anchor="middle">2</text>
+<line x1="475" y1="296" x2="660" y2="296" class="msg" marker-end="url(#ex2-f)"/>
+<text x="567.5" y="289" class="lbl" text-anchor="middle">client := searchClient(mobileNo)</text>
+<circle cx="15" cy="296" r="9.5" class="badge"/><text x="15" y="300" class="badge-t" text-anchor="middle">4</text>
+<line x1="475" y1="342" x2="835" y2="342" class="msg" marker-end="url(#ex2-f)"/>
+<text x="655.0" y="335" class="lbl" text-anchor="middle">isAvailable := checkAvailability(trainerId)</text>
+<circle cx="15" cy="342" r="9.5" class="badge"/><text x="15" y="346" class="badge-t" text-anchor="middle">5</text>
+<line x1="475" y1="428" x2="921.9" y2="428" class="msg" marker-end="url(#ex2-f)"/>
+<text x="698.45" y="421" class="lbl" text-anchor="middle">createObject(client, trainerId)</text>
+<circle cx="15" cy="428" r="9.5" class="badge"/><text x="15" y="432" class="badge-t" text-anchor="middle">6</text>
+<line x1="475" y1="472" x2="835" y2="472" class="msg" marker-end="url(#ex2-f)"/>
+<text x="655.0" y="465" class="lbl" text-anchor="middle">setTrainerStatus("Booked")</text>
+<circle cx="15" cy="472" r="9.5" class="badge"/><text x="15" y="476" class="badge-t" text-anchor="middle">7</text>
+<line x1="835" y1="506" x2="475" y2="506" class="msg ret" marker-end="url(#ex2-o)"/>
+<text x="655.0" y="499" class="lbl" text-anchor="middle">confirmation</text>
+<circle cx="15" cy="506" r="9.5" class="badge"/><text x="15" y="510" class="badge-t" text-anchor="middle">8</text>
+<line x1="475" y1="542" x2="285" y2="542" class="msg ret" marker-end="url(#ex2-o)"/>
+<text x="380.0" y="535" class="lbl" text-anchor="middle">bookingConfirmed</text>
+<circle cx="15" cy="542" r="9.5" class="badge"/><text x="15" y="546" class="badge-t" text-anchor="middle">9</text>
+<line x1="285" y1="578" x2="85" y2="578" class="msg ret" marker-end="url(#ex2-o)"/>
+<text x="185.0" y="571" class="lbl" text-anchor="middle">display confirmation</text>
+<circle cx="15" cy="578" r="9.5" class="badge"/><text x="15" y="582" class="badge-t" text-anchor="middle">10</text>
+<line x1="475" y1="656" x2="285" y2="656" class="msg ret" marker-end="url(#ex2-o)"/>
+<text x="380.0" y="649" class="lbl" text-anchor="middle">trainerUnavailable</text>
+<circle cx="15" cy="656" r="9.5" class="badge"/><text x="15" y="660" class="badge-t" text-anchor="middle">11</text>
+<line x1="285" y1="692" x2="85" y2="692" class="msg ret" marker-end="url(#ex2-o)"/>
+<text x="185.0" y="685" class="lbl" text-anchor="middle">display "trainer unavailable"</text>
+<circle cx="15" cy="692" r="9.5" class="badge"/><text x="15" y="696" class="badge-t" text-anchor="middle">12</text>
+<g stroke="#e8a04c" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="85" cy="21" r="8"/><path d="M85 29V50M73 37H97M85 50L75 66M85 50L95 66"/></g>
+<text x="85" y="82" class="actor-t" text-anchor="middle" fill="#e8a04c">Receptionist</text>
+<rect x="223.0" y="30" width="124" height="30" rx="3" class="box" stroke="#6fa8ea"/>
+<text x="285" y="49.5" class="ll" text-anchor="middle">:BookingForm</text>
+<rect x="411.65" y="30" width="126.7" height="30" rx="3" class="box" stroke="#a98be8"/>
+<text x="475" y="49.5" class="ll" text-anchor="middle">:salesHandler</text>
+<rect x="598.0" y="30" width="124" height="30" rx="3" class="box" stroke="#5cb87a"/>
+<text x="660" y="49.5" class="ll" text-anchor="middle">:Client</text>
+<rect x="773.0" y="30" width="124" height="30" rx="3" class="box" stroke="#5cb87a"/>
+<text x="835" y="49.5" class="ll" text-anchor="middle">:Trainer</text>
+<rect x="921.9" y="413" width="166.20000000000002" height="30" rx="3" class="box" stroke="#5cb87a"/>
+<text x="1005" y="432.5" class="ll" text-anchor="middle">newBooking:Booking</text>
+<circle cx="15" cy="231" r="9.5" class="badge"/><text x="15" y="235" class="badge-t" text-anchor="middle">3</text></svg>
+</div>
+
+    <p><strong>Why it is drawn this way</strong></p>
+    <table>
+      <tr><th>Feature</th><th>Reason</th></tr>
+      <tr><td><code>ref</code> box, no messages inside</td><td>The validation is a whole other use case with its own diagram, so you only name it</td></tr>
+      <tr><td>One <code>alt</code>, two guards, <strong>dashed divider</strong></td><td>The main flow and the Extensions row are mutually exclusive; the dashed line splits them</td></tr>
+      <tr><td>Create and Update both in the true half</td><td>They sit under "If trainer is available", so they must not appear outside the frame</td></tr>
+      <tr><td>Both halves finish back at the Receptionist</td><td>Either way the System column ends by telling the actor something</td></tr>
+      <tr><td>Why not <code>opt</code>?</td><td>The Extensions row gives an alternative outcome. <code>opt</code> is only for "if" with nothing else</td></tr>
+    </table>
+  </section>
+
   </main>
 </div>
 
 <footer>
-  Microsoft Access SQL Cheat Sheet - quick reference for Access SQL View syntax
+  Database Fundamentals - Access SQL reference &amp; DSD blueprint
 </footer>
 
 <script>
