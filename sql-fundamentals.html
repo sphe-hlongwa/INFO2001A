@@ -506,67 +506,93 @@
   }
   section, section h2, section h3, section h4 { scroll-margin-top: 150px; }
   /* DSD blueprint tables hold sentences, so let them wrap instead of scrolling sideways */
-  #dsd table { white-space: normal; }
-  #dsd td, #dsd th { vertical-align: top; }
+  :is(#dsd, #wireframe, #storyboard) table { white-space: normal; }
+  :is(#dsd, #wireframe, #storyboard) td, :is(#dsd, #wireframe, #storyboard) th { vertical-align: top; }
   /* ---- DSD worked examples ---- */
-  #dsd .scenario { border-left: 3px solid var(--accent); background: var(--code-bg); padding: 12px 16px; border-radius: 0 6px 6px 0; line-height: 2; margin: 10px 0 14px; }
-  #dsd .legend { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.78rem; margin: 6px 0 14px; }
-  #dsd .hl { padding: 1px 6px; border-radius: 4px; font-weight: 600; border-bottom: 2px solid; }
-  #dsd .hl-actor    { background: rgba(232,160,76,.16);  border-color: #e8a04c; }
-  #dsd .hl-boundary { background: rgba(111,168,234,.16); border-color: #6fa8ea; }
-  #dsd .hl-ctl      { background: rgba(169,139,232,.16); border-color: #a98be8; }
-  #dsd .hl-entity   { background: rgba(92,184,122,.16);  border-color: #5cb87a; }
-  #dsd .hl-act      { background: rgba(215,222,232,.09); border-color: #8a94a3; font-style: italic; }
-  #dsd .bd { display: inline-block; min-width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; background: var(--accent); color: #10141c; font-weight: 700; font-size: 0.78rem; }
-  #dsd .pat { font-size: 0.72rem; padding: 1px 8px; border-radius: 10px; border: 1px solid var(--border); white-space: nowrap; }
-  #dsd .pat-read   { color: #6fa8ea; border-color: #6fa8ea; }
-  #dsd .pat-create { color: #5cb87a; border-color: #5cb87a; }
-  #dsd .pat-update { color: #e8a04c; border-color: #e8a04c; }
-  #dsd .pat-loop, #dsd .pat-alt, #dsd .pat-ref { color: #a98be8; border-color: #a98be8; }
-  #dsd .pat-pass, #dsd .pat-ret { color: var(--muted); }
-  #dsd .dsd-fig { overflow-x: auto; margin: 12px 0 18px; border: 1px solid var(--border); border-radius: 8px; background: var(--code-bg); padding: 6px; }
-  #dsd .dsd-fig svg { display: block; width: 100%; height: auto; }
-  #dsd .dsd-fig .lifeline { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 5; opacity: .7; }
-  #dsd .dsd-fig .act { fill: var(--code-bg); stroke: var(--text); stroke-width: 1.3; }
-  #dsd .dsd-fig .msg { stroke: var(--text); stroke-width: 1.6; fill: none; }
-  #dsd .dsd-fig .msg.ret { stroke-dasharray: 7 5; }
-  #dsd .dsd-fig .mk-f { fill: var(--text); }
-  #dsd .dsd-fig .mk-o { fill: none; stroke: var(--text); stroke-width: 1.6; }
-  #dsd .dsd-fig .box { fill: #0d1526; stroke-width: 1.8; }
-  #dsd .dsd-fig .ll, #dsd .dsd-fig .lbl, #dsd .dsd-fig .kw, #dsd .dsd-fig .guard { font-family: 'SF Mono', Consolas, Menlo, monospace; }
-  #dsd .dsd-fig .ll { fill: var(--text); font-size: 12.5px; text-decoration: underline; }
-  #dsd .dsd-fig .lbl { fill: var(--text); font-size: 12.5px; paint-order: stroke; stroke: var(--code-bg); stroke-width: 5px; stroke-linejoin: round; }
-  #dsd .dsd-fig .actor-t { font-size: 13px; font-weight: 700; }
-  #dsd .dsd-fig .frame { fill: none; stroke: #e8a04c; stroke-width: 1.4; }
-  #dsd .dsd-fig .frame-tab { fill: #2a2416; stroke: #e8a04c; stroke-width: 1.4; }
-  #dsd .dsd-fig .kw { fill: #f1c68a; font-size: 12px; font-weight: 700; }
-  #dsd .dsd-fig .guard { fill: #f1c68a; font-size: 12.5px; }
-  #dsd .dsd-fig .divider { stroke: #e8a04c; stroke-width: 1.4; stroke-dasharray: 7 5; }
-  #dsd .dsd-fig .reftxt { fill: var(--text); font-size: 14px; font-weight: 600; }
+  :is(#dsd, #wireframe, #storyboard) .scenario { border-left: 3px solid var(--accent); background: var(--code-bg); padding: 12px 16px; border-radius: 0 6px 6px 0; line-height: 2; margin: 10px 0 14px; }
+  :is(#dsd, #wireframe, #storyboard) .legend { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.78rem; margin: 6px 0 14px; }
+  :is(#dsd, #wireframe, #storyboard) .hl { padding: 1px 6px; border-radius: 4px; font-weight: 600; border-bottom: 2px solid; }
+  :is(#dsd, #wireframe, #storyboard) .hl-actor    { background: rgba(232,160,76,.16);  border-color: #e8a04c; }
+  :is(#dsd, #wireframe, #storyboard) .hl-boundary { background: rgba(111,168,234,.16); border-color: #6fa8ea; }
+  :is(#dsd, #wireframe, #storyboard) .hl-ctl      { background: rgba(169,139,232,.16); border-color: #a98be8; }
+  :is(#dsd, #wireframe, #storyboard) .hl-entity   { background: rgba(92,184,122,.16);  border-color: #5cb87a; }
+  :is(#dsd, #wireframe, #storyboard) .hl-act      { background: rgba(215,222,232,.09); border-color: #8a94a3; font-style: italic; }
+  :is(#dsd, #wireframe, #storyboard) .bd { display: inline-block; min-width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; background: var(--accent); color: #10141c; font-weight: 700; font-size: 0.78rem; }
+  :is(#dsd, #wireframe, #storyboard) .pat { font-size: 0.72rem; padding: 1px 8px; border-radius: 10px; border: 1px solid var(--border); white-space: nowrap; }
+  :is(#dsd, #wireframe, #storyboard) .pat-read   { color: #6fa8ea; border-color: #6fa8ea; }
+  :is(#dsd, #wireframe, #storyboard) .pat-create { color: #5cb87a; border-color: #5cb87a; }
+  :is(#dsd, #wireframe, #storyboard) .pat-update { color: #e8a04c; border-color: #e8a04c; }
+  :is(#dsd, #wireframe, #storyboard) .pat-loop, :is(#dsd, #wireframe, #storyboard) .pat-alt, :is(#dsd, #wireframe, #storyboard) .pat-ref { color: #a98be8; border-color: #a98be8; }
+  :is(#dsd, #wireframe, #storyboard) .pat-pass, :is(#dsd, #wireframe, #storyboard) .pat-ret { color: var(--muted); }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig { overflow-x: auto; margin: 12px 0 18px; border: 1px solid var(--border); border-radius: 8px; background: var(--code-bg); padding: 6px; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig svg { display: block; width: 100%; height: auto; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .lifeline { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 5; opacity: .7; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .act { fill: var(--code-bg); stroke: var(--text); stroke-width: 1.3; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .msg { stroke: var(--text); stroke-width: 1.6; fill: none; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .msg.ret { stroke-dasharray: 7 5; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .mk-f { fill: var(--text); }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .mk-o { fill: none; stroke: var(--text); stroke-width: 1.6; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .box { fill: #0d1526; stroke-width: 1.8; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .ll, :is(#dsd, #wireframe, #storyboard) .dsd-fig .lbl, :is(#dsd, #wireframe, #storyboard) .dsd-fig .kw, :is(#dsd, #wireframe, #storyboard) .dsd-fig .guard { font-family: 'SF Mono', Consolas, Menlo, monospace; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .ll { fill: var(--text); font-size: 12.5px; text-decoration: underline; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .lbl { fill: var(--text); font-size: 12.5px; paint-order: stroke; stroke: var(--code-bg); stroke-width: 5px; stroke-linejoin: round; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .actor-t { font-size: 13px; font-weight: 700; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .frame { fill: none; stroke: #e8a04c; stroke-width: 1.4; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .frame-tab { fill: #2a2416; stroke: #e8a04c; stroke-width: 1.4; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .kw { fill: #f1c68a; font-size: 12px; font-weight: 700; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .guard { fill: #f1c68a; font-size: 12.5px; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .divider { stroke: #e8a04c; stroke-width: 1.4; stroke-dasharray: 7 5; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .reftxt { fill: var(--text); font-size: 14px; font-weight: 600; }
   /* Flow of Activities (use case) tables */
-  #dsd .foa-title { font-size: 0.85rem; color: var(--muted); margin: 14px 0 4px; }
-  #dsd table.foa { display: table; width: 100%; border-collapse: collapse; margin: 4px 0 14px; }
-  #dsd table.foa th, #dsd table.foa td { border: 1px solid var(--border); padding: 7px 12px; }
-  #dsd table.foa th { text-align: center; }
-  #dsd table.foa td.lab { width: 130px; font-weight: 700; background: var(--card); }
-  #dsd table.foa tr.ext td { border-top: 2px solid var(--border); }
-  #dsd table.foa td.cond { font-style: italic; color: #f1c68a; }
-  #dsd table.foa td:nth-child(2), #dsd table.foa td:nth-child(3) { width: 45%; }
-  #dsd .fig-cap { font-size: 0.85rem; color: var(--muted); margin: -8px 0 18px; }
-  #dsd .dsd-fig .card { fill: #0d1526; stroke-width: 1.6; }
-  #dsd .dsd-fig .p1-t { font-size: 14px; font-weight: 700; letter-spacing: .06em; }
-  #dsd .dsd-fig .p1-s { font-size: 12px; fill: var(--muted); }
-  #dsd .dsd-fig .p1-k { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; fill: var(--muted); }
-  #dsd .dsd-fig .p1-v { font-size: 12.5px; fill: var(--text); }
-  #dsd .dsd-fig .badge { fill: var(--accent); }
-  #dsd .dsd-fig .badge-t { fill: #10141c; font-size: 11px; font-weight: 700; }
+  :is(#dsd, #wireframe, #storyboard) .foa-title { font-size: 0.85rem; color: var(--muted); margin: 14px 0 4px; }
+  :is(#dsd, #wireframe, #storyboard) table.foa { display: table; width: 100%; border-collapse: collapse; margin: 4px 0 14px; }
+  :is(#dsd, #wireframe, #storyboard) table.foa th, :is(#dsd, #wireframe, #storyboard) table.foa td { border: 1px solid var(--border); padding: 7px 12px; }
+  :is(#dsd, #wireframe, #storyboard) table.foa th { text-align: center; }
+  :is(#dsd, #wireframe, #storyboard) table.foa td.lab { width: 130px; font-weight: 700; background: var(--card); }
+  :is(#dsd, #wireframe, #storyboard) table.foa tr.ext td { border-top: 2px solid var(--border); }
+  :is(#dsd, #wireframe, #storyboard) table.foa td.cond { font-style: italic; color: #f1c68a; }
+  :is(#dsd, #wireframe, #storyboard) table.foa td:nth-child(2), :is(#dsd, #wireframe, #storyboard) table.foa td:nth-child(3) { width: 45%; }
+  :is(#dsd, #wireframe, #storyboard) .fig-cap { font-size: 0.85rem; color: var(--muted); margin: -8px 0 18px; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .card { fill: #0d1526; stroke-width: 1.6; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .p1-t { font-size: 14px; font-weight: 700; letter-spacing: .06em; }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .p1-s { font-size: 12px; fill: var(--muted); }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .p1-k { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; fill: var(--muted); }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .p1-v { font-size: 12.5px; fill: var(--text); }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .badge { fill: var(--accent); }
+  :is(#dsd, #wireframe, #storyboard) .dsd-fig .badge-t { fill: #10141c; font-size: 11px; font-weight: 700; }
+  /* ---- wireframe / storyboard figures ---- */
+  :is(#wireframe, #storyboard) .dsd-fig .wf-win { fill: #10141c; stroke: #3a4458; stroke-width: 1.5; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-grp { fill: none; stroke: #2a3242; stroke-width: 1.3; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-gt { fill: #e8a04c; font-size: 12px; font-weight: 700; letter-spacing: .04em; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-app { fill: #f1c68a; font-size: 13px; font-weight: 700; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-h { fill: #fff; font-size: 16px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; letter-spacing: .02em; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-rule { stroke: #2a3242; stroke-width: 1.2; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-t { fill: var(--text); font-size: 12.5px; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-ph { fill: var(--muted); font-size: 12.5px; font-style: italic; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-m { fill: var(--muted); font-size: 11.5px; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-req { fill: #e0605a; font-weight: 700; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-box { fill: #0d1526; stroke: #4a566c; stroke-width: 1.3; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-ro { fill: #1a2130; stroke: #2f394c; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-chev { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-dot { fill: #e8a04c; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-name { fill: #6fa8ea; font-size: 11px; font-family: 'SF Mono', Consolas, Menlo, monospace; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-errb { fill: rgba(224,96,90,.14); stroke: #e0605a; stroke-width: 1.4; stroke-dasharray: 3 2.5; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-errt { fill: #e0605a; font-size: 13px; font-weight: 700; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-err { fill: #e98a85; font-size: 12px; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-btn { fill: none; stroke: #6a7690; stroke-width: 1.4; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-primary { fill: #e8a04c; stroke: #e8a04c; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-bt { fill: var(--text); font-size: 13px; font-weight: 600; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-bt-p { fill: #10141c; font-size: 13px; font-weight: 700; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-ok { fill: rgba(92,184,122,.14); stroke: #5cb87a; stroke-width: 1.4; }
+  :is(#wireframe, #storyboard) .dsd-fig .wf-okp { fill: none; stroke: #5cb87a; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  :is(#wireframe, #storyboard) pre { margin: 10px 0 16px; }
 </style>
 </head>
 <body>
 
 <header>
   <h1>Database Fundamentals</h1>
-  <p>Access SQL syntax, normalization &amp; indexing, plus the Design Sequence Diagram (DSD) blueprint</p>
+  <p>Access SQL syntax, normalization &amp; indexing, plus the DSD, wireframe and storyboard blueprints</p>
 </header>
 
 <input type="checkbox" id="tocToggle" class="toc-toggle-state">
@@ -738,6 +764,35 @@
         <li><a href="#dsd-reading-flow">Reading a Flow of Activities table</a></li>
         <li><a href="#dsd-example-1-shopping-cart">Example 1: Shopping cart</a></li>
         <li><a href="#dsd-example-2-trainer-booking">Example 2: Trainer booking</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#wireframe">17. Wireframe (Form Prototype) Blueprint</a></summary>
+      <ul>
+        <li><a href="#wireframe-what-it-is">What a wireframe aligns with</a></li>
+        <li><a href="#wireframe-six-steps">The 6-step blueprint</a></li>
+        <li><a href="#wireframe-step-1">Step 1: Design inputs</a></li>
+        <li><a href="#wireframe-step-2">Step 2: Layout &amp; hierarchy</a></li>
+        <li><a href="#wireframe-step-3">Step 3: Control selection</a></li>
+        <li><a href="#wireframe-step-4">Step 4: Validation annotations</a></li>
+        <li><a href="#wireframe-step-5">Step 5: ERD &amp; ADO.NET map</a></li>
+        <li><a href="#wireframe-step-6">Step 6: Quality gate</a></li>
+        <li><a href="#wireframe-example">Worked example: Tutoring request</a></li>
+        <li><a href="#wireframe-code">Linking to C# &amp; ADO.NET</a></li>
+        <li><a href="#wireframe-checklist">Marking checklist</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#storyboard">18. Storyboard Blueprint</a></summary>
+      <ul>
+        <li><a href="#storyboard-what-it-is">Storyboard vs wireframe</a></li>
+        <li><a href="#storyboard-six-steps">The 6-step blueprint</a></li>
+        <li><a href="#storyboard-step-1">Step 1: Design inputs</a></li>
+        <li><a href="#storyboard-step-2">Step 2: Screen topology</a></li>
+        <li><a href="#storyboard-step-3">Step 3: Wireframes</a></li>
+        <li><a href="#storyboard-step-4">Step 4: Form narratives</a></li>
+        <li><a href="#storyboard-step-5">Step 5: Navigational narratives</a></li>
+        <li><a href="#storyboard-step-6">Step 6: Quality gate</a></li>
       </ul>
     </details>
   </nav>
@@ -2659,11 +2714,597 @@ Do this for indexes on columns that turned out to be rarely queried but are freq
     </table>
   </section>
 
+  <section id="wireframe">
+    <h2>17. Wireframe (Form Prototype) Blueprint</h2>
+    <p class="desc">A systematic, step-by-step system for drawing a full-marks <strong>form wireframe</strong> (Wits INFO2001A). A wireframe is a static picture of <strong>one</strong> screen. It shows layout, control choice, input constraints and validation feedback, and every control traces back to the DSD and the ERD.</p>
+
+    <h3 id="wireframe-what-it-is">What a wireframe must align with</h3>
+    <p class="desc">Unlike a high-fidelity design, a wireframe focuses strictly on <strong>layout structure, control selection, visual hierarchy, input constraints and validation feedback</strong>. It must agree with three upstream artifacts:</p>
+    <table>
+      <tr><th>Artifact</th><th>What the wireframe takes from it</th></tr>
+      <tr><td><strong>Design Sequence Diagram</strong></td><td>The <strong>Boundary object</strong> (<code><u>:TutoringRequestForm</u></code>) is the form you draw. The parameters of the first message to the Controller are the fields it must capture.</td></tr>
+      <tr><td><strong>ERD &amp; Data Dictionary</strong></td><td>Every input or output control maps to one table column and data type. Foreign keys, required fields and system defaults come from here.</td></tr>
+      <tr><td><strong>Interaction &amp; UX principles</strong></td><td>Shneiderman's 8 Golden Rules and Nielsen's 10 Usability Heuristics (see the Step 6 audit).</td></tr>
+    </table>
+
+    <h3 id="wireframe-six-steps">The 6-Step Universal Wireframe Blueprint</h3>
+    <p class="desc">Work through the steps in order. Steps 1 to 3 decide <em>what</em> goes on the screen, Steps 4 and 5 make it safe and traceable, Step 6 marks it the way the examiner will.</p>
+<div class="dsd-fig" role="group" aria-label="Six-step wireframe blueprint">
+<svg viewBox="0 0 960 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="wfs-t" style="min-width:760px"><title id="wfs-t">Six steps of the wireframe blueprint</title>
+<defs><marker id="wfs-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker></defs>
+<rect x="10.0" y="14" width="144" height="122" rx="8" class="card" stroke="#e8a04c"/>
+<path d="M10.0 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H10.0z" fill="#e8a04c" opacity=".18"/>
+<text x="82.0" y="32" class="p1-t" text-anchor="middle" fill="#e8a04c">STEP 1</text>
+<text x="82.0" y="47" class="p1-s" text-anchor="middle">Design inputs</text>
+<text x="22.0" y="76" class="p1-k">OUTPUT</text>
+<text x="22.0" y="94" class="p1-v">DSD boundary + ERD</text>
+<text x="22.0" y="110" class="p1-v">fields and types</text>
+<line x1="156.0" y1="75" x2="166.2" y2="75" class="msg" marker-end="url(#wfs-f)"/>
+<rect x="169.2" y="14" width="144" height="122" rx="8" class="card" stroke="#6fa8ea"/>
+<path d="M169.2 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H169.2z" fill="#6fa8ea" opacity=".18"/>
+<text x="241.2" y="32" class="p1-t" text-anchor="middle" fill="#6fa8ea">STEP 2</text>
+<text x="241.2" y="47" class="p1-s" text-anchor="middle">Form hierarchy</text>
+<text x="181.2" y="76" class="p1-k">OUTPUT</text>
+<text x="181.2" y="94" class="p1-v">Header, body,</text>
+<text x="181.2" y="110" class="p1-v">action bar</text>
+<line x1="315.2" y1="75" x2="325.4" y2="75" class="msg" marker-end="url(#wfs-f)"/>
+<rect x="328.4" y="14" width="144" height="122" rx="8" class="card" stroke="#a98be8"/>
+<path d="M328.4 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H328.4z" fill="#a98be8" opacity=".18"/>
+<text x="400.4" y="32" class="p1-t" text-anchor="middle" fill="#a98be8">STEP 3</text>
+<text x="400.4" y="47" class="p1-s" text-anchor="middle">Control selection</text>
+<text x="340.4" y="76" class="p1-k">OUTPUT</text>
+<text x="340.4" y="94" class="p1-v">Right control for</text>
+<text x="340.4" y="110" class="p1-v">each data type</text>
+<line x1="474.4" y1="75" x2="484.6" y2="75" class="msg" marker-end="url(#wfs-f)"/>
+<rect x="487.6" y="14" width="144" height="122" rx="8" class="card" stroke="#5cb87a"/>
+<path d="M487.6 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H487.6z" fill="#5cb87a" opacity=".18"/>
+<text x="559.6" y="32" class="p1-t" text-anchor="middle" fill="#5cb87a">STEP 4</text>
+<text x="559.6" y="47" class="p1-s" text-anchor="middle">Error handling</text>
+<text x="499.6" y="76" class="p1-k">OUTPUT</text>
+<text x="499.6" y="94" class="p1-v">Asterisks and</text>
+<text x="499.6" y="110" class="p1-v">ErrorProvider</text>
+<line x1="633.6" y1="75" x2="643.8" y2="75" class="msg" marker-end="url(#wfs-f)"/>
+<rect x="646.8" y="14" width="144" height="122" rx="8" class="card" stroke="#e8a04c"/>
+<path d="M646.8 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H646.8z" fill="#e8a04c" opacity=".18"/>
+<text x="718.8" y="32" class="p1-t" text-anchor="middle" fill="#e8a04c">STEP 5</text>
+<text x="718.8" y="47" class="p1-s" text-anchor="middle">Code &amp; data map</text>
+<text x="658.8" y="76" class="p1-k">OUTPUT</text>
+<text x="658.8" y="94" class="p1-v">Traceability table</text>
+<text x="658.8" y="110" class="p1-v">ERD + ADO.NET</text>
+<line x1="792.8" y1="75" x2="803.0" y2="75" class="msg" marker-end="url(#wfs-f)"/>
+<rect x="806.0" y="14" width="144" height="122" rx="8" class="card" stroke="#6fa8ea"/>
+<path d="M806.0 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H806.0z" fill="#6fa8ea" opacity=".18"/>
+<text x="878.0" y="32" class="p1-t" text-anchor="middle" fill="#6fa8ea">STEP 6</text>
+<text x="878.0" y="47" class="p1-s" text-anchor="middle">Quality gate</text>
+<text x="818.0" y="76" class="p1-k">OUTPUT</text>
+<text x="818.0" y="94" class="p1-v">Nielsen +</text>
+<text x="818.0" y="110" class="p1-v">Shneiderman</text>
+</svg>
+</div>
+    <p class="fig-cap">Read the diagram left to right: the order of the cards is the order you work in.</p>
+
+    <h3 id="wireframe-step-1">Step 1: Gather &amp; Align the Design Inputs</h3>
+    <p class="desc">Before sketching, pull the field definitions from your upstream models.</p>
+    <table>
+      <tr><th>Source</th><th>What to extract</th><th>Tutoring request example</th></tr>
+      <tr><td><strong>DSD Boundary object</strong></td><td>The parameters passed from the form to the controller</td><td><code>createRequest(studentNo, courseCode, supportType, priorityLevel, requestedAvailability)</code></td></tr>
+      <tr><td><strong>ERD &amp; Data Dictionary</strong></td><td>Column data types, foreign keys, required vs optional, default system values</td><td><code>CourseCode</code> is an FK to <code>COURSE</code>; <code>Status</code> defaults to <code>"Submitted"</code></td></tr>
+      <tr><td><strong>Session context</strong></td><td>Attributes already known from the active login, so they become read-only</td><td>Logged-in <code>StudentNo</code> and name</td></tr>
+    </table>
+
+    <h3 id="wireframe-step-2">Step 2: Establish Layout &amp; Visual Hierarchy</h3>
+    <p class="desc">Structure every form into three visual regions.</p>
+    <table>
+      <tr><th>Region</th><th>What goes in it</th><th>Example</th></tr>
+      <tr><td><strong>1. Header</strong></td><td>Application / module title, a screen-purpose heading, and the active user session info</td><td><code>#TutAcadSupport</code> &middot; <em>Create Tutoring Request</em> &middot; <em>Logged in as: 202601234 (K. Naidoo)</em></td></tr>
+      <tr><td><strong>2. Form body</strong></td><td>Related fields grouped inside labelled GroupBoxes. Labels left-aligned, controls aligned on one vertical grid</td><td><em>Student Details</em>, <em>Course &amp; Support Details</em></td></tr>
+      <tr><td><strong>3. Action bar</strong></td><td>Primary and secondary buttons in a predictable place (bottom right or bottom left)</td><td><code>[Clear Form]</code> <code>[Submit Request]</code></td></tr>
+    </table>
+    <div class="note"><strong>Button labels:</strong> use <strong>action-oriented verbs</strong> (<code>[Submit Request]</code>, <code>[Clear Form]</code>, <code>[Cancel]</code>). Never use a generic <code>"OK"</code> or a bare <code>"Submit"</code> with no context.</div>
+
+    <h3 id="wireframe-step-3">Step 3: Select Controls &amp; Enforce Input Constraints</h3>
+    <p class="desc">Choose the control from the data characteristics so the user cannot make the error in the first place.</p>
+    <table>
+      <tr><th>Data type / domain rule</th><th>Control</th><th>C# / Windows Forms rationale</th></tr>
+      <tr><td><strong>Free text / long text</strong></td><td><code>TextBox</code> / <code>RichTextBox</code></td><td>Unconstrained strings such as a motivation letter or comments</td></tr>
+      <tr><td><strong>Foreign key / fixed list</strong></td><td><code>ComboBox</code></td><td><strong>Must state <code>DisplayMember</code> (the text, e.g. <code>CourseName</code>) and <code>ValueMember</code> (the FK, e.g. <code>CourseCode</code>).</strong> Prevents FK integrity violations</td></tr>
+      <tr><td><strong>Calendar date / time</strong></td><td><code>DateTimePicker</code></td><td>Prevents string-format parsing errors (e.g. <code>YYYY-MM-DD</code>)</td></tr>
+      <tr><td><strong>System-controlled attribute</strong></td><td>Read-only <code>TextBox</code> / <code>Label</code></td><td><code>ReadOnly = true</code> or <code>Enabled = false</code>. For <code>SubmissionDate = Date()</code>, <code>Status = "Submitted"</code>, <code>RequestID</code></td></tr>
+      <tr><td><strong>Independent options (0 to N)</strong></td><td><code>CheckBox</code></td><td>Independent Boolean toggles</td></tr>
+      <tr><td><strong>Mutually exclusive options (1 of N)</strong></td><td><code>RadioButton</code> group</td><td>A choice between 2 to 4 visible options, e.g. Priority: <code>( ) Low &nbsp;(&bull;) Medium &nbsp;( ) High</code></td></tr>
+    </table>
+
+    <h3 id="wireframe-step-4">Step 4: Annotate Validation &amp; Error Prevention</h3>
+    <p class="desc">Draw the validation feedback directly on the wireframe.</p>
+    <table>
+      <tr><th>Annotation</th><th>How to draw it</th></tr>
+      <tr><td><strong>Required field indicator</strong></td><td>A red asterisk <code>*</code> straight after the label of every required field</td></tr>
+      <tr><td><strong>Inline ErrorProvider</strong></td><td>An error icon <code>[!]</code> beside the control, with the message it would show</td></tr>
+      <tr><td><strong>Helper text</strong></td><td>Placeholder text or a hint under complex controls, e.g. <em>"Select preferred weekly slot"</em></td></tr>
+      <tr><td><strong>System status banner</strong></td><td>A dedicated status label at the bottom of the form for system feedback, e.g. <code>[ Status: Ready ]</code></td></tr>
+    </table>
+
+    <h3 id="wireframe-step-5">Step 5: Map Controls to ERD Attributes &amp; ADO.NET Logic</h3>
+    <p class="desc">Accompany every wireframe with a <strong>Control &amp; ERD Traceability Table</strong>. One row per control.</p>
+    <table>
+      <tr><th>Control name</th><th>Control type</th><th>ERD entity.column</th><th>Data type / binding</th><th>Validation rule / C# code</th></tr>
+      <tr><td><code>txtStudentNo</code></td><td>Read-only TextBox</td><td><code>STUDENT.StudentNo</code></td><td><code>INT</code> (PK)</td><td>Auto-filled from session: <code>Session.CurrentStudent.StudentNo</code></td></tr>
+      <tr><td><code>cboCourse</code></td><td>ComboBox</td><td><code>COURSE.CourseCode</code></td><td><code>VARCHAR</code> (FK)</td><td><code>DisplayMember = CourseName</code><br><code>ValueMember = CourseCode</code></td></tr>
+      <tr><td><code>cboSupportType</code></td><td>ComboBox</td><td><code>TUTORREQUEST.SupportType</code></td><td><code>VARCHAR</code></td><td>Required. Presence check via <code>ErrorProvider</code></td></tr>
+      <tr><td><code>radPriority</code></td><td>RadioButton group</td><td><code>TUTORREQUEST.PriorityLevel</code></td><td><code>VARCHAR</code></td><td>Default selection = <code>Medium</code></td></tr>
+      <tr><td><code>dtpPreferredDate</code></td><td>DateTimePicker</td><td><code>TUTORREQUEST.RequestedAvailability</code></td><td><code>DATETIME</code></td><td>Constraint: must be <code>&gt; Date.Today</code></td></tr>
+      <tr><td><code>lblStatus</code></td><td>Read-only Label</td><td><code>TUTORREQUEST.Status</code></td><td><code>VARCHAR</code></td><td>Default system value = <code>"Submitted"</code></td></tr>
+      <tr><td><code>lblMessage</code></td><td>Read-only Label</td><td>None (UI feedback only)</td><td>n/a</td><td>System status banner: <em>Ready</em> / <em>Processing request submission...</em></td></tr>
+    </table>
+    <div class="note"><strong>Check the ERD type first:</strong> if <code>RequestedAvailability</code> is a <code>DATETIME</code> use a <code>DateTimePicker</code>; if the data dictionary stores fixed timetable slots as a <code>VARCHAR</code> (as in the storyboard example) use a <code>ComboBox</code> instead. The control always follows the column.</div>
+
+    <h3 id="wireframe-step-6">Step 6: Quality Gate &amp; Usability Audit</h3>
+    <p class="desc">Evaluate the wireframe against the INFO2001A exam marking criteria.</p>
+    <table>
+      <tr><th>Principle</th><th>Question to ask</th><th>Where the example satisfies it</th></tr>
+      <tr><td><strong>Nielsen #1</strong><br>Visibility of system status</td><td>Does the form give feedback after an action?</td><td>Status banner, and the submit button disabled while the request runs</td></tr>
+      <tr><td><strong>Nielsen #5</strong><br>Error prevention</td><td>Do dropdowns and date pickers replace free text so bad input cannot crash the SQL?</td><td><code>cboCourse</code>, <code>cboSupportType</code>, <code>dtpPreferredDate</code></td></tr>
+      <tr><td><strong>Shneiderman #1</strong><br>Consistency</td><td>Are labels, alignment and button styles uniform?</td><td>One label column, one control column, same button style</td></tr>
+      <tr><td><strong>Shneiderman #7</strong><br>User in control</td><td>Is there a clear way out?</td><td><code>[Clear Form]</code> (and <code>[Cancel]</code> where the flow needs it)</td></tr>
+    </table>
+
+    <h3 id="wireframe-example">Worked Example: Create Tutoring Request Form</h3>
+    <p class="desc"><strong>Scenario:</strong> a registered student at Wits submits a request for academic help in a course. The form captures the course, support type, priority and requested date. The student ID comes from the login session, and the system sets <code>Status = "Submitted"</code> and <code>SubmissionDate = Date()</code> itself.</p>
+<div class="dsd-fig" role="group" aria-label="Wireframe of the Create Tutoring Request form">
+<svg viewBox="0 0 900 690" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="wfx-t" style="min-width:780px"><title id="wfx-t">Create Tutoring Request wireframe</title>
+<defs><marker id="wfx-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker></defs>
+<rect x="10" y="10" width="880" height="670" rx="8" class="wf-win"/>
+<path d="M10 18a8 8 0 0 1 8-8h864a8 8 0 0 1 8 8v28H10z" fill="#e8a04c" opacity=".18"/>
+<text x="28" y="34" class="wf-app">#TutAcadSupport Management System</text>
+<text x="872" y="34" class="wf-m" text-anchor="end">Logged in as: 202601234 (K. Naidoo)</text>
+<text x="28" y="72" class="wf-h">FORM: Create Academic Tutoring Request</text>
+<line x1="28" y1="82" x2="872" y2="82" class="wf-rule"/>
+<rect x="24" y="100" width="852" height="130" rx="6" class="wf-grp"/>
+<text x="38" y="118" class="wf-gt">1. Student Session Information</text>
+<text x="40" y="147" class="wf-t">Student Number</text>
+<rect x="230" y="130" width="300" height="26" rx="4" class="wf-box wf-ro"/>
+<text x="240" y="147" class="wf-t">202601234</text>
+<text x="545" y="147" class="wf-m">(Read-Only / Session)</text>
+<text x="860" y="147" class="wf-name" text-anchor="end">txtStudentNo</text>
+<text x="40" y="181" class="wf-t">Student Name</text>
+<rect x="230" y="164" width="300" height="26" rx="4" class="wf-box wf-ro"/>
+<text x="240" y="181" class="wf-t">K. Naidoo</text>
+<text x="545" y="181" class="wf-m">(Read-Only / Session)</text>
+<text x="860" y="181" class="wf-name" text-anchor="end">txtStudentName</text>
+<text x="40" y="215" class="wf-t">Academic Risk Level</text>
+<rect x="230" y="198" width="300" height="26" rx="4" class="wf-box wf-ro"/>
+<text x="240" y="215" class="wf-t">High Risk</text>
+<text x="545" y="215" class="wf-m">(Read-Only / System)</text>
+<text x="860" y="215" class="wf-name" text-anchor="end">txtRiskLevel</text>
+<rect x="24" y="246" width="852" height="290" rx="6" class="wf-grp"/>
+<text x="38" y="264" class="wf-gt">2. Request Details</text>
+<text x="40" y="293" class="wf-t">Select Course<tspan class="wf-req"> *</tspan></text>
+<rect x="230" y="276" width="330" height="26" rx="4" class="wf-box"/>
+<text x="240" y="293" class="wf-t">INFO2001A - Systems Analysis &amp; Design</text>
+<path d="M538 286l6 6 6-6" class="wf-chev"/>
+<rect x="572" y="279" width="20" height="20" rx="4" class="wf-errb"/><text x="582" y="293.5" class="wf-errt" text-anchor="middle">!</text>
+<text x="600" y="293.5" class="wf-err">"Course required"</text>
+<text x="860" y="293" class="wf-name" text-anchor="end">cboCourse</text>
+<text x="230" y="318" class="wf-m">Bound: DisplayMember = CourseName, ValueMember = CourseCode</text>
+<text x="40" y="347" class="wf-t">Support Type Needed<tspan class="wf-req"> *</tspan></text>
+<rect x="230" y="330" width="330" height="26" rx="4" class="wf-box"/>
+<text x="240" y="347" class="wf-t">Group Supplemental Instruction (SI)</text>
+<path d="M538 340l6 6 6-6" class="wf-chev"/>
+<text x="860" y="347" class="wf-name" text-anchor="end">cboSupportType</text>
+<text x="230" y="372" class="wf-m">Options: One-on-One, Group SI, Exam Prep, Assignment Help</text>
+<text x="40" y="403" class="wf-t">Priority Level<tspan class="wf-req"> *</tspan></text>
+<circle cx="238" cy="399" r="7" class="wf-box"/>
+<text x="252" y="403.5" class="wf-t">Low</text>
+<circle cx="318" cy="399" r="7" class="wf-box"/>
+<circle cx="318" cy="399" r="3.6" class="wf-dot"/>
+<text x="332" y="403.5" class="wf-t">Medium</text>
+<circle cx="430" cy="399" r="7" class="wf-box"/>
+<text x="444" y="403.5" class="wf-t">High</text>
+<text x="520" y="403" class="wf-m">(System default: Medium)</text>
+<text x="860" y="403" class="wf-name" text-anchor="end">radPriority</text>
+<text x="40" y="437" class="wf-t">Preferred Session Date<tspan class="wf-req"> *</tspan></text>
+<rect x="230" y="420" width="200" height="26" rx="4" class="wf-box"/>
+<text x="240" y="437" class="wf-t">2026-10-15</text>
+<rect x="406" y="426" width="14" height="13" rx="2" class="wf-chev"/><path d="M406 431h14M410 424v4M416 424v4" class="wf-chev"/>
+<text x="445" y="437" class="wf-m">Must be a future date</text>
+<text x="860" y="437" class="wf-name" text-anchor="end">dtpPreferredDate</text>
+<text x="40" y="475" class="wf-t">Detailed Description<tspan class="wf-req"> *</tspan></text>
+<rect x="230" y="458" width="420" height="66" rx="4" class="wf-box"/>
+<text x="240" y="477" class="wf-t">Struggling with 3-Layer Design Sequence Diagrams and Alt</text>
+<text x="240" y="494" class="wf-t">interaction frames for Milestone 2.</text>
+<text x="860" y="475" class="wf-name" text-anchor="end">txtDescription</text>
+<rect x="24" y="552" width="852" height="72" rx="6" class="wf-grp"/>
+<text x="38" y="570" class="wf-gt">3. System Assigned Metadata (Auto-Generated)</text>
+<text x="40" y="597" class="wf-t">Submission Date</text>
+<rect x="170" y="580" width="130" height="26" rx="4" class="wf-box wf-ro"/>
+<text x="180" y="597" class="wf-t">2026-10-10</text>
+<text x="340" y="597" class="wf-t">Initial Status</text>
+<rect x="440" y="580" width="130" height="26" rx="4" class="wf-box wf-ro"/>
+<text x="450" y="597" class="wf-t">Submitted</text>
+<text x="590" y="597" class="wf-m">(System-set)</text>
+<text x="860" y="597" class="wf-name" text-anchor="end">lblSubmissionDate · lblStatus</text>
+<rect x="24" y="638" width="250" height="30" rx="4" class="wf-box wf-ro"/>
+<text x="36" y="658" class="wf-t">[ Status: Ready ]</text>
+<text x="400" y="658" class="wf-name" text-anchor="end">lblMessage</text>
+<rect x="596" y="637" width="130" height="32" rx="5" class="wf-btn"/>
+<text x="661.0" y="657.5" class="wf-bt" text-anchor="middle">Clear Form</text>
+<rect x="738" y="637" width="138" height="32" rx="5" class="wf-btn wf-primary"/>
+<text x="807.0" y="657.5" class="wf-bt-p" text-anchor="middle">Submit Request</text>
+</svg>
+</div>
+    <p class="fig-cap"><code>*</code> = required field &middot; <code>[!]</code> = where the C# <code>ErrorProvider</code> icon appears &middot; grey boxes = read-only &middot; blue names on the right = control names for the traceability table.</p>
+
+    <h3 id="wireframe-code">Linking the Wireframe to C# &amp; ADO.NET</h3>
+    <p class="desc">The click handler below shows how the wireframe's controls reach the database through the three-layer architecture: validate on the Boundary, then delegate to the Controller.</p>
+<pre><code>// Event handler for the primary action button [Submit Request]
+private void btnSubmitRequest_Click(object sender, EventArgs e)
+{
+    // 1. Clear previous ErrorProvider messages
+    errorProvider1.Clear();
+    bool isValid = true;
+
+    // 2. Client-side validation (error prevention)
+    if (cboCourse.SelectedIndex == -1)
+    {
+        errorProvider1.SetError(cboCourse, &quot;Please select a valid course.&quot;);
+        isValid = false;
+    }
+    if (cboSupportType.SelectedIndex == -1)
+    {
+        errorProvider1.SetError(cboSupportType, &quot;Please select a support type.&quot;);
+        isValid = false;
+    }
+    if (dtpPreferredDate.Value.Date &lt;= DateTime.Today)
+    {
+        errorProvider1.SetError(dtpPreferredDate, &quot;Preferred date must be in the future.&quot;);
+        isValid = false;
+    }
+    if (string.IsNullOrWhiteSpace(txtDescription.Text))
+    {
+        errorProvider1.SetError(txtDescription, &quot;Please provide a brief description.&quot;);
+        isValid = false;
+    }
+    if (!isValid) return;               // block execution, never reach the controller
+
+    // 3. Prevent duplicate submissions (Nielsen #1: system status)
+    btnSubmitRequest.Enabled = false;
+    lblMessage.Text = &quot;Processing request submission...&quot;;
+
+    try
+    {
+        // ValueMember gives the FK value, not the displayed text
+        string courseCode = cboCourse.SelectedValue.ToString();
+        string supportType = cboSupportType.SelectedItem.ToString();
+        string priority = radHigh.Checked ? &quot;High&quot; : (radLow.Checked ? &quot;Low&quot; : &quot;Medium&quot;);
+
+        // 4. Delegate to the controller (three-layer architecture)
+        bool success = requestHandler.createTutoringRequest(
+            Session.CurrentStudent.StudentNo,
+            courseCode, supportType, priority,
+            dtpPreferredDate.Value, txtDescription.Text.Trim());
+
+        if (success)
+        {
+            MessageBox.Show(&quot;Tutoring request successfully submitted!&quot;, &quot;Success&quot;,
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.Close();               // return to the launcher
+        }
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show(&quot;Database error: &quot; + ex.Message, &quot;System Error&quot;,
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+    }
+    finally
+    {
+        btnSubmitRequest.Enabled = true;
+        lblMessage.Text = &quot;Ready&quot;;
+    }
+}</code></pre>
+
+    <h3 id="wireframe-checklist">Exam &amp; Milestone Marking Checklist</h3>
+    <p class="desc">Tick every item before you hand the wireframe in.</p>
+    <table>
+      <tr><th>Criterion</th><th>Requirement</th><th>Check</th></tr>
+      <tr><td><strong>Header &amp; context</strong></td><td>App title, screen title and logged-in user displayed</td><td>☐</td></tr>
+      <tr><td><strong>Control selection</strong></td><td><code>ComboBox</code> for foreign keys, <code>DateTimePicker</code> for dates, <code>TextBox</code> for free text</td><td>☐</td></tr>
+      <tr><td><strong>DisplayMember / ValueMember</strong></td><td>FK dropdowns state the displayed text vs the hidden FK value</td><td>☐</td></tr>
+      <tr><td><strong>Read-only system fields</strong></td><td><code>Status</code>, <code>SubmissionDate</code>, <code>StudentNo</code> cannot be edited by the user</td><td>☐</td></tr>
+      <tr><td><strong>Error handling</strong></td><td>Required fields marked <code>*</code> and the <code>ErrorProvider</code> position annotated <code>[!]</code></td><td>☐</td></tr>
+      <tr><td><strong>Action-oriented buttons</strong></td><td>A clear verb such as <code>[Submit Request]</code>, never <code>"OK"</code></td><td>☐</td></tr>
+      <tr><td><strong>Traceability matrix</strong></td><td>A table mapping every control to its ERD entity, attribute and data type</td><td>☐</td></tr>
+    </table>
+  </section>
+
+  <section id="storyboard">
+    <h2>18. Storyboard Blueprint</h2>
+    <p class="desc">A systematic, step-by-step system for building a full-marks <strong>storyboard</strong> (Wits INFO2001A). A storyboard is a time-ordered sequence of wireframes plus written form and navigational narratives that show how a user completes a whole use case from start to finish.</p>
+
+    <h3 id="storyboard-what-it-is">Storyboard vs wireframe</h3>
+    <p class="desc">A wireframe shows one isolated form. A storyboard shows the <strong>complete journey and the screen-to-screen flow</strong>, and links to three artifacts:</p>
+    <table>
+      <tr><th>Artifact</th><th>What the storyboard takes from it</th></tr>
+      <tr><td><strong>Use Case Description</strong></td><td>The main success scenario and the extensions: these become the screens and the branches between them</td></tr>
+      <tr><td><strong>Design Sequence Diagram</strong></td><td>Boundary objects, messages (button clicks), return arrows (confirmations and errors) and the <code>alt</code> / <code>opt</code> / <code>loop</code> / <code>ref</code> frames</td></tr>
+      <tr><td><strong>ERD &amp; Data Dictionary</strong></td><td>Attributes, data types, primary and foreign keys, constraints</td></tr>
+    </table>
+
+    <h3 id="storyboard-six-steps">The 6-Step Universal Storyboard Blueprint</h3>
+    <p class="desc">Steps 1 and 2 plan the journey, Step 3 draws it, Steps 4 and 5 write it down, Step 6 audits it. Worked examples use the <code>#TutAcadSupport</code> <em>Create Tutoring Request</em> use case.</p>
+<div class="dsd-fig" role="group" aria-label="Six-step storyboard blueprint">
+<svg viewBox="0 0 960 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="sbs-t" style="min-width:760px"><title id="sbs-t">Six steps of the storyboard blueprint</title>
+<defs><marker id="sbs-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker></defs>
+<rect x="10.0" y="14" width="144" height="122" rx="8" class="card" stroke="#e8a04c"/>
+<path d="M10.0 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H10.0z" fill="#e8a04c" opacity=".18"/>
+<text x="82.0" y="32" class="p1-t" text-anchor="middle" fill="#e8a04c">STEP 1</text>
+<text x="82.0" y="47" class="p1-s" text-anchor="middle">Design inputs</text>
+<text x="22.0" y="76" class="p1-k">OUTPUT</text>
+<text x="22.0" y="94" class="p1-v">Use case, DSD,</text>
+<text x="22.0" y="110" class="p1-v">ERD</text>
+<line x1="156.0" y1="75" x2="166.2" y2="75" class="msg" marker-end="url(#sbs-f)"/>
+<rect x="169.2" y="14" width="144" height="122" rx="8" class="card" stroke="#6fa8ea"/>
+<path d="M169.2 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H169.2z" fill="#6fa8ea" opacity=".18"/>
+<text x="241.2" y="32" class="p1-t" text-anchor="middle" fill="#6fa8ea">STEP 2</text>
+<text x="241.2" y="47" class="p1-s" text-anchor="middle">Screen topology</text>
+<text x="181.2" y="76" class="p1-k">OUTPUT</text>
+<text x="181.2" y="94" class="p1-v">Entry, alt branch,</text>
+<text x="181.2" y="110" class="p1-v">outcome</text>
+<line x1="315.2" y1="75" x2="325.4" y2="75" class="msg" marker-end="url(#sbs-f)"/>
+<rect x="328.4" y="14" width="144" height="122" rx="8" class="card" stroke="#a98be8"/>
+<path d="M328.4 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H328.4z" fill="#a98be8" opacity=".18"/>
+<text x="400.4" y="32" class="p1-t" text-anchor="middle" fill="#a98be8">STEP 3</text>
+<text x="400.4" y="47" class="p1-s" text-anchor="middle">Wireframes</text>
+<text x="340.4" y="76" class="p1-k">OUTPUT</text>
+<text x="340.4" y="94" class="p1-v">Controls, verbs,</text>
+<text x="340.4" y="110" class="p1-v">validation</text>
+<line x1="474.4" y1="75" x2="484.6" y2="75" class="msg" marker-end="url(#sbs-f)"/>
+<rect x="487.6" y="14" width="144" height="122" rx="8" class="card" stroke="#5cb87a"/>
+<path d="M487.6 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H487.6z" fill="#5cb87a" opacity=".18"/>
+<text x="559.6" y="32" class="p1-t" text-anchor="middle" fill="#5cb87a">STEP 4</text>
+<text x="559.6" y="47" class="p1-s" text-anchor="middle">Form narratives</text>
+<text x="499.6" y="76" class="p1-k">OUTPUT</text>
+<text x="499.6" y="94" class="p1-v">ERD mapping +</text>
+<text x="499.6" y="110" class="p1-v">rules per screen</text>
+<line x1="633.6" y1="75" x2="643.8" y2="75" class="msg" marker-end="url(#sbs-f)"/>
+<rect x="646.8" y="14" width="144" height="122" rx="8" class="card" stroke="#e8a04c"/>
+<path d="M646.8 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H646.8z" fill="#e8a04c" opacity=".18"/>
+<text x="718.8" y="32" class="p1-t" text-anchor="middle" fill="#e8a04c">STEP 5</text>
+<text x="718.8" y="47" class="p1-s" text-anchor="middle">Navigation</text>
+<text x="658.8" y="76" class="p1-k">OUTPUT</text>
+<text x="658.8" y="94" class="p1-v">Action, DSD link,</text>
+<text x="658.8" y="110" class="p1-v">branching</text>
+<line x1="792.8" y1="75" x2="803.0" y2="75" class="msg" marker-end="url(#sbs-f)"/>
+<rect x="806.0" y="14" width="144" height="122" rx="8" class="card" stroke="#6fa8ea"/>
+<path d="M806.0 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H806.0z" fill="#6fa8ea" opacity=".18"/>
+<text x="878.0" y="32" class="p1-t" text-anchor="middle" fill="#6fa8ea">STEP 6</text>
+<text x="878.0" y="47" class="p1-s" text-anchor="middle">Quality gate</text>
+<text x="818.0" y="76" class="p1-k">OUTPUT</text>
+<text x="818.0" y="94" class="p1-v">Rubric +</text>
+<text x="818.0" y="110" class="p1-v">traceability</text>
+</svg>
+</div>
+    <p class="fig-cap">Read the diagram left to right: the order of the cards is the order you work in.</p>
+
+    <h3 id="storyboard-step-1">Step 1: Gather &amp; Align Your Design Inputs</h3>
+    <p class="desc">Inspect your three foundational models before drawing a single box, so the storyboard is 100% consistent with them.</p>
+    <table>
+      <tr><th>Source</th><th>What to identify</th></tr>
+      <tr><td><strong>Use Case Description</strong></td><td>The actor, the triggering event, the main flow steps and the extension paths</td></tr>
+      <tr><td><strong>DSD</strong></td><td>All Boundary objects (<code>:Form</code>), input messages (button clicks), return arrows (confirmations and errors) and interaction frames</td></tr>
+      <tr><td><strong>ERD &amp; Data Dictionary</strong></td><td>Every attribute to capture or display, with PKs, FKs, data types and required fields</td></tr>
+    </table>
+    <p><strong>Example inputs: Create Tutoring Request</strong></p>
+    <table>
+      <tr><th>Input</th><th>Value</th></tr>
+      <tr><td><strong>Primary actor</strong></td><td>Student, e.g. Sipho Ndlovu (<code>StudentNo = 202601234</code>)</td></tr>
+      <tr><td><strong>Triggering event</strong></td><td>The student needs academic support in <code>INFO2001A</code></td></tr>
+      <tr><td><strong>DSD objects</strong></td><td>Boundary <code><u>:TutoringRequestForm</u></code>, Controller <code><u>:requestHandler</u></code>, Entity <code><u>:TUTORREQUEST</u></code></td></tr>
+      <tr><td><strong>ERD attributes</strong></td><td><code>RequestID</code> (PK, auto-generated e.g. <code>TR-2026-089</code>), <code>StudentNo</code> (FK), <code>CourseCode</code> (FK), <code>SupportType</code>, <code>PriorityLevel</code>, <code>RequestedAvailability</code> (e.g. <code>Mon 14:00-16:00</code>), <code>Status</code> (default <code>"Submitted"</code>), <code>SubmissionDate</code> (system <code>Date()</code>)</td></tr>
+    </table>
+
+    <h3 id="storyboard-step-2">Step 2: Map the Screen Sequence &amp; Navigational Topology</h3>
+    <p class="desc">Use the minimum number of screens that executes the use case cleanly.</p>
+    <table>
+      <tr><th>Screen</th><th>Role</th><th>Path</th></tr>
+      <tr><td><strong>Screen 1</strong></td><td>Main input form: input controls and action buttons</td><td>Start</td></tr>
+      <tr><td><strong>Screen 1 (error state)</strong></td><td>Same form showing localized error messages when inputs fail validation</td><td>Extension (<code>alt [invalid]</code>)</td></tr>
+      <tr><td><strong>Screen 2</strong></td><td>Outcome view: generated system ID, status and summary details</td><td>Success (<code>alt [valid]</code>)</td></tr>
+    </table>
+<div class="dsd-fig" role="group" aria-label="Screen flow: entry form to confirmation or back with errors">
+<svg viewBox="0 0 900 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="sbt-t" style="min-width:760px"><title id="sbt-t">Storyboard screen flow with alt frame</title>
+<defs><marker id="sbt-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker></defs>
+<rect x="300" y="14" width="300" height="52" rx="8" class="card" stroke="#6fa8ea"/>
+<text x="450" y="36" class="p1-t" text-anchor="middle" fill="#6fa8ea">SCREEN 1</text>
+<text x="450" y="55" class="p1-v" text-anchor="middle">Request Entry Form</text>
+<line x1="450" y1="68" x2="450" y2="112" class="msg" marker-end="url(#sbt-f)"/>
+<text x="462" y="96" class="lbl">click [Submit Request]</text>
+<rect x="30" y="112" width="840" height="200" class="frame"/>
+<path d="M30 112h44v18l-9 8H30z" class="frame-tab"/>
+<text x="40" y="128" class="kw">alt</text>
+<line x1="450" y1="112" x2="450" y2="312" class="divider"/>
+<text x="90" y="134" class="guard">[validation fails]</text>
+<text x="470" y="134" class="guard">[validation succeeds]</text>
+<rect x="70" y="170" width="330" height="86" rx="8" class="card" stroke="#e8a04c"/>
+<text x="235" y="194" class="p1-t" text-anchor="middle" fill="#e8a04c">SCREEN 1 + ERRORPROVIDERS</text>
+<text x="235" y="218" class="p1-v" text-anchor="middle">Form preserves typed values,</text>
+<text x="235" y="236" class="p1-v" text-anchor="middle">alerts the user inline</text>
+<rect x="500" y="170" width="330" height="86" rx="8" class="card" stroke="#5cb87a"/>
+<text x="665" y="194" class="p1-t" text-anchor="middle" fill="#5cb87a">SCREEN 2</text>
+<text x="665" y="212" class="p1-s" text-anchor="middle">Request Confirmation View</text>
+<text x="665" y="232" class="p1-v" text-anchor="middle">Shows TR-2026-089 and</text>
+<text x="665" y="248" class="p1-v" text-anchor="middle">the submission timestamp</text>
+<text x="235" y="284" class="wf-m" text-anchor="middle">no message reaches :requestHandler</text>
+<text x="665" y="284" class="wf-m" text-anchor="middle">createRequest() reaches :requestHandler</text>
+</svg>
+</div>
+    <p class="fig-cap">The <code>alt</code> frame mirrors the DSD: the left half is the extension path, the right half is the main success flow.</p>
+
+    <h3 id="storyboard-step-3">Step 3: Draw the Visual Form Wireframes</h3>
+    <p class="desc">Draw a clean wireframe for each screen, applying the same rules as the wireframe blueprint (section 17) to every screen.</p>
+    <table>
+      <tr><th>Rule</th><th>Apply it like this</th></tr>
+      <tr><td><strong>Header &amp; context</strong></td><td>App / module title and the logged-in user session role</td></tr>
+      <tr><td><strong>Control selection</strong></td><td><code>TextBox</code> for free or read-only text; <code>ComboBox</code> for constrained FK choices (<strong>state <code>DisplayMember</code> and <code>ValueMember</code></strong>); <code>DateTimePicker</code> for dates; read-only controls for system data</td></tr>
+      <tr><td><strong>Action buttons</strong></td><td>Prominent action verbs such as <code>[Submit Request]</code>. Never <code>"OK"</code></td></tr>
+      <tr><td><strong>Validation annotations</strong></td><td>Required fields <code>*</code> and inline <code>ErrorProvider</code> positions <code>[!]</code></td></tr>
+    </table>
+    <p><strong>Wireframe 1: Create Tutoring Request entry form</strong></p>
+<div class="dsd-fig" role="group" aria-label="Storyboard screen 1 wireframe">
+<svg viewBox="0 0 900 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="sb1-t" style="min-width:780px"><title id="sb1-t">Storyboard screen 1: Create Tutoring Request entry form</title>
+<defs><marker id="sb1-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker></defs>
+<rect x="10" y="10" width="880" height="450" rx="8" class="wf-win"/>
+<path d="M10 18a8 8 0 0 1 8-8h864a8 8 0 0 1 8 8v28H10z" fill="#e8a04c" opacity=".18"/>
+<text x="28" y="34" class="wf-app">#TutAcadSupport Management System</text>
+<text x="872" y="34" class="wf-m" text-anchor="end">Logged in as: Student (202601234)</text>
+<text x="28" y="72" class="wf-h">CREATE ACADEMIC TUTORING REQUEST</text>
+<line x1="28" y1="82" x2="872" y2="82" class="wf-rule"/>
+<text x="40" y="115" class="wf-t">Student Number</text>
+<rect x="230" y="98" width="300" height="26" rx="4" class="wf-box wf-ro"/>
+<text x="240" y="115" class="wf-t">202601234</text>
+<text x="545" y="115" class="wf-m">(Read-Only)</text>
+<text x="860" y="115" class="wf-name" text-anchor="end">txtStudentNo</text>
+<text x="40" y="153" class="wf-t">Student Name</text>
+<rect x="230" y="136" width="300" height="26" rx="4" class="wf-box wf-ro"/>
+<text x="240" y="153" class="wf-t">Sipho Ndlovu</text>
+<text x="545" y="153" class="wf-m">(Read-Only)</text>
+<text x="860" y="153" class="wf-name" text-anchor="end">txtStudentName</text>
+<text x="40" y="191" class="wf-t">Select Course<tspan class="wf-req"> *</tspan></text>
+<rect x="230" y="174" width="300" height="26" rx="4" class="wf-box"/>
+<text x="240" y="191" class="wf-ph">- Select a course -</text>
+<path d="M508 184l6 6 6-6" class="wf-chev"/>
+<rect x="542" y="177" width="20" height="20" rx="4" class="wf-errb"/><text x="552" y="191.5" class="wf-errt" text-anchor="middle">!</text>
+<text x="570" y="191.5" class="wf-err">Shown here if left empty</text>
+<text x="860" y="191" class="wf-name" text-anchor="end">cboCourse</text>
+<text x="40" y="229" class="wf-t">Support Type<tspan class="wf-req"> *</tspan></text>
+<rect x="230" y="212" width="300" height="26" rx="4" class="wf-box"/>
+<text x="240" y="229" class="wf-t">Exam Prep</text>
+<path d="M508 222l6 6 6-6" class="wf-chev"/>
+<text x="860" y="229" class="wf-name" text-anchor="end">cboSupportType</text>
+<text x="40" y="267" class="wf-t">Priority Level<tspan class="wf-req"> *</tspan></text>
+<circle cx="238" cy="263" r="7" class="wf-box"/>
+<text x="252" y="267.5" class="wf-t">High</text>
+<circle cx="330" cy="263" r="7" class="wf-box"/>
+<circle cx="330" cy="263" r="3.6" class="wf-dot"/>
+<text x="344" y="267.5" class="wf-t">Medium</text>
+<circle cx="450" cy="263" r="7" class="wf-box"/>
+<text x="464" y="267.5" class="wf-t">Low</text>
+<text x="545" y="267" class="wf-m">(Default: Medium)</text>
+<text x="860" y="267" class="wf-name" text-anchor="end">radPriority</text>
+<text x="40" y="305" class="wf-t">Availability<tspan class="wf-req"> *</tspan></text>
+<rect x="230" y="288" width="300" height="26" rx="4" class="wf-box"/>
+<text x="240" y="305" class="wf-t">Mon 14:00 - 16:00</text>
+<path d="M508 298l6 6 6-6" class="wf-chev"/>
+<text x="860" y="305" class="wf-name" text-anchor="end">cboAvailability</text>
+<text x="40" y="343" class="wf-t">Request Status</text>
+<rect x="230" y="326" width="300" height="26" rx="4" class="wf-box wf-ro"/>
+<text x="240" y="343" class="wf-t">Submitted</text>
+<text x="545" y="343" class="wf-m">(System assigned)</text>
+<text x="860" y="343" class="wf-name" text-anchor="end">lblStatus</text>
+<text x="40" y="381" class="wf-t">Submission Date</text>
+<rect x="230" y="364" width="300" height="26" rx="4" class="wf-box wf-ro"/>
+<text x="240" y="381" class="wf-t">2026-10-10</text>
+<text x="545" y="381" class="wf-m">(System date)</text>
+<text x="860" y="381" class="wf-name" text-anchor="end">lblSubmissionDate</text>
+<rect x="24" y="414" width="250" height="30" rx="4" class="wf-box wf-ro"/>
+<text x="36" y="434" class="wf-t">[ Status: Ready ]</text>
+<rect x="644" y="413" width="138" height="32" rx="5" class="wf-btn wf-primary"/>
+<text x="713.0" y="433.5" class="wf-bt-p" text-anchor="middle">Submit Request</text>
+<rect x="794" y="413" width="82" height="32" rx="5" class="wf-btn"/>
+<text x="835.0" y="433.5" class="wf-bt" text-anchor="middle">Cancel</text>
+</svg>
+</div>
+    <p class="fig-cap">The <code>[!]</code> marker is an <em>annotation</em>: the ErrorProvider icon only appears beside the course drop-down when the user clicks <code>[Submit Request]</code> with it empty.</p>
+    <p><strong>Wireframe 2: Request confirmation view</strong></p>
+<div class="dsd-fig" role="group" aria-label="Storyboard screen 2 wireframe">
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="sb2-t" style="min-width:780px"><title id="sb2-t">Storyboard screen 2: Request confirmation view</title>
+<defs><marker id="sb2-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker></defs>
+<rect x="10" y="10" width="880" height="380" rx="8" class="wf-win"/>
+<path d="M10 18a8 8 0 0 1 8-8h864a8 8 0 0 1 8 8v28H10z" fill="#e8a04c" opacity=".18"/>
+<text x="28" y="34" class="wf-app">#TutAcadSupport Management System</text>
+<text x="872" y="34" class="wf-m" text-anchor="end">Logged in as: Student (202601234)</text>
+<text x="28" y="72" class="wf-h">REQUEST SUBMISSION CONFIRMATION</text>
+<line x1="28" y1="82" x2="872" y2="82" class="wf-rule"/>
+<rect x="28" y="100" width="844" height="42" rx="6" class="wf-ok"/>
+<path d="M44 121l6 6 11-12" class="wf-okp"/>
+<text x="76" y="126" class="wf-t">SUCCESS: Your tutoring request has been successfully recorded in the system.</text>
+<rect x="24" y="158" width="852" height="190" rx="6" class="wf-grp"/>
+<text x="38" y="176" class="wf-gt">Request Summary</text>
+<text x="44" y="198" class="wf-m">Request Reference ID</text>
+<text x="260" y="198" class="wf-t">TR-2026-089</text>
+<text x="44" y="223" class="wf-m">Course Code</text>
+<text x="260" y="223" class="wf-t">INFO2001A (Systems Analysis &amp; Design)</text>
+<text x="44" y="248" class="wf-m">Support Type</text>
+<text x="260" y="248" class="wf-t">Exam Prep</text>
+<text x="44" y="273" class="wf-m">Priority Level</text>
+<text x="260" y="273" class="wf-t">Medium</text>
+<text x="44" y="298" class="wf-m">Submission Timestamp</text>
+<text x="260" y="298" class="wf-t">2026-10-10 08:30 AM</text>
+<text x="44" y="323" class="wf-m">Current Status</text>
+<text x="260" y="323" class="wf-t">Submitted (Pending Admin Verification)</text>
+<rect x="700" y="356" width="176" height="30" rx="5" class="wf-btn wf-primary"/>
+<text x="788.0" y="375.5" class="wf-bt-p" text-anchor="middle">Return to Dashboard</text>
+</svg>
+</div>
+    <p class="fig-cap">The confirmation screen reads back the generated <code>RequestID</code>, so the student can see the system status changed (Nielsen #1).</p>
+
+    <h3 id="storyboard-step-4">Step 4: Write the Form Narratives (Per Screen)</h3>
+    <p class="desc">Below each wireframe write a structured <strong>Form Narrative</strong>: screen ID and title, purpose, an ERD data-mapping table, and the validation and exception rules.</p>
+    <p><strong>Form narrative for Screen 1: Create Tutoring Request Entry Form</strong></p>
+    <p class="desc"><strong>Purpose:</strong> allows registered students to select a course, specify support needs and submit a tutoring request to the <code>#TutAcadSupport</code> database.</p>
+    <table>
+      <tr><th>Screen control</th><th>ERD entity / attribute</th><th>Control type</th><th>System logic &amp; validation rule</th></tr>
+      <tr><td>Student Number</td><td><code>STUDENT.StudentNo</code></td><td>Read-only TextBox</td><td>Auto-populated from the session: <code>Session["StudentNo"]</code></td></tr>
+      <tr><td>Student Name</td><td><code>STUDENT.StudentFName</code>, <code>StudentLName</code></td><td>Read-only TextBox</td><td>Concatenated display from the active student record</td></tr>
+      <tr><td>Course Selection</td><td><code>COURSE.CourseCode</code></td><td>ComboBox</td><td>Bound to active courses: <code>DisplayMember = CourseName</code>, <code>ValueMember = CourseCode</code>. Required</td></tr>
+      <tr><td>Support Type</td><td><code>TUTORREQUEST.SupportType</code></td><td>ComboBox</td><td>Pre-populated list (<code>Exam Prep</code>, <code>Assignment Help</code>, <code>Content Clarification</code>). Required</td></tr>
+      <tr><td>Priority Level</td><td><code>TUTORREQUEST.PriorityLevel</code></td><td>RadioButton group</td><td>Default = <code>Medium</code>. Maps to a database string</td></tr>
+      <tr><td>Availability</td><td><code>TUTORREQUEST.RequestedAvailability</code></td><td>ComboBox</td><td>Pre-defined timetable slots. Required</td></tr>
+      <tr><td>Status</td><td><code>TUTORREQUEST.Status</code></td><td>Read-only Label</td><td>System-assigned default <code>"Submitted"</code></td></tr>
+      <tr><td>Submission Date</td><td><code>TUTORREQUEST.SubmissionDate</code></td><td>Read-only Label</td><td>Auto-assigned system date <code>Date()</code></td></tr>
+    </table>
+    <p><strong>Validation &amp; exception rules</strong></p>
+    <table>
+      <tr><th>Rule</th><th>Behaviour</th></tr>
+      <tr><td><strong>1. Presence check</strong></td><td>If <code>CourseCode</code> or <code>SupportType</code> is unselected on <code>[Submit Request]</code>, validation fails <strong>before</strong> the Controller is called</td></tr>
+      <tr><td><strong>2. Error feedback</strong></td><td>The form stays active, keeps what the user typed, and highlights the missing fields with <code>ErrorProvider</code> icons</td></tr>
+    </table>
+
+    <h3 id="storyboard-step-5">Step 5: Write the Navigational Narratives &amp; Draw Flow Arrows</h3>
+    <p class="desc">Connect the wireframes with directional arrows and write a <strong>Navigational Narrative</strong> for every transition: the trigger, what the system does (linked to the DSD messages) and which screen comes next.</p>
+    <p><strong>Transition 1: Screen 1 to Screen 2</strong> <span class="pat pat-create">Main success flow</span> <code>alt [valid]</code></p>
+    <table>
+      <tr><th>Part</th><th>Narrative</th></tr>
+      <tr><td><strong>Trigger</strong></td><td>The student selects all required drop-downs (<code>CourseCode = "INFO2001A"</code>, <code>SupportType = "Exam Prep"</code>) and clicks <code>[Submit Request]</code></td></tr>
+      <tr><td><strong>System processing (DSD link)</strong></td><td>1. <code><u>:TutoringRequestForm</u></code> runs client-side validation: <code>ValidateInputs() == true</code><br>2. The form sends <code>createRequest(studentNo, courseCode, supportType, priority, avail)</code> to <code><u>:requestHandler</u></code><br>3. The handler runs <code>INSERT INTO TUTORREQUEST (...)</code> and returns the new <code>RequestID = "TR-2026-089"</code></td></tr>
+      <tr><td><strong>Screen transition</strong></td><td>Screen 1 closes and <strong>Screen 2: Request Confirmation View</strong> opens, showing the new <code>TR-2026-089</code> and the submission timestamp</td></tr>
+    </table>
+    <p><strong>Transition 2: Screen 1 to Screen 1</strong> <span class="pat pat-update">Validation error flow</span> <code>alt [invalid]</code></p>
+    <table>
+      <tr><th>Part</th><th>Narrative</th></tr>
+      <tr><td><strong>Trigger</strong></td><td>The student leaves Course Selection unselected and clicks <code>[Submit Request]</code></td></tr>
+      <tr><td><strong>System processing (DSD link)</strong></td><td>1. <code><u>:TutoringRequestForm</u></code> runs <code>ValidateInputs()</code>, which returns <code>false</code><br>2. Processing halts <strong>before</strong> any message is sent to <code><u>:requestHandler</u></code>, which saves a database call</td></tr>
+      <tr><td><strong>Screen transition</strong></td><td>The form stays on Screen 1, keeps every value entered, shows an <code>ErrorProvider</code> icon beside the Course drop-down and a red status label: <em>"Error: Please select a valid course before submitting."</em></td></tr>
+    </table>
+
+    <h3 id="storyboard-step-6">Step 6: Consistency &amp; Quality Gate Audit</h3>
+    <p class="desc">Verify the finished storyboard against the Milestone 2 marking rubric and the exam standards.</p>
+    <table>
+      <tr><th>Audit criterion</th><th>Verification rule</th><th>Check</th></tr>
+      <tr><td><strong>Traceability</strong></td><td>Every input control matches an attribute in <code>TUTORREQUEST</code> or <code>STUDENT</code></td><td>☐</td></tr>
+      <tr><td><strong>Data protection</strong></td><td>System-controlled fields (<code>Status</code>, <code>SubmissionDate</code>) are read-only so users cannot tamper with them</td><td>☐</td></tr>
+      <tr><td><strong>Constrained inputs</strong></td><td>Drop-downs use <code>DisplayMember</code> (course name) and <code>ValueMember</code> (course code PK)</td><td>☐</td></tr>
+      <tr><td><strong>Action-oriented verbs</strong></td><td>The action button reads <code>[Submit Request]</code>, not <code>OK</code></td><td>☐</td></tr>
+      <tr><td><strong>Usability alignment</strong></td><td>Nielsen #1 (system status, via the confirmation screen) and #5 (error prevention, via constrained controls)</td><td>☐</td></tr>
+      <tr><td><strong>DSD consistency</strong></td><td>Each transition names the DSD messages and the <code>alt</code> branch it follows</td><td>☐</td></tr>
+    </table>
+    <div class="note"><strong>Exam workflow:</strong> list the screens from the use case (Step 2), draw each one with the wireframe rules (Step 3), write one form narrative per screen (Step 4) and one navigational narrative per arrow (Step 5), then tick the audit table.</div>
+  </section>
+
   </main>
 </div>
 
 <footer>
-  Database Fundamentals - Access SQL reference &amp; DSD blueprint
+  Database Fundamentals - Access SQL reference &amp; DSD, wireframe and storyboard blueprints
 </footer>
 
 <script>
@@ -2860,5 +3501,7 @@ Do this for indexes on columns that turned out to be rarely queried but are freq
   })();
 </script>
 
+<script data-goatcounter="https://info2001a.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
