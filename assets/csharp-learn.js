@@ -119,7 +119,7 @@
           var c = +ob.dataset.oi;
           b.querySelectorAll('.opt').forEach(function (x) { x.disabled = true; });
           b.querySelectorAll('.opt')[it.a].classList.add('correct');
-          if (c !== it.a) ob.classList.add('wrong'); else score++;
+          if (c !== it.a) { ob.classList.add('wrong'); if (window.playWrongSound) playWrongSound(); } else score++;
           answered++;
           var w = b.querySelector('.why');
           w.innerHTML = (c === it.a ? '<b>Correct. </b>' : '<b>Not quite. </b>') + it.w;

@@ -720,6 +720,7 @@
   </a>
 </footer>
 
+<script src="assets/quiz-sound.js"></script>
 <script>
   // ---- sidebar nav ----
   function showView(name){
@@ -895,7 +896,7 @@
         const chosen = parseInt(ob.dataset.oi);
         optButtons.forEach(b=>b.disabled = true);
         optButtons[item.correct].classList.add('correct');
-        if(chosen !== item.correct) ob.classList.add('incorrect');
+        if(chosen !== item.correct){ ob.classList.add('incorrect'); window.playWrongSound && playWrongSound(); }
         block.querySelector('.explain').classList.add('show');
         answered++;
         if(chosen === item.correct) score++;
@@ -1206,7 +1207,7 @@
         const correct = Number(btn.dataset.correct);
         block.querySelectorAll('.mcq-opt').forEach(b=>b.disabled=true);
         block.querySelectorAll('.mcq-opt')[correct].classList.add('correct');
-        if(chosen !== correct) btn.classList.add('incorrect');
+        if(chosen !== correct){ btn.classList.add('incorrect'); window.playWrongSound && playWrongSound(); }
         block.querySelector('.explain').classList.add('show');
         mcqAnswered++;
         if(chosen === correct) mcqCorrect++;
