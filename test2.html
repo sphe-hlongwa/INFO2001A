@@ -764,6 +764,7 @@
 </footer>
 
 <script src="assets/quiz-sound.js"></script>
+<script src="assets/quiz-fail.js"></script>
 <script>
   // ---- sidebar nav ----
   function showView(name){
@@ -839,6 +840,7 @@
         block.querySelector('.explain').classList.add('show');
         qAnswered++; if(chosen === item.correct) qScore++;
         updateQuizScore();
+        if(qAnswered === quizzes[activeQuiz].questions.length && window.quizFinished) quizFinished(qScore, qAnswered);
       }));
       quizList.appendChild(block);
     });
