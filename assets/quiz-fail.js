@@ -1,17 +1,23 @@
 /* Quizzes only (never mock exams): when a finished quiz scores under 50%,
    play assets/fail-scream.mp4 in the middle of the screen with its green
-   background keyed out, so the page shows through.
+   background keyed out, so the page shows through. At 80% or more,
+   assets/quiz-pass.mp4 plays the same way.
    Call window.quizFinished(score, total) once every question is answered. */
 (function () {
   var base = document.currentScript.src;
-  var srcMp4 = new URL('fail-scream.mp4', base).href, srcWebm = new URL('fail-scream.webm', base).href;
-  // crop to the subject inside the 576x1024 source frame
-  var CX = 110, CY = 225, CW = 360, CH = 480;
+  var FAIL = { mp4: new URL('fail-scream.mp4', base).href, webm: new URL('fail-scream.webm', base).href,
+               // crop to the subject inside the 576x1024 source frame
+               cx: 110, cy: 225, cw: 360, ch: 480 };
+  var PASS = { mp4: new URL('quiz-pass.mp4', base).href, webm: new URL('quiz-pass.webm', base).href,
+               // crop to the subject inside the 1024x576 source frame
+               cx: 352, cy: 16, cw: 672, ch: 560 };
   var playing = false;
 
-  function show() {
+  function show(cfg) {
     if (playing) return;
     playing = true;
+    var CX = cfg.cx, CY = cfg.cy, CW = cfg.cw, CH = cfg.ch;
+    var srcMp4 = cfg.mp4, srcWebm = cfg.webm;
     var wrap = document.createElement('div');
     wrap.setAttribute('aria-hidden', 'true');
     wrap.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;pointer-events:none;';
@@ -66,6 +72,11 @@
   }
 
   window.quizFinished = function (score, total) {
-    try { if (total > 0 && score / total < 0.5) show(); } catch (e) {}
+    try {
+      if (total <= 0) return;
+      var pct = score / total;
+      if (pct < 0.5) show(FAIL);
+      else if (pct >= 0.8) show(PASS);
+    } catch (e) {}
   };
 })();
