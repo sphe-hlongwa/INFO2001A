@@ -23,8 +23,9 @@
     wrap.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;pointer-events:none;';
     var cv = document.createElement('canvas');
     cv.width = CW; cv.height = CH;
-    var h = Math.min(window.innerHeight * 0.7, 520);
-    cv.style.cssText = 'height:' + h + 'px;width:' + (h * CW / CH) + 'px;max-width:90vw;transform:scale(.2);opacity:0;transition:transform .25s cubic-bezier(.2,1.6,.4,1),opacity .15s;';
+    // fit inside 70% of the screen height and 90% of its width without stretching
+    var h = Math.min(window.innerHeight * 0.7, 520, window.innerWidth * 0.9 * CH / CW);
+    cv.style.cssText = 'height:' + h + 'px;width:' + (h * CW / CH) + 'px;transform:scale(.2);opacity:0;transition:transform .25s cubic-bezier(.2,1.6,.4,1),opacity .15s;';
     wrap.appendChild(cv);
     var v = document.createElement('video');
     v.innerHTML = '<source src="' + srcMp4 + '" type="video/mp4"><source src="' + srcWebm + '" type="video/webm">'; v.playsInline = true; v.preload = 'auto'; v.crossOrigin = 'anonymous';
