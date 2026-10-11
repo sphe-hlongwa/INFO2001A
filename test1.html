@@ -1209,7 +1209,7 @@
         const correct = Number(btn.dataset.correct);
         block.querySelectorAll('.mcq-opt').forEach(b=>b.disabled=true);
         block.querySelectorAll('.mcq-opt')[correct].classList.add('correct');
-        if(chosen !== correct){ btn.classList.add('incorrect'); window.playWrongSound && playWrongSound(); }
+        if(chosen !== correct){ btn.classList.add('incorrect'); }
         block.querySelector('.explain').classList.add('show');
         mcqAnswered++;
         if(chosen === correct) mcqCorrect++;
