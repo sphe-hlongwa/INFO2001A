@@ -11,10 +11,9 @@
       { label: 'Test 2', sub: 'SQL + Database Design + System Design + C#', href: 'test2.html' }
     ]},
     { label: 'Learn', items: [
-      { label: 'Database Fundamentals', sub: 'Access SQL + DSD, wireframe, storyboard', href: 'sql-fundamentals.html' },
+      { label: 'Database Fundamentals', sub: 'Access SQL + DSD, wireframe, storyboard, report', href: 'sql-fundamentals.html' },
       { label: 'C# + SQL', sub: 'Build it, understand it, practise it', href: 'csharp-sql.html' }
-    ]},
-    { label: 'GitHub', href: 'https://github.com/sphe-hlongwa', external: true }
+    ]}
   ];
 
   var CHEV = '<svg class="chev" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2.5 4.5 3.5 3.5 3.5-3.5"/></svg>';

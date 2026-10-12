@@ -506,93 +506,93 @@
   }
   section, section h2, section h3, section h4 { scroll-margin-top: 150px; }
   /* DSD blueprint tables hold sentences, so let them wrap instead of scrolling sideways */
-  :is(#dsd, #wireframe, #storyboard) table { white-space: normal; }
-  :is(#dsd, #wireframe, #storyboard) td, :is(#dsd, #wireframe, #storyboard) th { vertical-align: top; }
+  :is(#dsd, #wireframe, #storyboard, #report) table { white-space: normal; }
+  :is(#dsd, #wireframe, #storyboard, #report) td, :is(#dsd, #wireframe, #storyboard, #report) th { vertical-align: top; }
   /* ---- DSD worked examples ---- */
-  :is(#dsd, #wireframe, #storyboard) .scenario { border-left: 3px solid var(--accent); background: var(--code-bg); padding: 12px 16px; border-radius: 0 6px 6px 0; line-height: 2; margin: 10px 0 14px; }
-  :is(#dsd, #wireframe, #storyboard) .legend { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.78rem; margin: 6px 0 14px; }
-  :is(#dsd, #wireframe, #storyboard) .hl { padding: 1px 6px; border-radius: 4px; font-weight: 600; border-bottom: 2px solid; }
-  :is(#dsd, #wireframe, #storyboard) .hl-actor    { background: rgba(232,160,76,.16);  border-color: #e8a04c; }
-  :is(#dsd, #wireframe, #storyboard) .hl-boundary { background: rgba(111,168,234,.16); border-color: #6fa8ea; }
-  :is(#dsd, #wireframe, #storyboard) .hl-ctl      { background: rgba(169,139,232,.16); border-color: #a98be8; }
-  :is(#dsd, #wireframe, #storyboard) .hl-entity   { background: rgba(92,184,122,.16);  border-color: #5cb87a; }
-  :is(#dsd, #wireframe, #storyboard) .hl-act      { background: rgba(215,222,232,.09); border-color: #8a94a3; font-style: italic; }
-  :is(#dsd, #wireframe, #storyboard) .bd { display: inline-block; min-width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; background: var(--accent); color: #10141c; font-weight: 700; font-size: 0.78rem; }
-  :is(#dsd, #wireframe, #storyboard) .pat { font-size: 0.72rem; padding: 1px 8px; border-radius: 10px; border: 1px solid var(--border); white-space: nowrap; }
-  :is(#dsd, #wireframe, #storyboard) .pat-read   { color: #6fa8ea; border-color: #6fa8ea; }
-  :is(#dsd, #wireframe, #storyboard) .pat-create { color: #5cb87a; border-color: #5cb87a; }
-  :is(#dsd, #wireframe, #storyboard) .pat-update { color: #e8a04c; border-color: #e8a04c; }
-  :is(#dsd, #wireframe, #storyboard) .pat-loop, :is(#dsd, #wireframe, #storyboard) .pat-alt, :is(#dsd, #wireframe, #storyboard) .pat-ref { color: #a98be8; border-color: #a98be8; }
-  :is(#dsd, #wireframe, #storyboard) .pat-pass, :is(#dsd, #wireframe, #storyboard) .pat-ret { color: var(--muted); }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig { overflow-x: auto; margin: 12px 0 18px; border: 1px solid var(--border); border-radius: 8px; background: var(--code-bg); padding: 6px; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig svg { display: block; width: 100%; height: auto; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .lifeline { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 5; opacity: .7; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .act { fill: var(--code-bg); stroke: var(--text); stroke-width: 1.3; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .msg { stroke: var(--text); stroke-width: 1.6; fill: none; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .msg.ret { stroke-dasharray: 7 5; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .mk-f { fill: var(--text); }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .mk-o { fill: none; stroke: var(--text); stroke-width: 1.6; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .box { fill: #0d1526; stroke-width: 1.8; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .ll, :is(#dsd, #wireframe, #storyboard) .dsd-fig .lbl, :is(#dsd, #wireframe, #storyboard) .dsd-fig .kw, :is(#dsd, #wireframe, #storyboard) .dsd-fig .guard { font-family: 'SF Mono', Consolas, Menlo, monospace; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .ll { fill: var(--text); font-size: 12.5px; text-decoration: underline; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .lbl { fill: var(--text); font-size: 12.5px; paint-order: stroke; stroke: var(--code-bg); stroke-width: 5px; stroke-linejoin: round; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .actor-t { font-size: 13px; font-weight: 700; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .frame { fill: none; stroke: #e8a04c; stroke-width: 1.4; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .frame-tab { fill: #2a2416; stroke: #e8a04c; stroke-width: 1.4; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .kw { fill: #f1c68a; font-size: 12px; font-weight: 700; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .guard { fill: #f1c68a; font-size: 12.5px; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .divider { stroke: #e8a04c; stroke-width: 1.4; stroke-dasharray: 7 5; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .reftxt { fill: var(--text); font-size: 14px; font-weight: 600; }
+  :is(#dsd, #wireframe, #storyboard, #report) .scenario { border-left: 3px solid var(--accent); background: var(--code-bg); padding: 12px 16px; border-radius: 0 6px 6px 0; line-height: 2; margin: 10px 0 14px; }
+  :is(#dsd, #wireframe, #storyboard, #report) .legend { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.78rem; margin: 6px 0 14px; }
+  :is(#dsd, #wireframe, #storyboard, #report) .hl { padding: 1px 6px; border-radius: 4px; font-weight: 600; border-bottom: 2px solid; }
+  :is(#dsd, #wireframe, #storyboard, #report) .hl-actor    { background: rgba(232,160,76,.16);  border-color: #e8a04c; }
+  :is(#dsd, #wireframe, #storyboard, #report) .hl-boundary { background: rgba(111,168,234,.16); border-color: #6fa8ea; }
+  :is(#dsd, #wireframe, #storyboard, #report) .hl-ctl      { background: rgba(169,139,232,.16); border-color: #a98be8; }
+  :is(#dsd, #wireframe, #storyboard, #report) .hl-entity   { background: rgba(92,184,122,.16);  border-color: #5cb87a; }
+  :is(#dsd, #wireframe, #storyboard, #report) .hl-act      { background: rgba(215,222,232,.09); border-color: #8a94a3; font-style: italic; }
+  :is(#dsd, #wireframe, #storyboard, #report) .bd { display: inline-block; min-width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; background: var(--accent); color: #10141c; font-weight: 700; font-size: 0.78rem; }
+  :is(#dsd, #wireframe, #storyboard, #report) .pat { font-size: 0.72rem; padding: 1px 8px; border-radius: 10px; border: 1px solid var(--border); white-space: nowrap; }
+  :is(#dsd, #wireframe, #storyboard, #report) .pat-read   { color: #6fa8ea; border-color: #6fa8ea; }
+  :is(#dsd, #wireframe, #storyboard, #report) .pat-create { color: #5cb87a; border-color: #5cb87a; }
+  :is(#dsd, #wireframe, #storyboard, #report) .pat-update { color: #e8a04c; border-color: #e8a04c; }
+  :is(#dsd, #wireframe, #storyboard, #report) .pat-loop, :is(#dsd, #wireframe, #storyboard, #report) .pat-alt, :is(#dsd, #wireframe, #storyboard, #report) .pat-ref { color: #a98be8; border-color: #a98be8; }
+  :is(#dsd, #wireframe, #storyboard, #report) .pat-pass, :is(#dsd, #wireframe, #storyboard, #report) .pat-ret { color: var(--muted); }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig { overflow-x: auto; margin: 12px 0 18px; border: 1px solid var(--border); border-radius: 8px; background: var(--code-bg); padding: 6px; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig svg { display: block; width: 100%; height: auto; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .lifeline { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 5 5; opacity: .7; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .act { fill: var(--code-bg); stroke: var(--text); stroke-width: 1.3; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .msg { stroke: var(--text); stroke-width: 1.6; fill: none; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .msg.ret { stroke-dasharray: 7 5; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .mk-f { fill: var(--text); }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .mk-o { fill: none; stroke: var(--text); stroke-width: 1.6; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .box { fill: #0d1526; stroke-width: 1.8; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .ll, :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .lbl, :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .kw, :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .guard { font-family: 'SF Mono', Consolas, Menlo, monospace; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .ll { fill: var(--text); font-size: 12.5px; text-decoration: underline; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .lbl { fill: var(--text); font-size: 12.5px; paint-order: stroke; stroke: var(--code-bg); stroke-width: 5px; stroke-linejoin: round; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .actor-t { font-size: 13px; font-weight: 700; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .frame { fill: none; stroke: #e8a04c; stroke-width: 1.4; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .frame-tab { fill: #2a2416; stroke: #e8a04c; stroke-width: 1.4; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .kw { fill: #f1c68a; font-size: 12px; font-weight: 700; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .guard { fill: #f1c68a; font-size: 12.5px; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .divider { stroke: #e8a04c; stroke-width: 1.4; stroke-dasharray: 7 5; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .reftxt { fill: var(--text); font-size: 14px; font-weight: 600; }
   /* Flow of Activities (use case) tables */
-  :is(#dsd, #wireframe, #storyboard) .foa-title { font-size: 0.85rem; color: var(--muted); margin: 14px 0 4px; }
-  :is(#dsd, #wireframe, #storyboard) table.foa { display: table; width: 100%; border-collapse: collapse; margin: 4px 0 14px; }
-  :is(#dsd, #wireframe, #storyboard) table.foa th, :is(#dsd, #wireframe, #storyboard) table.foa td { border: 1px solid var(--border); padding: 7px 12px; }
-  :is(#dsd, #wireframe, #storyboard) table.foa th { text-align: center; }
-  :is(#dsd, #wireframe, #storyboard) table.foa td.lab { width: 130px; font-weight: 700; background: var(--card); }
-  :is(#dsd, #wireframe, #storyboard) table.foa tr.ext td { border-top: 2px solid var(--border); }
-  :is(#dsd, #wireframe, #storyboard) table.foa td.cond { font-style: italic; color: #f1c68a; }
-  :is(#dsd, #wireframe, #storyboard) table.foa td:nth-child(2), :is(#dsd, #wireframe, #storyboard) table.foa td:nth-child(3) { width: 45%; }
-  :is(#dsd, #wireframe, #storyboard) .fig-cap { font-size: 0.85rem; color: var(--muted); margin: -8px 0 18px; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .card { fill: #0d1526; stroke-width: 1.6; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .p1-t { font-size: 14px; font-weight: 700; letter-spacing: .06em; }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .p1-s { font-size: 12px; fill: var(--muted); }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .p1-k { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; fill: var(--muted); }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .p1-v { font-size: 12.5px; fill: var(--text); }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .badge { fill: var(--accent); }
-  :is(#dsd, #wireframe, #storyboard) .dsd-fig .badge-t { fill: #10141c; font-size: 11px; font-weight: 700; }
+  :is(#dsd, #wireframe, #storyboard, #report) .foa-title { font-size: 0.85rem; color: var(--muted); margin: 14px 0 4px; }
+  :is(#dsd, #wireframe, #storyboard, #report) table.foa { display: table; width: 100%; border-collapse: collapse; margin: 4px 0 14px; }
+  :is(#dsd, #wireframe, #storyboard, #report) table.foa th, :is(#dsd, #wireframe, #storyboard, #report) table.foa td { border: 1px solid var(--border); padding: 7px 12px; }
+  :is(#dsd, #wireframe, #storyboard, #report) table.foa th { text-align: center; }
+  :is(#dsd, #wireframe, #storyboard, #report) table.foa td.lab { width: 130px; font-weight: 700; background: var(--card); }
+  :is(#dsd, #wireframe, #storyboard, #report) table.foa tr.ext td { border-top: 2px solid var(--border); }
+  :is(#dsd, #wireframe, #storyboard, #report) table.foa td.cond { font-style: italic; color: #f1c68a; }
+  :is(#dsd, #wireframe, #storyboard, #report) table.foa td:nth-child(2), :is(#dsd, #wireframe, #storyboard, #report) table.foa td:nth-child(3) { width: 45%; }
+  :is(#dsd, #wireframe, #storyboard, #report) .fig-cap { font-size: 0.85rem; color: var(--muted); margin: -8px 0 18px; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .card { fill: #0d1526; stroke-width: 1.6; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .p1-t { font-size: 14px; font-weight: 700; letter-spacing: .06em; }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .p1-s { font-size: 12px; fill: var(--muted); }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .p1-k { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; fill: var(--muted); }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .p1-v { font-size: 12.5px; fill: var(--text); }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .badge { fill: var(--accent); }
+  :is(#dsd, #wireframe, #storyboard, #report) .dsd-fig .badge-t { fill: #10141c; font-size: 11px; font-weight: 700; }
   /* ---- wireframe / storyboard figures ---- */
-  :is(#wireframe, #storyboard) .dsd-fig .wf-win { fill: #10141c; stroke: #3a4458; stroke-width: 1.5; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-grp { fill: none; stroke: #2a3242; stroke-width: 1.3; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-gt { fill: #e8a04c; font-size: 12px; font-weight: 700; letter-spacing: .04em; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-app { fill: #f1c68a; font-size: 13px; font-weight: 700; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-h { fill: #fff; font-size: 16px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; letter-spacing: .02em; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-rule { stroke: #2a3242; stroke-width: 1.2; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-t { fill: var(--text); font-size: 12.5px; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-ph { fill: var(--muted); font-size: 12.5px; font-style: italic; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-m { fill: var(--muted); font-size: 11.5px; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-req { fill: #e0605a; font-weight: 700; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-box { fill: #0d1526; stroke: #4a566c; stroke-width: 1.3; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-ro { fill: #1a2130; stroke: #2f394c; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-chev { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-dot { fill: #e8a04c; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-name { fill: #6fa8ea; font-size: 11px; font-family: 'SF Mono', Consolas, Menlo, monospace; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-errb { fill: rgba(224,96,90,.14); stroke: #e0605a; stroke-width: 1.4; stroke-dasharray: 3 2.5; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-errt { fill: #e0605a; font-size: 13px; font-weight: 700; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-err { fill: #e98a85; font-size: 12px; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-btn { fill: none; stroke: #6a7690; stroke-width: 1.4; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-primary { fill: #e8a04c; stroke: #e8a04c; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-bt { fill: var(--text); font-size: 13px; font-weight: 600; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-bt-p { fill: #10141c; font-size: 13px; font-weight: 700; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-ok { fill: rgba(92,184,122,.14); stroke: #5cb87a; stroke-width: 1.4; }
-  :is(#wireframe, #storyboard) .dsd-fig .wf-okp { fill: none; stroke: #5cb87a; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-  :is(#wireframe, #storyboard) pre { margin: 10px 0 16px; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-win { fill: #10141c; stroke: #3a4458; stroke-width: 1.5; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-grp { fill: none; stroke: #2a3242; stroke-width: 1.3; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-gt { fill: #e8a04c; font-size: 12px; font-weight: 700; letter-spacing: .04em; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-app { fill: #f1c68a; font-size: 13px; font-weight: 700; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-h { fill: #fff; font-size: 16px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; letter-spacing: .02em; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-rule { stroke: #2a3242; stroke-width: 1.2; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-t { fill: var(--text); font-size: 12.5px; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-ph { fill: var(--muted); font-size: 12.5px; font-style: italic; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-m { fill: var(--muted); font-size: 11.5px; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-req { fill: #e0605a; font-weight: 700; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-box { fill: #0d1526; stroke: #4a566c; stroke-width: 1.3; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-ro { fill: #1a2130; stroke: #2f394c; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-chev { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-dot { fill: #e8a04c; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-name { fill: #6fa8ea; font-size: 11px; font-family: 'SF Mono', Consolas, Menlo, monospace; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-errb { fill: rgba(224,96,90,.14); stroke: #e0605a; stroke-width: 1.4; stroke-dasharray: 3 2.5; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-errt { fill: #e0605a; font-size: 13px; font-weight: 700; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-err { fill: #e98a85; font-size: 12px; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-btn { fill: none; stroke: #6a7690; stroke-width: 1.4; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-primary { fill: #e8a04c; stroke: #e8a04c; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-bt { fill: var(--text); font-size: 13px; font-weight: 600; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-bt-p { fill: #10141c; font-size: 13px; font-weight: 700; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-ok { fill: rgba(92,184,122,.14); stroke: #5cb87a; stroke-width: 1.4; }
+  :is(#wireframe, #storyboard, #report) .dsd-fig .wf-okp { fill: none; stroke: #5cb87a; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  :is(#wireframe, #storyboard, #report) pre { margin: 10px 0 16px; }
 </style>
 </head>
 <body>
 
 <header>
   <h1>Database Fundamentals</h1>
-  <p>Access SQL syntax, normalization &amp; indexing, plus the DSD, wireframe and storyboard blueprints</p>
+  <p>Access SQL syntax, normalization &amp; indexing, plus the DSD, wireframe, storyboard and report blueprints</p>
 </header>
 
 <input type="checkbox" id="tocToggle" class="toc-toggle-state">
@@ -793,6 +793,26 @@
         <li><a href="#storyboard-step-4">Step 4: Form narratives</a></li>
         <li><a href="#storyboard-step-5">Step 5: Navigational narratives</a></li>
         <li><a href="#storyboard-step-6">Step 6: Quality gate</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><a href="#report">19. Report Blueprint</a></summary>
+      <ul>
+        <li><a href="#report-what-it-is">Report vs other blueprints</a></li>
+        <li><a href="#report-types">The 4 report types &amp; formats</a></li>
+        <li><a href="#report-rationale">The 7-field rationale table</a></li>
+        <li><a href="#report-six-steps">The 6-step blueprint</a></li>
+        <li><a href="#report-step-1">Step 1: Question &amp; recipient</a></li>
+        <li><a href="#report-step-2">Step 2: Rationale table</a></li>
+        <li><a href="#report-step-3">Step 3: ERD data map</a></li>
+        <li><a href="#report-step-4">Step 4: Report prototype</a></li>
+        <li><a href="#report-step-5">Step 5: SQL retrieval</a></li>
+        <li><a href="#report-step-6">Step 6: Quality audit</a></li>
+        <li><a href="#report-example-1">Example 1: Exception</a></li>
+        <li><a href="#report-example-2">Example 2: Summary / Management</a></li>
+        <li><a href="#report-example-3">Example 3: Detail / Operational</a></li>
+        <li><a href="#report-example-4">Example 4: Trend / Comparative</a></li>
+        <li><a href="#report-checklist">Quality gate checklist</a></li>
       </ul>
     </details>
   </nav>
@@ -3300,11 +3320,601 @@ private void btnSubmitRequest_Click(object sender, EventArgs e)
     <div class="note"><strong>Exam workflow:</strong> list the screens from the use case (Step 2), draw each one with the wireframe rules (Step 3), write one form narrative per screen (Step 4) and one navigational narrative per arrow (Step 5), then tick the audit table.</div>
   </section>
 
+  <section id="report">
+    <h2>19. Report Blueprint</h2>
+    <p class="desc">A systematic, step-by-step system for creating and drawing a full-marks <strong>decision-oriented report</strong> (Wits INFO2001A). A report is <strong>not a data dump</strong>: listing every column of a table is invalid design. A report earns its place only by helping a specific recipient make a defensible, timely business decision.</p>
+
+    <h3 id="report-what-it-is">Report vs the other blueprints</h3>
+    <p class="desc">The DSD, wireframe and storyboard design how data goes <em>in</em>. A report designs how it comes <em>out</em>. Design always flows <strong>backwards from the decision</strong>:</p>
+<div class="dsd-fig" role="group" aria-label="Report design flows backwards from the decision">
+<svg viewBox="0 0 960 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="rpc-t" style="min-width:760px"><title id="rpc-t">Report design flows backwards from the decision</title>
+<defs><marker id="rpc-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker></defs>
+<rect x="10.0" y="10" width="144" height="70" rx="8" class="card" stroke="#e8a04c"/>
+<path d="M10.0 18a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V28H10.0z" fill="#e8a04c" opacity=".18"/>
+<text x="82.0" y="24" class="p1-k" text-anchor="middle" fill="#e8a04c">1</text>
+<text x="82.0" y="49" class="p1-v" text-anchor="middle">Decision</text>
+<text x="82.0" y="67" class="p1-v" text-anchor="middle">to be Made</text>
+<line x1="156.0" y1="45" x2="166.2" y2="45" class="msg" marker-end="url(#rpc-f)"/>
+<rect x="169.2" y="10" width="144" height="70" rx="8" class="card" stroke="#6fa8ea"/>
+<path d="M169.2 18a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V28H169.2z" fill="#6fa8ea" opacity=".18"/>
+<text x="241.2" y="24" class="p1-k" text-anchor="middle" fill="#6fa8ea">2</text>
+<text x="241.2" y="58" class="p1-v" text-anchor="middle">Recipient</text>
+<line x1="315.2" y1="45" x2="325.4" y2="45" class="msg" marker-end="url(#rpc-f)"/>
+<rect x="328.4" y="10" width="144" height="70" rx="8" class="card" stroke="#a98be8"/>
+<path d="M328.4 18a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V28H328.4z" fill="#a98be8" opacity=".18"/>
+<text x="400.4" y="24" class="p1-k" text-anchor="middle" fill="#a98be8">3</text>
+<text x="400.4" y="49" class="p1-v" text-anchor="middle">Business</text>
+<text x="400.4" y="67" class="p1-v" text-anchor="middle">Question</text>
+<line x1="474.4" y1="45" x2="484.6" y2="45" class="msg" marker-end="url(#rpc-f)"/>
+<rect x="487.6" y="10" width="144" height="70" rx="8" class="card" stroke="#5cb87a"/>
+<path d="M487.6 18a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V28H487.6z" fill="#5cb87a" opacity=".18"/>
+<text x="559.6" y="24" class="p1-k" text-anchor="middle" fill="#5cb87a">4</text>
+<text x="559.6" y="49" class="p1-v" text-anchor="middle">Measures &amp;</text>
+<text x="559.6" y="67" class="p1-v" text-anchor="middle">Dimensions</text>
+<line x1="633.6" y1="45" x2="643.8" y2="45" class="msg" marker-end="url(#rpc-f)"/>
+<rect x="646.8" y="10" width="144" height="70" rx="8" class="card" stroke="#e8a04c"/>
+<path d="M646.8 18a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V28H646.8z" fill="#e8a04c" opacity=".18"/>
+<text x="718.8" y="24" class="p1-k" text-anchor="middle" fill="#e8a04c">5</text>
+<text x="718.8" y="49" class="p1-v" text-anchor="middle">Data &amp; SQL</text>
+<text x="718.8" y="67" class="p1-v" text-anchor="middle">Calculations</text>
+<line x1="792.8" y1="45" x2="803.0" y2="45" class="msg" marker-end="url(#rpc-f)"/>
+<rect x="806.0" y="10" width="144" height="70" rx="8" class="card" stroke="#6fa8ea"/>
+<path d="M806.0 18a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V28H806.0z" fill="#6fa8ea" opacity=".18"/>
+<text x="878.0" y="24" class="p1-k" text-anchor="middle" fill="#6fa8ea">6</text>
+<text x="878.0" y="49" class="p1-v" text-anchor="middle">Report Format &amp;</text>
+<text x="878.0" y="67" class="p1-v" text-anchor="middle">Visual Prototype</text>
+</svg>
+</div>
+    <p class="fig-cap">Design starts at the decision (card 1) and ends at the format and prototype (card 6).</p>
+    <table>
+      <tr><th>Artifact</th><th>What the report takes from it</th></tr>
+      <tr><td><strong>ERD &amp; Data Dictionary</strong></td><td>Every displayed column must trace to an entity attribute, or be defined as a derived calculation with an explicit formula</td></tr>
+      <tr><td><strong>SQL (Sections 1 to 14)</strong></td><td>The report is the result of a query: <code>SELECT</code>, <code>INNER JOIN</code>, <code>WHERE</code>, <code>GROUP BY</code>, <code>HAVING</code>, <code>ORDER BY</code></td></tr>
+      <tr><td><strong>Interaction &amp; UX principles</strong></td><td>Nielsen's heuristics for a clean layout: no decorative clutter, clear headers, aligned columns</td></tr>
+    </table>
+
+    <h3 id="report-types">The 4 Universal Report Types &amp; Format Mapping</h3>
+    <p class="desc">Every exam question and project deliverable requires you to pick a <strong>Report Type</strong> and match it to a suitable <strong>Report Format</strong>.</p>
+    <table>
+      <tr><th>Report type</th><th>Business focus &amp; question</th><th>Recommended format</th><th>Key visual elements</th><th>INFO2001A case examples</th></tr>
+      <tr><td><strong>1. Exception</strong></td><td>Identifies specific records that breach a business rule, threshold or SLA and need immediate intervention</td><td>On-screen tabular grid or exportable PDF list</td><td>Sorted by urgency / severity, exception filter criteria displayed, highlighted status flags</td><td><em>Aged Submitted Requests (&ge; 7 Days)</em>, <em>Applications Pending &ge; 31 Days</em>, <em>Low Donor Balance (&lt; 15%)</em></td></tr>
+      <tr><td><strong>2. Summary / Management</strong></td><td>Provides aggregated metrics and grouped totals to monitor overall programme performance and resource allocation</td><td>Summary table with grouping headers, bar chart or column chart</td><td>Categorical grouping, aggregated counts (<code>COUNT</code>), totals (<code>SUM</code>), averages (<code>AVG</code>)</td><td><em>Tutor Workload by Reporting Period</em>, <em>Funding Distribution by Faculty</em>, <em>Room Utilization Summary</em></td></tr>
+      <tr><td><strong>3. Detail / Operational</strong></td><td>Delivers the line-item transaction records needed for daily administrative execution and verification</td><td>Tabular data grid with filter and search controls</td><td>Record-level IDs, date stamps, status flags, foreign key descriptions</td><td><em>Active Student Session Schedule</em>, <em>Active Tenant Rental Summary</em>, <em>Applicant Document Verification Log</em></td></tr>
+      <tr><td><strong>4. Trend / Comparative</strong></td><td>Tracks changes over time, or compares performance metrics across departments, courses or periods</td><td>Line chart (time series) or grouped bar chart</td><td>Clear time x-axis, category legend, baseline comparisons</td><td><em>Monthly Support Demand Trend</em>, <em>Pass Rate Improvement by Course</em>, <em>Year-on-Year Application Volume</em></td></tr>
+    </table>
+
+    <h3 id="report-rationale">The 7-Field Report Rationale Table</h3>
+    <p class="desc">Every report design deliverable in Milestone 2 and Test 2 needs a complete rationale table. Use this exact structure.</p>
+    <table>
+      <tr><th>Rationale field</th><th>Blueprint &amp; scoring standard</th></tr>
+      <tr><td><strong>1. Report Name</strong></td><td>Concise, professional title that shows the subject, threshold and scope</td></tr>
+      <tr><td><strong>2. Report Type</strong></td><td>One of: Exception, Summary / Management, Detail / Operational, or Trend / Comparative</td></tr>
+      <tr><td><strong>3. Report Format</strong></td><td>A specific presentation mode, e.g. Tabular PDF, On-Screen Grid, Bar Chart, Line Graph</td></tr>
+      <tr><td><strong>4. Report Recipient(s)</strong></td><td>Specific organisational role(s), e.g. Academic Coordinator, Financial Aid Officer, Admin Manager</td></tr>
+      <tr><td><strong>5. Report Frequency</strong></td><td>The operational cycle, e.g. Daily, Weekly, Monthly, Per Reporting Period, On-Demand</td></tr>
+      <tr><td><strong>6. Report Rationale / Justification</strong></td><td>Explains the business problem, the threshold definition and why the report is necessary</td></tr>
+      <tr><td><strong>7. Decision(s) Made from Report</strong></td><td>Specific, actionable operational or strategic choices triggered by reading the report data</td></tr>
+    </table>
+
+    <h3 id="report-six-steps">The 6-Step Universal Report Blueprint</h3>
+    <p class="desc">Steps 1 and 2 decide <em>why</em> the report exists, Step 3 finds the data, Steps 4 and 5 draw and query it, Step 6 audits it. Worked examples use the <code>#TutAcadSupport</code> system.</p>
+<div class="dsd-fig" role="group" aria-label="Six-step report blueprint">
+<svg viewBox="0 0 960 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="rps-t" style="min-width:760px"><title id="rps-t">Six steps of the report blueprint</title>
+<defs><marker id="rps-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker></defs>
+<rect x="10.0" y="14" width="144" height="122" rx="8" class="card" stroke="#e8a04c"/>
+<path d="M10.0 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H10.0z" fill="#e8a04c" opacity=".18"/>
+<text x="82.0" y="32" class="p1-t" text-anchor="middle" fill="#e8a04c">STEP 1</text>
+<text x="82.0" y="47" class="p1-s" text-anchor="middle">Decision target</text>
+<text x="22.0" y="76" class="p1-k">OUTPUT</text>
+<text x="22.0" y="94" class="p1-v">Question + who</text>
+<text x="22.0" y="110" class="p1-v">+ threshold</text>
+<line x1="156.0" y1="75" x2="166.2" y2="75" class="msg" marker-end="url(#rps-f)"/>
+<rect x="169.2" y="14" width="144" height="122" rx="8" class="card" stroke="#6fa8ea"/>
+<path d="M169.2 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H169.2z" fill="#6fa8ea" opacity=".18"/>
+<text x="241.2" y="32" class="p1-t" text-anchor="middle" fill="#6fa8ea">STEP 2</text>
+<text x="241.2" y="47" class="p1-s" text-anchor="middle">Rationale table</text>
+<text x="181.2" y="76" class="p1-k">OUTPUT</text>
+<text x="181.2" y="94" class="p1-v">7-field table,</text>
+<text x="181.2" y="110" class="p1-v">concrete decisions</text>
+<line x1="315.2" y1="75" x2="325.4" y2="75" class="msg" marker-end="url(#rps-f)"/>
+<rect x="328.4" y="14" width="144" height="122" rx="8" class="card" stroke="#a98be8"/>
+<path d="M328.4 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H328.4z" fill="#a98be8" opacity=".18"/>
+<text x="400.4" y="32" class="p1-t" text-anchor="middle" fill="#a98be8">STEP 3</text>
+<text x="400.4" y="47" class="p1-s" text-anchor="middle">ERD data map</text>
+<text x="340.4" y="76" class="p1-k">OUTPUT</text>
+<text x="340.4" y="94" class="p1-v">Tables, joins,</text>
+<text x="340.4" y="110" class="p1-v">derived fields</text>
+<line x1="474.4" y1="75" x2="484.6" y2="75" class="msg" marker-end="url(#rps-f)"/>
+<rect x="487.6" y="14" width="144" height="122" rx="8" class="card" stroke="#5cb87a"/>
+<path d="M487.6 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H487.6z" fill="#5cb87a" opacity=".18"/>
+<text x="559.6" y="32" class="p1-t" text-anchor="middle" fill="#5cb87a">STEP 4</text>
+<text x="559.6" y="47" class="p1-s" text-anchor="middle">Report prototype</text>
+<text x="499.6" y="76" class="p1-k">OUTPUT</text>
+<text x="499.6" y="94" class="p1-v">Header, body,</text>
+<text x="499.6" y="110" class="p1-v">footer mockup</text>
+<line x1="633.6" y1="75" x2="643.8" y2="75" class="msg" marker-end="url(#rps-f)"/>
+<rect x="646.8" y="14" width="144" height="122" rx="8" class="card" stroke="#e8a04c"/>
+<path d="M646.8 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H646.8z" fill="#e8a04c" opacity=".18"/>
+<text x="718.8" y="32" class="p1-t" text-anchor="middle" fill="#e8a04c">STEP 5</text>
+<text x="718.8" y="47" class="p1-s" text-anchor="middle">SQL logic</text>
+<text x="658.8" y="76" class="p1-k">OUTPUT</text>
+<text x="658.8" y="94" class="p1-v">SELECT, JOIN,</text>
+<text x="658.8" y="110" class="p1-v">GROUP BY</text>
+<line x1="792.8" y1="75" x2="803.0" y2="75" class="msg" marker-end="url(#rps-f)"/>
+<rect x="806.0" y="14" width="144" height="122" rx="8" class="card" stroke="#6fa8ea"/>
+<path d="M806.0 22a8 8 0 0 1 8-8h128a8 8 0 0 1 8 8V52H806.0z" fill="#6fa8ea" opacity=".18"/>
+<text x="878.0" y="32" class="p1-t" text-anchor="middle" fill="#6fa8ea">STEP 6</text>
+<text x="878.0" y="47" class="p1-s" text-anchor="middle">Quality audit</text>
+<text x="818.0" y="76" class="p1-k">OUTPUT</text>
+<text x="818.0" y="94" class="p1-v">Nielsen + exam</text>
+<text x="818.0" y="110" class="p1-v">rubric</text>
+</svg>
+</div>
+    <p class="fig-cap">Read the diagram left to right: the order of the cards is the order you work in.</p>
+
+    <h3 id="report-step-1">Step 1: Define the Business Question &amp; Recipient Decision</h3>
+    <p class="desc">Identify who needs the report and what specific operational choice they must make. Define any exception threshold up front.</p>
+    <table>
+      <tr><th>Element</th><th>What to define</th><th>Example: Aged Submitted Requests</th></tr>
+      <tr><td><strong>Recipient</strong></td><td>The role that reads the report</td><td>Academic Support Administrator</td></tr>
+      <tr><td><strong>Decision</strong></td><td>The choice the report must support</td><td>Reassign unverified requests</td></tr>
+      <tr><td><strong>Threshold</strong></td><td>The rule that makes a record an exception</td><td><code>Date() - SubmissionDate &gt;= 7 days</code></td></tr>
+    </table>
+
+    <h3 id="report-step-2">Step 2: Complete the 7-Field Rationale Table</h3>
+    <p class="desc">Fill in all 7 metadata fields accurately (see the table above).</p>
+    <div class="note"><strong>Decisions must be concrete.</strong> The <em>Decision(s) Made</em> field needs real actions such as <em>"Reassign unverified requests to available administrators"</em>, never vague statements like <em>"To view data"</em>.</div>
+
+    <h3 id="report-step-3">Step 3: Map Data Requirements to the ERD &amp; Data Dictionary</h3>
+    <table>
+      <tr><th>Task</th><th>What to do</th><th>Example</th></tr>
+      <tr><td><strong>Source tables &amp; joins</strong></td><td>Identify every source table and the join path between them</td><td><code>TUTORINGREQUEST</code> &rarr; <code>STUDENT</code>, <code>COURSE</code></td></tr>
+      <tr><td><strong>Keys &amp; categories</strong></td><td>Identify primary keys, foreign keys and categorical attributes</td><td><code>RequestID</code> (PK), <code>StudentNo</code> (FK), <code>PriorityLevel</code></td></tr>
+      <tr><td><strong>Derived fields</strong></td><td>State the <strong>exact formula</strong> for every non-stored attribute</td><td><code>Days Pending = Date() - SubmissionDate</code><br><code>Completion Rate = (Completed / Scheduled) * 100</code></td></tr>
+    </table>
+
+    <h3 id="report-step-4">Step 4: Draw the Report Prototype / Visual Mockup</h3>
+    <p class="desc">Construct a visual prototype with three mandatory regions.</p>
+    <table>
+      <tr><th>Region</th><th>What goes in it</th></tr>
+      <tr><td><strong>1. Report header block</strong></td><td>Title, generated timestamp, active filter / parameter criteria, recipient context</td></tr>
+      <tr><td><strong>2. Report body</strong></td><td>Column headers, sorted or grouped data rows, formatted values (currency <code>R #,##0.00</code>, dates <code>DD/MM/YYYY</code>) and exception indicators (<code>[!]</code>)</td></tr>
+      <tr><td><strong>3. Report footer / summary row</strong></td><td>Calculated aggregated totals: <code>Total Records</code>, <code>SUM()</code>, <code>AVG()</code></td></tr>
+    </table>
+<div class="dsd-fig" role="group" aria-label="Report prototype with header block, body and footer summary row">
+<svg viewBox="0 0 900 312" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="rpa-t" style="min-width:760px"><title id="rpa-t">Anatomy of a report prototype: header block, body and footer summary row</title>
+<rect x="8" y="8" width="884" height="296" rx="8" class="wf-win"/>
+<rect x="20" y="20" width="860" height="70" rx="6" class="wf-grp"/>
+<text x="52" y="38" class="wf-gt">REPORT HEADER BLOCK</text>
+<circle cx="36" cy="34" r="10" class="badge"/><text x="36" y="38" class="badge-t" text-anchor="middle">1</text>
+<text x="34" y="58" class="wf-app">#TutAcadSupport System</text>
+<text x="34" y="80" class="wf-h">AGED SUBMITTED REQUESTS (&gt;= 7 DAYS)</text>
+<text x="866" y="58" class="wf-m" text-anchor="end">Generated: 12/10/2026 08:30  |  Recipient: Admin Manager</text>
+<text x="866" y="78" class="wf-m" text-anchor="end">Filter: Status = 'Submitted' AND Days Pending &gt;= 7</text>
+<rect x="20" y="100" width="860" height="132" rx="6" class="wf-grp"/>
+<text x="52" y="118" class="wf-gt">REPORT BODY</text>
+<circle cx="36" cy="114" r="10" class="badge"/><text x="36" y="118" class="badge-t" text-anchor="middle">2</text>
+<rect x="30" y="126" width="840" height="24" rx="3" class="wf-ro"/>
+<text x="40" y="142" class="wf-m" font-weight="700">Request ID</text>
+<text x="160" y="142" class="wf-m" font-weight="700">Student Name</text>
+<text x="300" y="142" class="wf-m" font-weight="700">Course</text>
+<text x="400" y="142" class="wf-m" font-weight="700">Priority</text>
+<text x="490" y="142" class="wf-m" font-weight="700">Submitted</text>
+<text x="610" y="142" class="wf-m" font-weight="700">Days Pending</text>
+<text x="740" y="142" class="wf-m" font-weight="700">SLA Status</text>
+<text x="40" y="170" class="wf-t">TR-2026-012</text>
+<text x="160" y="170" class="wf-t">Sipho Ndlovu</text>
+<text x="300" y="170" class="wf-t">INFO2001A</text>
+<text x="400" y="170" class="wf-t">High</text>
+<text x="490" y="170" class="wf-t">01/10/2026</text>
+<text x="610" y="170" class="wf-t">11 Days</text>
+<text x="740" y="170" class="wf-errt">[!] CRITICAL</text>
+<text x="40" y="192" class="wf-t">TR-2026-018</text>
+<text x="160" y="192" class="wf-t">Amina Patel</text>
+<text x="300" y="192" class="wf-t">COMS2001A</text>
+<text x="400" y="192" class="wf-t">High</text>
+<text x="490" y="192" class="wf-t">02/10/2026</text>
+<text x="610" y="192" class="wf-t">10 Days</text>
+<text x="740" y="192" class="wf-errt">[!] CRITICAL</text>
+<text x="40" y="214" class="wf-t">TR-2026-025</text>
+<text x="160" y="214" class="wf-t">Johan Botha</text>
+<text x="300" y="214" class="wf-t">CAM3001A</text>
+<text x="400" y="214" class="wf-t">Medium</text>
+<text x="490" y="214" class="wf-t">04/10/2026</text>
+<text x="610" y="214" class="wf-t">8 Days</text>
+<text x="740" y="214" class="wf-err">[!] WARNING</text>
+<rect x="20" y="242" width="860" height="52" rx="6" class="wf-grp"/>
+<text x="52" y="260" class="wf-gt">REPORT FOOTER / SUMMARY ROW</text>
+<circle cx="36" cy="256" r="10" class="badge"/><text x="36" y="260" class="badge-t" text-anchor="middle">3</text>
+<text x="34" y="283" class="wf-t">Total Aged Requests Pending: 4   |   High Priority Exceptions: 2   |   Average Days Pending: 9.0 Days</text>
+</svg>
+</div>
+    <p class="fig-cap">Every prototype needs all three regions: header block (1), body (2) and footer summary row (3).</p>
+
+    <h3 id="report-step-5">Step 5: Write the Supporting SQL Data Retrieval Logic</h3>
+    <p class="desc">Write the query that feeds the report with the standard clauses (<code>SELECT</code>, <code>FROM</code>, <code>INNER JOIN</code>, <code>WHERE</code>, <code>GROUP BY</code>, <code>HAVING</code>, <code>ORDER BY</code>). The worked examples use Access functions: <code>DateDiff()</code>, <code>IIF()</code> and <code>&amp;</code> for concatenation.</p>
+    <table>
+      <tr><th>Report element</th><th>SQL clause</th></tr>
+      <tr><td>Columns and derived fields</td><td><code>SELECT</code> with an <code>AS</code> alias</td></tr>
+      <tr><td>Source tables and join path</td><td><code>FROM</code> + <code>INNER JOIN ... ON</code></td></tr>
+      <tr><td>Exception threshold / period filter</td><td><code>WHERE</code></td></tr>
+      <tr><td>Group headers and subtotals</td><td><code>GROUP BY</code> with <code>COUNT</code>, <code>SUM</code>, <code>AVG</code></td></tr>
+      <tr><td>Filter on an aggregate</td><td><code>HAVING</code></td></tr>
+      <tr><td>Sort order (urgency, volume)</td><td><code>ORDER BY</code></td></tr>
+    </table>
+
+    <h3 id="report-step-6">Step 6: Perform the Traceability &amp; Quality Audit</h3>
+    <table>
+      <tr><th>Check</th><th>Requirement</th></tr>
+      <tr><td><strong>Traceability</strong></td><td>Every displayed field exists in the ERD or is explicitly defined as a derived calculation</td></tr>
+      <tr><td><strong>Visual clarity</strong></td><td>No decorative clutter: no 3D charts, clean alignment, clear headers</td></tr>
+    </table>
+
+    <h3 id="report-example-1">Worked Example 1: Exception Report</h3>
+    <div class="scenario"><strong>Scenario:</strong> #TutAcadSupport Academic Support Management System</div>
+    <p><strong>1. 7-field rationale table</strong></p>
+    <table>
+      <tr><th>Rationale field</th><th>Entry</th></tr>
+      <tr><td><strong>1. Report name</strong></td><td>Aged Submitted Tutoring Requests Report (&ge; 7 Days Pending)</td></tr>
+      <tr><td><strong>2. Report type</strong></td><td>Exception Report</td></tr>
+      <tr><td><strong>3. Report format</strong></td><td>On-Screen Tabular Grid with Exportable PDF Option</td></tr>
+      <tr><td><strong>4. Recipient(s)</strong></td><td>Academic Support Administrator / Processing Officer</td></tr>
+      <tr><td><strong>5. Frequency</strong></td><td>Daily (every morning at 08:00)</td></tr>
+      <tr><td><strong>6. Rationale</strong></td><td>Surfaces all tutoring requests remaining in <code>"Submitted"</code> status for 7 or more calendar days without verification. Identifies bottlenecks in request processing to uphold student SLA commitments.</td></tr>
+      <tr><td><strong>7. Decision(s) made</strong></td><td><ol style="margin:0;padding-left:1.2em"><li>Immediately reassign unverified requests to available administrators.</li><li>Contact students whose supporting documentation is incomplete or missing.</li><li>Escalate high academic risk students (Risk Level = <code>"High"</code>) for emergency manual matching.</li></ol></td></tr>
+    </table>
+    <p><strong>2. Visual report prototype</strong></p>
+<div class="dsd-fig" role="group" aria-label="Prototype of the Aged Submitted Tutoring Requests exception report">
+<svg viewBox="0 0 900 306" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="rp1-t" style="min-width:760px"><title id="rp1-t">Prototype of the Aged Submitted Tutoring Requests exception report</title>
+<rect x="8" y="8" width="884" height="290" rx="8" class="wf-win"/>
+<text x="24" y="36" class="wf-app">#TutAcadSupport System</text>
+<text x="24" y="60" class="wf-h">AGED SUBMITTED TUTORING REQUESTS REPORT (&gt;= 7 DAYS PENDING)</text>
+<text x="24" y="80" class="wf-m">Filter Criteria: Status = 'Submitted' AND Days Pending &gt;= 7</text>
+<text x="868" y="36" class="wf-m" text-anchor="end">Generated: 12/10/2026 08:30</text>
+<text x="868" y="58" class="wf-m" text-anchor="end">Recipient: Admin Manager</text>
+<text x="868" y="80" class="wf-m" text-anchor="end">Sort: Days Pending (DESC)</text>
+<line x1="16" y1="94" x2="884" y2="94" class="wf-rule"/>
+<rect x="16" y="106" width="868" height="24" rx="3" class="wf-ro"/>
+<text x="24" y="122" class="wf-m" font-weight="700">Request ID</text>
+<text x="130" y="122" class="wf-m" font-weight="700">Student No</text>
+<text x="220" y="122" class="wf-m" font-weight="700">Student Name</text>
+<text x="340" y="122" class="wf-m" font-weight="700">Course Code</text>
+<text x="440" y="122" class="wf-m" font-weight="700">Priority Level</text>
+<text x="540" y="122" class="wf-m" font-weight="700">Submission Date</text>
+<text x="660" y="122" class="wf-m" font-weight="700">Days Pending</text>
+<text x="760" y="122" class="wf-m" font-weight="700">SLA Status</text>
+<text x="24" y="147" class="wf-t">TR-2026-012</text>
+<text x="130" y="147" class="wf-t">202601102</text>
+<text x="220" y="147" class="wf-t">Sipho Ndlovu</text>
+<text x="340" y="147" class="wf-t">INFO2001A</text>
+<text x="440" y="147" class="wf-t">High</text>
+<text x="540" y="147" class="wf-t">01/10/2026</text>
+<text x="660" y="147" class="wf-t">11 Days</text>
+<text x="760" y="147" class="wf-errt">[!] CRITICAL</text>
+<text x="24" y="171" class="wf-t">TR-2026-018</text>
+<text x="130" y="171" class="wf-t">202601458</text>
+<text x="220" y="171" class="wf-t">Amina Patel</text>
+<text x="340" y="171" class="wf-t">COMS2001A</text>
+<text x="440" y="171" class="wf-t">High</text>
+<text x="540" y="171" class="wf-t">02/10/2026</text>
+<text x="660" y="171" class="wf-t">10 Days</text>
+<text x="760" y="171" class="wf-errt">[!] CRITICAL</text>
+<text x="24" y="195" class="wf-t">TR-2026-025</text>
+<text x="130" y="195" class="wf-t">202601889</text>
+<text x="220" y="195" class="wf-t">Johan Botha</text>
+<text x="340" y="195" class="wf-t">CAM3001A</text>
+<text x="440" y="195" class="wf-t">Medium</text>
+<text x="540" y="195" class="wf-t">04/10/2026</text>
+<text x="660" y="195" class="wf-t">8 Days</text>
+<text x="760" y="195" class="wf-err">[!] WARNING</text>
+<text x="24" y="219" class="wf-t">TR-2026-031</text>
+<text x="130" y="219" class="wf-t">202601221</text>
+<text x="220" y="219" class="wf-t">Thabo Mokoena</text>
+<text x="340" y="219" class="wf-t">BUAN2002A</text>
+<text x="440" y="219" class="wf-t">Low</text>
+<text x="540" y="219" class="wf-t">05/10/2026</text>
+<text x="660" y="219" class="wf-t">7 Days</text>
+<text x="760" y="219" class="wf-err">[!] WARNING</text>
+<line x1="16" y1="232" x2="884" y2="232" class="wf-rule"/>
+<text x="24" y="252" class="wf-gt">SUMMARY METRICS</text>
+<text x="24" y="274" class="wf-t">Total Aged Requests Pending: 4   |   High Priority Exception Count: 2   |   Average Days Pending: 9.0 Days</text>
+</svg>
+</div>
+    <p><strong>3. ERD mapping &amp; SQL retrieval</strong></p>
+    <table>
+      <tr><th>Item</th><th>Detail</th></tr>
+      <tr><td><strong>Source tables</strong></td><td><code>TUTORINGREQUEST (tr)</code>, <code>STUDENT (s)</code>, <code>COURSE (c)</code></td></tr>
+      <tr><td><strong>Derived field</strong></td><td><code>Days Pending = Date() - tr.SubmissionDate</code></td></tr>
+    </table>
+    <pre><code>SELECT 
+    tr.RequestID,
+    s.StudentNo,
+    s.StudentFName &amp; ' ' &amp; s.StudentLName AS StudentName,
+    c.CourseCode,
+    tr.PriorityLevel,
+    tr.SubmissionDate,
+    DateDiff('d', tr.SubmissionDate, Date()) AS DaysPending
+FROM (TUTORINGREQUEST tr
+INNER JOIN STUDENT s ON tr.StudentNo = s.StudentNo)
+INNER JOIN COURSE c ON tr.CourseCode = c.CourseCode
+WHERE tr.Status = 'Submitted' 
+  AND DateDiff('d', tr.SubmissionDate, Date()) &gt;= 7
+ORDER BY DateDiff('d', tr.SubmissionDate, Date()) DESC;</code></pre>
+
+    <h3 id="report-example-2">Worked Example 2: Summary / Management Report</h3>
+    <div class="scenario"><strong>Scenario:</strong> #TutAcadSupport Tutor Workload &amp; Performance Monitoring</div>
+    <p><strong>1. 7-field rationale table</strong></p>
+    <table>
+      <tr><th>Rationale field</th><th>Entry</th></tr>
+      <tr><td><strong>1. Report name</strong></td><td>Tutor Workload &amp; Session Completion Summary Report</td></tr>
+      <tr><td><strong>2. Report type</strong></td><td>Summary / Management Report</td></tr>
+      <tr><td><strong>3. Report format</strong></td><td>Grouped Summary Table with Accompanying Bar Chart</td></tr>
+      <tr><td><strong>4. Recipient(s)</strong></td><td>Academic Development Director / Senior Administrator</td></tr>
+      <tr><td><strong>5. Frequency</strong></td><td>Monthly / end of reporting period</td></tr>
+      <tr><td><strong>6. Rationale</strong></td><td>Summarises the total number of scheduled versus completed tutoring sessions per tutor for a selected period. Identifies tutor capacity utilisation and non-attendance rates.</td></tr>
+      <tr><td><strong>7. Decision(s) made</strong></td><td><ol style="margin:0;padding-left:1.2em"><li>Rebalance student allocations away from overloaded tutors to underutilised tutors.</li><li>Identify tutors with low completion rates for performance review or check-in.</li><li>Determine budget allocation for tutor stipend payments based on verified completed sessions.</li></ol></td></tr>
+    </table>
+    <p><strong>2. Visual report prototype</strong></p>
+<div class="dsd-fig" role="group" aria-label="Prototype of the Tutor Workload and Session Completion summary report with bar chart">
+<svg viewBox="0 0 900 566" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="rp2-t" style="min-width:760px"><title id="rp2-t">Prototype of the Tutor Workload and Session Completion summary report with bar chart</title>
+<rect x="8" y="8" width="884" height="550" rx="8" class="wf-win"/>
+<text x="24" y="36" class="wf-app">#TutAcadSupport System</text>
+<text x="24" y="60" class="wf-h">TUTOR WORKLOAD &amp; SESSION COMPLETION SUMMARY</text>
+<text x="24" y="80" class="wf-m">Grouped By: Tutor   |   Sort: Total Sessions (DESC)</text>
+<text x="868" y="36" class="wf-m" text-anchor="end">Generated: 31/10/2026 17:00</text>
+<text x="868" y="58" class="wf-m" text-anchor="end">Period: Oct 2026 (01/10 - 31/10)</text>
+<line x1="16" y1="94" x2="884" y2="94" class="wf-rule"/>
+<rect x="16" y="106" width="868" height="24" rx="3" class="wf-ro"/>
+<text x="24" y="122" class="wf-m" font-weight="700">Tutor ID / Name</text>
+<text x="250" y="122" class="wf-m" font-weight="700">Qualified Course</text>
+<text x="410" y="122" class="wf-m" font-weight="700">Scheduled Sessions</text>
+<text x="590" y="122" class="wf-m" font-weight="700">Completed Sessions</text>
+<text x="760" y="122" class="wf-m" font-weight="700">Completion Rate (%)</text>
+<rect x="16" y="132" width="868" height="22" rx="3" fill="rgba(232,160,76,.10)"/>
+<text x="24" y="147" class="wf-gt">TUT-101 - Dr. M. Dlamini</text>
+<text x="250" y="171" class="wf-t">INFO2001A</text>
+<text x="410" y="171" class="wf-t">12</text>
+<text x="590" y="171" class="wf-t">12</text>
+<text x="760" y="171" class="wf-t">100.0%</text>
+<text x="250" y="195" class="wf-t">INFO2002A</text>
+<text x="410" y="195" class="wf-t">8</text>
+<text x="590" y="195" class="wf-t">7</text>
+<text x="760" y="195" class="wf-t">87.5%</text>
+<line x1="16" y1="203" x2="884" y2="203" class="wf-rule"/>
+<text x="24" y="219" class="wf-t" font-weight="700">* Tutor subtotal</text>
+<text x="410" y="219" class="wf-t" font-weight="700">20</text>
+<text x="590" y="219" class="wf-t" font-weight="700">19</text>
+<text x="760" y="219" class="wf-t" font-weight="700">95.0%</text>
+<rect x="16" y="228" width="868" height="22" rx="3" fill="rgba(232,160,76,.10)"/>
+<text x="24" y="243" class="wf-gt">TUT-104 - Sarah Jenkins</text>
+<text x="250" y="267" class="wf-t">COMS2001A</text>
+<text x="410" y="267" class="wf-t">15</text>
+<text x="590" y="267" class="wf-t">11</text>
+<text x="760" y="267" class="wf-t">73.3%</text>
+<line x1="16" y1="275" x2="884" y2="275" class="wf-rule"/>
+<text x="24" y="291" class="wf-t" font-weight="700">* Tutor subtotal</text>
+<text x="410" y="291" class="wf-t" font-weight="700">15</text>
+<text x="590" y="291" class="wf-t" font-weight="700">11</text>
+<text x="760" y="291" class="wf-t" font-weight="700">73.3%</text>
+<rect x="16" y="300" width="868" height="22" rx="3" fill="rgba(232,160,76,.10)"/>
+<text x="24" y="315" class="wf-gt">TUT-109 - Lerato Khumalo</text>
+<text x="250" y="339" class="wf-t">CAM3001A</text>
+<text x="410" y="339" class="wf-t">10</text>
+<text x="590" y="339" class="wf-t">10</text>
+<text x="760" y="339" class="wf-t">100.0%</text>
+<line x1="16" y1="347" x2="884" y2="347" class="wf-rule"/>
+<text x="24" y="363" class="wf-t" font-weight="700">* Tutor subtotal</text>
+<text x="410" y="363" class="wf-t" font-weight="700">10</text>
+<text x="590" y="363" class="wf-t" font-weight="700">10</text>
+<text x="760" y="363" class="wf-t" font-weight="700">100.0%</text>
+<text x="24" y="388" class="wf-gt">COMPLETION RATE BY TUTOR (%)</text>
+<text x="24" y="417" class="wf-t">Dr. M. Dlamini</text>
+<rect x="170" y="402" width="560" height="20" rx="3" class="wf-ro"/>
+<rect x="170" y="402" width="532.0" height="20" rx="3" fill="#5cb87a" opacity=".85"/>
+<text x="740" y="417" class="wf-t" font-weight="700">95.0%</text>
+<text x="24" y="445" class="wf-t">Sarah Jenkins</text>
+<rect x="170" y="430" width="560" height="20" rx="3" class="wf-ro"/>
+<rect x="170" y="430" width="410.5" height="20" rx="3" fill="#e8a04c" opacity=".85"/>
+<text x="740" y="445" class="wf-t" font-weight="700">73.3%</text>
+<text x="24" y="473" class="wf-t">Lerato Khumalo</text>
+<rect x="170" y="458" width="560" height="20" rx="3" class="wf-ro"/>
+<rect x="170" y="458" width="560.0" height="20" rx="3" fill="#5cb87a" opacity=".85"/>
+<text x="740" y="473" class="wf-t" font-weight="700">100.0%</text>
+<line x1="16" y1="492" x2="884" y2="492" class="wf-rule"/>
+<text x="24" y="512" class="wf-gt">PROGRAMME TOTALS</text>
+<text x="24" y="534" class="wf-t">Total Tutors Active: 3   |   Total Scheduled: 45   |   Total Completed: 40   |   Overall Completion Rate: 88.9%</text>
+</svg>
+</div>
+    <p><strong>3. ERD mapping &amp; SQL retrieval</strong></p>
+    <table>
+      <tr><th>Item</th><th>Detail</th></tr>
+      <tr><td><strong>Source tables</strong></td><td><code>TUTOR (t)</code>, <code>TUTORINGSESSION (ts)</code>, <code>COURSE (c)</code></td></tr>
+      <tr><td><strong>Derived field</strong></td><td><code>Completion Rate = (COUNT(Completed) / COUNT(Total)) * 100</code></td></tr>
+    </table>
+    <pre><code>SELECT 
+    t.TutorID,
+    t.TutorFName &amp; ' ' &amp; t.TutorLName AS TutorName,
+    c.CourseCode,
+    COUNT(ts.SessionID) AS ScheduledSessions,
+    SUM(IIF(ts.Status = 'Completed', 1, 0)) AS CompletedSessions,
+    FORMAT((SUM(IIF(ts.Status = 'Completed', 1, 0)) / COUNT(ts.SessionID)) * 100, "0.0") &amp; '%' AS CompletionRate
+FROM (TUTOR t
+INNER JOIN TUTORINGSESSION ts ON t.TutorID = ts.TutorID)
+INNER JOIN COURSE c ON ts.CourseCode = c.CourseCode
+WHERE ts.SessionDate BETWEEN #10/01/2026# AND #10/31/2026#
+GROUP BY t.TutorID, t.TutorFName, t.TutorLName, c.CourseCode
+ORDER BY COUNT(ts.SessionID) DESC;</code></pre>
+
+    <h3 id="report-example-3">Worked Example 3: Detail / Operational Report</h3>
+    <div class="scenario"><strong>Scenario:</strong> Room Rental &amp; Accommodation Management System</div>
+    <p><strong>1. 7-field rationale table</strong></p>
+    <table>
+      <tr><th>Rationale field</th><th>Entry</th></tr>
+      <tr><td><strong>1. Report name</strong></td><td>Active Tenant Rental Summary Report</td></tr>
+      <tr><td><strong>2. Report type</strong></td><td>Detail / Operational Report</td></tr>
+      <tr><td><strong>3. Report format</strong></td><td>Tabular On-Screen Grid / PDF Export</td></tr>
+      <tr><td><strong>4. Recipient(s)</strong></td><td>Rental Service Administrator / Landlord Coordinator</td></tr>
+      <tr><td><strong>5. Frequency</strong></td><td>Monthly / on-demand</td></tr>
+      <tr><td><strong>6. Rationale</strong></td><td>Provides an operational line-item record of active tenants, their rented rooms, rental purpose, and transition status from <code>"new"</code> to <code>"active"</code>.</td></tr>
+      <tr><td><strong>7. Decision(s) made</strong></td><td><ol style="margin:0;padding-left:1.2em"><li>Identify tenants marked <code>"new"</code> who have not yet commenced rental and trigger follow-up communications.</li><li>Monitor room occupancy levels to identify vacant rooms available for upcoming listings.</li><li>Plan lease renewals or terminations based on upcoming rental end dates.</li></ol></td></tr>
+    </table>
+    <p><strong>2. Visual report prototype</strong></p>
+<div class="dsd-fig" role="group" aria-label="Prototype of the Active Tenant Rental Summary detail report">
+<svg viewBox="0 0 900 306" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="rp3-t" style="min-width:760px"><title id="rp3-t">Prototype of the Active Tenant Rental Summary detail report</title>
+<rect x="8" y="8" width="884" height="290" rx="8" class="wf-win"/>
+<text x="24" y="36" class="wf-app">Room Rental System</text>
+<text x="24" y="60" class="wf-h">ACTIVE TENANT RENTAL SUMMARY REPORT</text>
+<text x="868" y="36" class="wf-m" text-anchor="end">Generated: 12/10/2026 09:15</text>
+<text x="868" y="58" class="wf-m" text-anchor="end">Filter: Status = 'active'</text>
+<line x1="16" y1="94" x2="884" y2="94" class="wf-rule"/>
+<rect x="16" y="106" width="868" height="24" rx="3" class="wf-ro"/>
+<text x="24" y="122" class="wf-m" font-weight="700">Tenant ID</text>
+<text x="110" y="122" class="wf-m" font-weight="700">Tenant Name</text>
+<text x="235" y="122" class="wf-m" font-weight="700">Mobile No</text>
+<text x="345" y="122" class="wf-m" font-weight="700">Room ID</text>
+<text x="430" y="122" class="wf-m" font-weight="700">Room Type</text>
+<text x="525" y="122" class="wf-m" font-weight="700">Rental Purpose</text>
+<text x="710" y="122" class="wf-m" font-weight="700">Tenant Status</text>
+<text x="24" y="147" class="wf-t">TNT-1001</text>
+<text x="110" y="147" class="wf-t">John Smith</text>
+<text x="235" y="147" class="wf-t">0821234567</text>
+<text x="345" y="147" class="wf-t">RM-201</text>
+<text x="430" y="147" class="wf-t">Single</text>
+<text x="525" y="147" class="wf-t">Academic Residence</text>
+<text x="710" y="147" class="wf-t">Active</text>
+<text x="24" y="171" class="wf-t">TNT-1004</text>
+<text x="110" y="171" class="wf-t">Mary Zungu</text>
+<text x="235" y="171" class="wf-t">0839876543</text>
+<text x="345" y="171" class="wf-t">RM-205</text>
+<text x="430" y="171" class="wf-t">Double</text>
+<text x="525" y="171" class="wf-t">Postgrad Research</text>
+<text x="710" y="171" class="wf-t">Active</text>
+<text x="24" y="195" class="wf-t">TNT-1008</text>
+<text x="110" y="195" class="wf-t">David Naidoo</text>
+<text x="235" y="195" class="wf-t">0715551234</text>
+<text x="345" y="195" class="wf-t">RM-102</text>
+<text x="430" y="195" class="wf-t">Studio</text>
+<text x="525" y="195" class="wf-t">Short-term Internship</text>
+<text x="710" y="195" class="wf-app">New (Pending Entry)</text>
+<text x="24" y="219" class="wf-t">TNT-1012</text>
+<text x="110" y="219" class="wf-t">Kabo Molefe</text>
+<text x="235" y="219" class="wf-t">0842223333</text>
+<text x="345" y="219" class="wf-t">RM-304</text>
+<text x="430" y="219" class="wf-t">Single</text>
+<text x="525" y="219" class="wf-t">Academic Residence</text>
+<text x="710" y="219" class="wf-t">Active</text>
+<line x1="16" y1="232" x2="884" y2="232" class="wf-rule"/>
+<text x="24" y="252" class="wf-gt">SUMMARY METRICS</text>
+<text x="24" y="274" class="wf-t">Total Active Tenants: 4   |   Total Rooms Occupied: 4   |   Pending Entry Count: 1</text>
+</svg>
+</div>
+
+    <h3 id="report-example-4">Worked Example 4: Trend / Comparative Report</h3>
+    <div class="scenario"><strong>Scenario:</strong> Academic Support Demand Analytics</div>
+    <p><strong>1. 7-field rationale table</strong></p>
+    <table>
+      <tr><th>Rationale field</th><th>Entry</th></tr>
+      <tr><td><strong>1. Report name</strong></td><td>Monthly Course Support Demand &amp; GPA Improvement Trend Report</td></tr>
+      <tr><td><strong>2. Report type</strong></td><td>Trend / Comparative Report</td></tr>
+      <tr><td><strong>3. Report format</strong></td><td>Line Chart (Monthly Volume) with Comparative Summary Table</td></tr>
+      <tr><td><strong>4. Recipient(s)</strong></td><td>Director of Academic Development / Faculty Deans</td></tr>
+      <tr><td><strong>5. Frequency</strong></td><td>Quarterly / per semester</td></tr>
+      <tr><td><strong>6. Rationale</strong></td><td>Tracks monthly tutoring request volumes across academic faculties and compares pre-tutoring vs post-tutoring GPA improvements to evaluate programme effectiveness.</td></tr>
+      <tr><td><strong>7. Decision(s) made</strong></td><td><ol style="margin:0;padding-left:1.2em"><li>Allocate additional tutor recruitment budget to high-demand, high-impact courses.</li><li>Redesign academic support modules for courses showing high demand but low GPA recovery.</li><li>Present evidence-based impact reports to university executive management for grant funding renewal.</li></ol></td></tr>
+    </table>
+    <p><strong>2. Visual report prototype</strong></p>
+<div class="dsd-fig" role="group" aria-label="Prototype of the Monthly Course Support Demand and GPA Improvement trend report">
+<svg viewBox="0 0 900 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="rp4-t" style="min-width:760px"><title id="rp4-t">Prototype of the Monthly Course Support Demand and GPA Improvement trend report</title>
+<rect x="8" y="8" width="884" height="524" rx="8" class="wf-win"/>
+<text x="24" y="36" class="wf-app">#TutAcadSupport Analytics</text>
+<text x="24" y="60" class="wf-h">MONTHLY COURSE SUPPORT DEMAND &amp; GPA IMPROVEMENT TREND</text>
+<text x="868" y="36" class="wf-m" text-anchor="end">Generated: 30/11/2026 16:00</text>
+<text x="868" y="58" class="wf-m" text-anchor="end">Period: Semester 2 (2026)</text>
+<line x1="16" y1="94" x2="884" y2="94" class="wf-rule"/>
+<text x="24" y="110" class="wf-gt">MONTHLY REQUEST VOLUME TREND (LINE CHART)</text>
+<text x="24" y="136" class="wf-m">Requests</text>
+<line x1="90" y1="298.0" x2="860" y2="298.0" class="wf-rule"/>
+<text x="82" y="302.0" class="wf-m" text-anchor="end">0</text>
+<line x1="90" y1="260.5" x2="860" y2="260.5" class="wf-rule"/>
+<text x="82" y="264.5" class="wf-m" text-anchor="end">20</text>
+<line x1="90" y1="223.0" x2="860" y2="223.0" class="wf-rule"/>
+<text x="82" y="227.0" class="wf-m" text-anchor="end">40</text>
+<line x1="90" y1="185.5" x2="860" y2="185.5" class="wf-rule"/>
+<text x="82" y="189.5" class="wf-m" text-anchor="end">60</text>
+<line x1="90" y1="148.0" x2="860" y2="148.0" class="wf-rule"/>
+<text x="82" y="152.0" class="wf-m" text-anchor="end">80</text>
+<polyline points="160.0,241.8 317.5,194.9 475.0,157.4 632.5,185.5 790.0,232.4" fill="none" stroke="#6fa8ea" stroke-width="2.5" stroke-linejoin="round"/>
+<circle cx="160.0" cy="241.8" r="5" fill="#e8a04c"/>
+<text x="160.0" y="230.8" class="wf-t" text-anchor="middle" font-weight="700">Jun: 30</text>
+<text x="160.0" y="316" class="wf-m" text-anchor="middle">Jun</text>
+<circle cx="317.5" cy="194.9" r="5" fill="#e8a04c"/>
+<text x="317.5" y="183.9" class="wf-t" text-anchor="middle" font-weight="700">Jul: 55</text>
+<text x="317.5" y="316" class="wf-m" text-anchor="middle">Jul</text>
+<circle cx="475.0" cy="157.4" r="5" fill="#e8a04c"/>
+<text x="475.0" y="146.4" class="wf-t" text-anchor="middle" font-weight="700">Aug: 75</text>
+<text x="475.0" y="316" class="wf-m" text-anchor="middle">Aug</text>
+<circle cx="632.5" cy="185.5" r="5" fill="#e8a04c"/>
+<text x="632.5" y="174.5" class="wf-t" text-anchor="middle" font-weight="700">Sep: 60</text>
+<text x="632.5" y="316" class="wf-m" text-anchor="middle">Sep</text>
+<circle cx="790.0" cy="232.4" r="5" fill="#e8a04c"/>
+<text x="790.0" y="221.4" class="wf-t" text-anchor="middle" font-weight="700">Oct: 35</text>
+<text x="790.0" y="316" class="wf-m" text-anchor="middle">Oct</text>
+<text x="475.0" y="334" class="wf-m" text-anchor="middle">Month (Semester 2, 2026)</text>
+<text x="24" y="354" class="wf-gt">COMPARATIVE PERFORMANCE SUMMARY TABLE</text>
+<rect x="16" y="364" width="868" height="24" rx="3" class="wf-ro"/>
+<text x="24" y="380" class="wf-m" font-weight="700">Course Code</text>
+<text x="130" y="380" class="wf-m" font-weight="700">Faculty</text>
+<text x="250" y="380" class="wf-m" font-weight="700">Total Requests</text>
+<text x="370" y="380" class="wf-m" font-weight="700">Students Assisted</text>
+<text x="520" y="380" class="wf-m" font-weight="700">Avg Pre-GPA</text>
+<text x="640" y="380" class="wf-m" font-weight="700">Avg Post-GPA</text>
+<text x="770" y="380" class="wf-m" font-weight="700">GPA Gain (+/-)</text>
+<text x="24" y="405" class="wf-t">INFO2001A</text>
+<text x="130" y="405" class="wf-t">Commerce</text>
+<text x="250" y="405" class="wf-t">85</text>
+<text x="370" y="405" class="wf-t">72</text>
+<text x="520" y="405" class="wf-t">52.4%</text>
+<text x="640" y="405" class="wf-t">61.8%</text>
+<text x="770" y="405" class="wf-t" style="fill:#5cb87a;font-weight:700">+9.4%</text>
+<text x="24" y="429" class="wf-t">COMS2001A</text>
+<text x="130" y="429" class="wf-t">Science</text>
+<text x="250" y="429" class="wf-t">60</text>
+<text x="370" y="429" class="wf-t">50</text>
+<text x="520" y="429" class="wf-t">48.0%</text>
+<text x="640" y="429" class="wf-t">56.5%</text>
+<text x="770" y="429" class="wf-t" style="fill:#5cb87a;font-weight:700">+8.5%</text>
+<text x="24" y="453" class="wf-t">CAM3001A</text>
+<text x="130" y="453" class="wf-t">Engineering</text>
+<text x="250" y="453" class="wf-t">45</text>
+<text x="370" y="453" class="wf-t">40</text>
+<text x="520" y="453" class="wf-t">55.0%</text>
+<text x="640" y="453" class="wf-t">61.0%</text>
+<text x="770" y="453" class="wf-t" style="fill:#5cb87a;font-weight:700">+6.0%</text>
+<line x1="16" y1="466" x2="884" y2="466" class="wf-rule"/>
+<text x="24" y="486" class="wf-gt">OVERALL SEMESTER IMPACT</text>
+<text x="24" y="508" class="wf-t">Total Assisted: 162 Students   |   Average GPA Improvement: +8.3 Points (weighted by students assisted)</text>
+</svg>
+</div>
+
+    <h3 id="report-checklist">Exam &amp; Milestone Quality Gate Checklist</h3>
+    <p class="desc">Verify these gates before you submit any report design.</p>
+    <table>
+      <tr><th>Criterion</th><th>Requirement</th><th>Check</th></tr>
+      <tr><td><strong>Decision traceability</strong></td><td>Every field in the report is required to answer the business question and support the stated decision</td><td>&#9744;</td></tr>
+      <tr><td><strong>ERD consistency</strong></td><td>Every non-calculated column traces to an exact entity attribute in the ERD and Data Dictionary</td><td>&#9744;</td></tr>
+      <tr><td><strong>Calculated attributes defined</strong></td><td>All derived metrics (<code>Days Pending</code>, <code>Completion Rate</code>, <code>GPA Gain</code>) have explicit formulas</td><td>&#9744;</td></tr>
+      <tr><td><strong>Plausible prototype data</strong></td><td>Realistic names, dates, numbers and codes: no <code>"xxx"</code>, <code>"test"</code> or blank fields</td><td>&#9744;</td></tr>
+      <tr><td><strong>No decorative clutter</strong></td><td>No unnecessary 3D charts, dark backgrounds or unlabelled axes</td><td>&#9744;</td></tr>
+      <tr><td><strong>Complete 7-field table</strong></td><td>All 7 metadata fields present, with recipient, frequency and rationale included</td><td>&#9744;</td></tr>
+    </table>
+    <div class="note"><strong>Exam workflow:</strong> name the decision and recipient (Step 1), complete the 7-field table (Step 2), list tables and derived formulas (Step 3), draw header, body and footer (Step 4), write the query (Step 5), then tick the quality gate above (Step 6).</div>
+  </section>
+
   </main>
 </div>
 
 <footer>
-  Database Fundamentals - Access SQL reference &amp; DSD, wireframe and storyboard blueprints
+  Database Fundamentals - Access SQL reference &amp; DSD, wireframe, storyboard and report blueprints
 </footer>
 
 <script>
