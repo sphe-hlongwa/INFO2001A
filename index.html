@@ -16,15 +16,18 @@
 
   .tracks{
     display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem;
+    grid-auto-rows:var(--card-h);
   }
+  /* every card is exactly this tall on every screen; text never changes the card size */
+  :root{--card-h:350px;}
 
   /* ---- track card (square-ish, icon tile + meta on top, art bleeding off the corner) ---- */
   .track{
     --accent:var(--cyan);
     position:relative;overflow:hidden;isolation:isolate;
     display:flex;flex-direction:column;
-    min-height:330px;aspect-ratio:1/.86;
-    padding:1.6rem 1.75rem 1.5rem;
+    height:var(--card-h);min-height:0;
+    padding:1.5rem 1.75rem 1.4rem;
     background:var(--panel);
     border:1px solid var(--line);border-radius:6px;
     color:var(--ink);text-decoration:none;
@@ -51,18 +54,24 @@
     color:#fff;padding-top:.25rem;
   }
 
-  .track-body{position:relative;z-index:2;max-width:66%;margin-top:4.25rem;}
+  .track-body{position:relative;z-index:2;max-width:68%;margin-top:2.4rem;min-height:0;overflow:hidden;}
   .track h2{
     font-family:'Space Grotesk',sans-serif;font-weight:600;
-    font-size:clamp(28px,3.2vw,36px);line-height:1.12;letter-spacing:-.01em;
+    font-size:clamp(26px,3vw,34px);line-height:1.12;letter-spacing:-.01em;
     margin:0 0 .35rem;color:#fff;
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;
   }
   .track-desc{
     font-family:'Space Grotesk',sans-serif;font-weight:500;
-    font-size:clamp(17px,1.8vw,21px);line-height:1.35;margin:0;color:#e9eef6;
+    font-size:clamp(16px,1.7vw,20px);line-height:1.35;margin:0;color:#e9eef6;
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden;
   }
 
-  .track-foot{position:relative;z-index:2;font-size:13.5px;color:var(--muted);max-width:56%;margin-top:auto;padding-top:1.5rem;}
+  .track-foot{
+    position:relative;z-index:2;font-size:13.5px;line-height:1.4;color:var(--muted);max-width:56%;
+    margin-top:auto;padding-top:.75rem;flex-shrink:0;
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;line-clamp:4;overflow:hidden;
+  }
   .track-art{
     position:absolute;z-index:1;right:-12%;bottom:-14%;
     width:56%;height:auto;pointer-events:none;
@@ -72,12 +81,11 @@
 
   @media(max-width:860px){
     .tracks{grid-template-columns:1fr;}
-    .track{aspect-ratio:auto;min-height:320px;}
   }
   @media(max-width:480px){
-    .track{padding:1.25rem 1.25rem 1.2rem;min-height:300px;}
-    .track-body{max-width:80%;}
-    .track-foot{max-width:62%;}
+    .track{padding:1.25rem 1.25rem 1.2rem;}
+    .track-body{max-width:80%;margin-top:2rem;}
+    .track-foot{max-width:64%;font-size:12.5px;}
     .track-art{width:46%;right:-10%;bottom:-10%;}
   }
 </style>
