@@ -125,6 +125,7 @@
           w.innerHTML = (c === it.a ? '<b>Correct. </b>' : '<b>Not quite. </b>') + it.w;
           w.classList.add('show');
           paint();
+          if (opts.quizFail && answered === items.length && window.quizFinished) quizFinished(score, items.length);
         });
       });
       el.appendChild(b);
@@ -262,7 +263,7 @@
       { tag: 'Errors', q: 'What is <code>finally</code> best used for in a save handler?', o: ['Showing the success message', 'Restoring UI state, such as re-enabling the button', 'Catching OleDbException', 'Opening the connection'], a: 1, w: 'finally runs whether the save worked or failed. Show success only after confirmed success.' },
       { tag: 'Errors', q: 'Which message is best when a save fails?', o: ['Invalid input', 'OleDbException: Syntax error in INSERT INTO at C:\\Labs\\db.accdb', 'The application could not be saved. Please try again or contact support.', 'Error 0x80004005'], a: 2, w: 'Say what failed and offer a next step. Keep SQL, stack traces and paths out of view and log them separately.' }
     ];
-    var resetQuiz = mount(quizEl, Q, { score: '#quizScore', col: true });
-    $('#quizReset').addEventListener('click', function () { resetQuiz = mount(quizEl, Q, { score: '#quizScore', col: true }); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    var resetQuiz = mount(quizEl, Q, { score: '#quizScore', col: true, quizFail: true });
+    $('#quizReset').addEventListener('click', function () { resetQuiz = mount(quizEl, Q, { score: '#quizScore', col: true, quizFail: true }); window.scrollTo({ top: 0, behavior: 'smooth' }); });
   }
 })();

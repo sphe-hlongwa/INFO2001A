@@ -721,6 +721,7 @@
 </footer>
 
 <script src="assets/quiz-sound.js"></script>
+<script src="assets/quiz-fail.js"></script>
 <script>
   // ---- sidebar nav ----
   function showView(name){
@@ -901,6 +902,7 @@
         answered++;
         if(chosen === item.correct) score++;
         updateScore();
+        if(answered === quiz.length && window.quizFinished) quizFinished(score, quiz.length);
       });
     });
     quizList.appendChild(block);
@@ -1207,7 +1209,7 @@
         const correct = Number(btn.dataset.correct);
         block.querySelectorAll('.mcq-opt').forEach(b=>b.disabled=true);
         block.querySelectorAll('.mcq-opt')[correct].classList.add('correct');
-        if(chosen !== correct){ btn.classList.add('incorrect'); window.playWrongSound && playWrongSound(); }
+        if(chosen !== correct){ btn.classList.add('incorrect'); }
         block.querySelector('.explain').classList.add('show');
         mcqAnswered++;
         if(chosen === correct) mcqCorrect++;
@@ -1217,5 +1219,7 @@
   }
 
 </script>
+<script data-goatcounter="https://info2001a.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
