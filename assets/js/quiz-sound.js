@@ -1,6 +1,6 @@
-/* Plays assets/wrong.mp3 when a quiz answer is wrong. Call window.playWrongSound(). */
+/* Plays assets/media/wrong.mp3 when a quiz answer is wrong. Call window.playWrongSound(). */
 (function () {
-  var src = new URL('wrong.mp3', document.currentScript.src).href;
+  var src = new URL('../media/wrong.mp3', document.currentScript.src).href;
   var audio = null;
   window.playWrongSound = function () {
     try {

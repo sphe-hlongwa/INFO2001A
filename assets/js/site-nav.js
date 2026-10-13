@@ -44,7 +44,7 @@
   nav.className = 'site-nav';
   nav.innerHTML =
     '<nav class="nav-bar" aria-label="Primary">' +
-      '<a class="nav-logo" href="index.html" aria-label="INFO2001A home"><img src="assets/logo.svg" alt=""></a>' +
+      '<a class="nav-logo" href="index.html" aria-label="INFO2001A home"><img src="assets/img/logo.svg" alt=""></a>' +
       '<ul class="nav-links" id="navLinks">' + links + '</ul>' +
       '<div class="nav-right">' +
         '<a class="nav-cta" href="' + BMC_URL + '" target="_blank" rel="noopener noreferrer">' + MUG + '<span>Buy Me Coffee</span></a>' +

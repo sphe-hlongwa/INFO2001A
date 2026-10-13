@@ -1,5 +1,5 @@
 /* Renders one mock paper into #mock-container.
-   Needs: window.MOCK_PAPER (assets/mock-N.js) and <body data-paper="N">. */
+   Needs: window.MOCK_PAPER (assets/data/mock-N.js) and <body data-paper="N">. */
 (function(){
   const paper = window.MOCK_PAPER;
   const num = Number(document.body.dataset.paper);

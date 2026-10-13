@@ -1,14 +1,14 @@
 /* Quizzes only (never mock exams): when a finished quiz scores under 50%,
-   play assets/fail-scream.mp4 in the middle of the screen with its green
+   play assets/media/fail-scream.mp4 in the middle of the screen with its green
    background keyed out, so the page shows through. At 80% or more,
-   assets/quiz-pass.mp4 plays the same way.
+   assets/media/quiz-pass.mp4 plays the same way.
    Call window.quizFinished(score, total) once every question is answered. */
 (function () {
   var base = document.currentScript.src;
-  var FAIL = { mp4: new URL('fail-scream.mp4', base).href, webm: new URL('fail-scream.webm', base).href,
+  var FAIL = { mp4: new URL('../media/fail-scream.mp4', base).href, webm: new URL('../media/fail-scream.webm', base).href,
                // crop to the subject inside the 576x1024 source frame
                cx: 110, cy: 225, cw: 360, ch: 480 };
-  var PASS = { mp4: new URL('quiz-pass.mp4', base).href, webm: new URL('quiz-pass.webm', base).href,
+  var PASS = { mp4: new URL('../media/quiz-pass.mp4', base).href, webm: new URL('../media/quiz-pass.webm', base).href,
                // crop to the subject inside the 1024x576 source frame
                cx: 352, cy: 16, cw: 672, ch: 560 };
   var playing = false;

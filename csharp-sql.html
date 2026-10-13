@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>C# + SQL | INFO2001A</title>
-<link rel="icon" type="image/png" href="icons8-server-32.png">
+<link rel="icon" type="image/png" href="assets/img/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css">
-<script src="assets/site-nav.js" defer></script>
+<link rel="stylesheet" href="assets/css/site.css">
+<script src="assets/js/site-nav.js" defer></script>
 <style>
   :root{--accent:#a98be8;}
   .page{padding-bottom:3rem;}
@@ -210,7 +210,7 @@
   .lb.open{display:flex;}
   .lb img{max-width:100%;max-height:100%;border-radius:8px;background:#fff;}
 </style>
-<link rel="stylesheet" href="assets/csharp-learn.css">
+<link rel="stylesheet" href="assets/css/csharp-learn.css">
 </head>
 <body>
 
@@ -1036,7 +1036,7 @@ finally
     document.getElementById('stText').innerHTML = '<p>'+s.x+'</p>';
     const shots = document.getElementById('stShots');
     shots.className = 'shots' + (s.i.length>1 ? ' multi':'');
-    shots.innerHTML = s.i.map(n=>'<img loading="lazy" src="assets/csharp/step-'+n+'.png" alt="Visual Studio screenshot for: '+s.t+'">').join('');
+    shots.innerHTML = s.i.map(n=>'<img loading="lazy" src="assets/img/csharp/step-'+n+'.png" alt="Visual Studio screenshot for: '+s.t+'">').join('');
     document.getElementById('stDots').innerHTML = STEPS.map((_,k)=>'<button type="button" aria-label="Step '+(k+1)+'" class="'+(k<si?'done':k===si?'cur':'')+'" data-k="'+k+'"></button>').join('');
     document.getElementById('stPrev').disabled = si===0;
     const last = si===STEPS.length-1;
@@ -1160,9 +1160,9 @@ finally
   makeDemo(document.getElementById('demoEdit'), true);
 })();
 </script>
-<script src="assets/quiz-sound.js"></script>
-<script src="assets/quiz-fail.js"></script>
-<script src="assets/csharp-learn.js"></script>
+<script src="assets/js/quiz-sound.js"></script>
+<script src="assets/js/quiz-fail.js"></script>
+<script src="assets/js/csharp-learn.js"></script>
 <script data-goatcounter="https://info2001a.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 </body>
