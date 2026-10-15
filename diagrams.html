@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diagrams | INFO2001A</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='2' y='3' width='20' height='6' rx='1.5' fill='%236fa8ea'/%3E%3Crect x='2' y='10' width='20' height='6' rx='1.5' fill='%234a7fc4'/%3E%3Crect x='2' y='17' width='20' height='4' rx='1.5' fill='%232f5a94'/%3E%3Ccircle cx='6' cy='6' r='1' fill='%230d1526'/%3E%3Ccircle cx='6' cy='13' r='1' fill='%230d1526'/%3E%3Ccircle cx='6' cy='19' r='1' fill='%230d1526'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/nav.css">
 <link rel="stylesheet" href="assets/css/diagram-zoom.css">
 <link rel="stylesheet" href="assets/css/grid-bg.css">
@@ -182,6 +181,8 @@
     border-top: 1px solid var(--border);
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px 8px;
   }
   .sidebar-footer a {
     display: inline-flex;
@@ -775,6 +776,7 @@
       </svg>
       <span>sphe-hlongwa</span>
     </a>
+    <a href="privacy.html"><span>Privacy</span></a>
   </div>
   </aside>
 

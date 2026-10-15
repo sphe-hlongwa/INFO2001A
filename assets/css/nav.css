@@ -105,3 +105,9 @@
   .nav-logo{margin-right:.4rem;}
 }
 
+/* ---- touch: no browser tap flash; use our own pressed state instead ---- */
+*{-webkit-tap-highlight-color:transparent;}
+@media (hover:none){
+  a:active,button:active,summary:active,label:active,[role="button"]:active,[onclick]:active,.fc:active{opacity:.7;}
+  a,button,summary,label,[role="button"],[onclick],.fc{transition:opacity .12s ease;}
+}

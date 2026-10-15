@@ -494,7 +494,7 @@
 
   /* ---- footer ---- */
   footer.site-footer{
-    display:flex;justify-content:center;margin-top:2.5rem;
+    display:flex;justify-content:center;flex-wrap:wrap;gap:.25rem .5rem;margin-top:2.5rem;
     padding-top:1.5rem;border-top:1px dashed var(--line);
   }
   footer.site-footer a{
@@ -544,3 +544,10 @@
   .time-hint{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);margin:0 0 1rem;}
   .qitem .qnum-tag{color:var(--cyan);font-family:'IBM Plex Mono',monospace;margin-right:.45rem;}
   @media(max-width:600px){ table.flow{font-size:12.5px;} }
+
+/* ---- touch: no browser tap flash; use our own pressed state instead ---- */
+*{-webkit-tap-highlight-color:transparent;}
+@media (hover:none){
+  a:active,button:active,summary:active,label:active,[role="button"]:active,[onclick]:active,.fc:active{opacity:.7;}
+  a,button,summary,label,[role="button"],[onclick],.fc{transition:opacity .12s ease;}
+}
