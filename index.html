@@ -79,14 +79,31 @@
   }
   .track:hover .track-art,.track:focus-visible .track-art{transform:scale(1.05) translate(-1%,-1%);}
 
+    /* always two columns: shrink the cards and trim text instead of stacking */
+  .short{display:none;}
   @media(max-width:860px){
-    .tracks{grid-template-columns:1fr;}
+    :root{--card-h:clamp(210px,40vw,350px);}
+    .tracks{gap:1rem;}
+    .track{padding:1.15rem 1.2rem 1.1rem;}
+    .track-icon{width:46px;height:46px;} .track-icon svg{width:23px;height:23px;}
+    .track-body{max-width:100%;margin-top:1.5rem;}
+    .track-foot{max-width:60%;font-size:12.5px;}
   }
-  @media(max-width:480px){
-    .track{padding:1.25rem 1.25rem 1.2rem;}
-    .track-body{max-width:80%;margin-top:2rem;}
-    .track-foot{max-width:64%;font-size:12.5px;}
-    .track-art{width:46%;right:-10%;bottom:-10%;}
+  @media(max-width:600px){
+    .page{padding-left:1rem;padding-right:1rem;}
+    .tracks{gap:.75rem;}
+    :root{--card-h:clamp(176px,50vw,230px);}
+    .track{padding:.9rem .85rem .85rem;}
+    .track-icon{width:38px;height:38px;border-radius:7px;} .track-icon svg{width:19px;height:19px;}
+    .track-meta,.track-foot{display:none;}
+    .track-body{margin-top:.9rem;}
+    .track h2{font-size:clamp(17px,5vw,22px);}
+    .track-desc{font-size:clamp(12px,3.4vw,15px);-webkit-line-clamp:3;line-clamp:3;}
+    .long{display:none;} .short{display:inline;}
+    .track-art{width:50%;right:-12%;bottom:-12%;opacity:.55;}
+  }
+  @media(max-width:360px){
+    .track h2{font-size:16px;} .track-desc{font-size:11.5px;}
   }
 </style>
 </head>
@@ -127,10 +144,26 @@
       </div>
       <div class="track-body">
         <h2>Test 2</h2>
-        <p class="track-desc">Systems Design + Interaction Design + ADO.NET + Reporting</p>
+        <p class="track-desc"><span class="long">Systems Design + Interaction Design + ADO.NET + Reporting</span><span class="short">Systems &amp; Interaction Design, ADO.NET</span></p>
       </div>
       <div class="track-foot">Flashcards &middot; Quizzes &middot; Mock papers</div>
       <img class="track-art" src="assets/img/art-test2.svg" alt="" aria-hidden="true">
+    </a>
+
+    <!-- EXAM -->
+    <a class="track" href="exam.html" style="--accent:#e8707e">
+      <div class="track-top">
+        <span class="track-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.5 2M9.5 3h5M12 3v3"/></svg>
+        </span>
+        <span class="track-meta">Coming soon</span>
+      </div>
+      <div class="track-body">
+        <h2>Exam</h2>
+        <p class="track-desc">Full exam preparation</p>
+      </div>
+      <div class="track-foot">Timed practice &middot; Past papers</div>
+      <img class="track-art" src="assets/img/art-exam.svg" alt="" aria-hidden="true">
     </a>
 
     <!-- DATABASE FUNDAMENTALS -->
@@ -143,9 +176,9 @@
       </div>
       <div class="track-body">
         <h2>Database Fundamentals</h2>
-        <p class="track-desc">Access SQL reference + DSD, wireframe and storyboard blueprints</p>
+        <p class="track-desc">Access SQL reference, normalization and indexing</p>
       </div>
-      <div class="track-foot">Syntax &middot; Joins &middot; Functions &middot; DSD &middot; Wireframes &middot; Storyboards</div>
+      <div class="track-foot">Syntax &middot; Joins &middot; Functions &middot; Normalization &middot; Indexing</div>
       <img class="track-art" src="assets/img/art-sql.svg" alt="" aria-hidden="true">
     </a>
 
@@ -163,6 +196,22 @@
       </div>
       <div class="track-foot">Build &middot; Understand &middot; Practice</div>
       <img class="track-art" src="assets/img/art-csharp.svg" alt="" aria-hidden="true">
+    </a>
+
+    <!-- DIAGRAMS -->
+    <a class="track" href="diagrams.html" style="--accent:#4cc9c0">
+      <div class="track-top">
+        <span class="track-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="5" rx="1.2"/><rect x="3" y="16" width="6" height="5" rx="1.2"/><rect x="15" y="16" width="6" height="5" rx="1.2"/><path d="M12 8v4M6 16v-4h12v4"/></svg>
+        </span>
+        <span class="track-meta">8 blueprints</span>
+      </div>
+      <div class="track-body">
+        <h2>Diagrams</h2>
+        <p class="track-desc"><span class="long">Use case, class, ERD, normalisation, DSD, wireframes, storyboards and reports</span><span class="short">Use case, class, ERD, DSD and more</span></p>
+      </div>
+      <div class="track-foot">Use case &middot; ERD &middot; DSD &middot; Wireframe &middot; Report</div>
+      <img class="track-art" src="assets/img/art-diagrams.svg" alt="" aria-hidden="true">
     </a>
 
   </section>

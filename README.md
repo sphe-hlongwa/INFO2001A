@@ -10,13 +10,14 @@ Static study site for INFO2001A (Information Systems, Wits). No build step: open
 | `test1.html` | Test 1: SQL + database design (flashcards, quizzes, mock) |
 | `test2.html` | Test 2: systems design + database + C# (flashcards, quizzes, mock paper selector) |
 | `mock/mock1.html` … `mock3.html` | The three full Test 2 mock papers, one page each (timer, auto-marked MCQs, model answers) |
-| `sql-fundamentals.html` | Access SQL, DSD, wireframe, storyboard and report walkthroughs |
+| `sql-fundamentals.html` | Access SQL, normalization and indexing reference |
+| `diagrams.html` | Use case, class, ERD, normalisation, DSD, wireframe, storyboard and report blueprints |
 | `csharp-sql.html` | C# + SQL step-by-step with screenshots |
 
 ## Folder layout
 
 ```
-index.html, test1.html, test2.html, sql-fundamentals.html, csharp-sql.html
+index.html, test1.html, test2.html, sql-fundamentals.html, diagrams.html, csharp-sql.html
 mock/                  mock1.html, mock2.html, mock3.html
 assets/
   css/                 site, nav, grid-bg, test2, mock-paper, csharp-learn

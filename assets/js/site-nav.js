@@ -11,7 +11,8 @@
       { label: 'Test 2', sub: 'SQL + Database Design + System Design + C#', href: 'test2.html' }
     ]},
     { label: 'Learn', items: [
-      { label: 'Database Fundamentals', sub: 'Access SQL + DSD, wireframe, storyboard, report', href: 'sql-fundamentals.html' },
+      { label: 'Database Fundamentals', sub: 'Access SQL, normalization, indexing', href: 'sql-fundamentals.html' },
+      { label: 'Diagrams', sub: 'Use case, class, ERD, normalisation, DSD, wireframe, storyboard, report', href: 'diagrams.html' },
       { label: 'C# + SQL', sub: 'Build it, understand it, practise it', href: 'csharp-sql.html' }
     ]}
   ];

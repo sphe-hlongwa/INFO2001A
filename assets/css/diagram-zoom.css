@@ -1,0 +1,71 @@
+/* ================= diagram fit + tap-to-zoom ================= */
+
+/* Small screens: shrink every diagram to the card width (no sideways swipe). */
+@media (max-width: 900px) {
+  .dsd-fig { overflow: hidden !important; position: relative; cursor: zoom-in; -webkit-tap-highlight-color: transparent; padding-bottom: 34px !important; }
+  .dsd-fig > svg { min-width: 0 !important; width: 100% !important; height: auto !important; }
+
+  /* little "tap to zoom" chip */
+  .dz-hint {
+    position: absolute; right: 8px; bottom: 6px; z-index: 2;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 9px; border-radius: 999px;
+    background: rgba(5, 8, 16, .82); border: 1px solid rgba(255, 255, 255, .16);
+    color: #cfe0f7; font: 600 11px/1 'Space Grotesk', sans-serif;
+    pointer-events: none;
+  }
+  .dz-hint { white-space: nowrap; }
+  /* beat the page's ".dsd-fig svg {width:100%}" rule */
+  .dz-hint svg { width: 13px !important; height: 13px !important; min-width: 0 !important; display: inline-block !important; flex: none; }
+}
+@media (min-width: 901px) { .dz-hint { display: none; } }
+
+/* ---------- full-screen viewer ---------- */
+.dz-overlay {
+  position: fixed; inset: 0; z-index: 3000;       /* above nav (1600) and TOC drawer (2000) */
+  display: none; flex-direction: column;
+  background: #04070e;
+  touch-action: none; overscroll-behavior: contain;
+}
+.dz-overlay.open { display: flex; }
+
+.dz-bar {
+  flex: none; display: flex; align-items: center; gap: .5rem;
+  padding: calc(8px + env(safe-area-inset-top, 0px)) 10px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, .09);
+  font-family: 'Space Grotesk', sans-serif;
+}
+.dz-title { flex: 1; min-width: 0; color: #cfe0f7; font-size: 13px; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dz-btn {
+  flex: none; min-width: 38px; height: 38px; padding: 0 10px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255, 255, 255, .07); color: #fff;
+  border: 1px solid rgba(255, 255, 255, .18); border-radius: 8px;
+  font: 600 16px/1 'Space Grotesk', sans-serif; cursor: pointer;
+}
+.dz-btn:active { background: rgba(255, 255, 255, .18); }
+.dz-btn:focus-visible { outline: 2px solid #6fa8ea; outline-offset: 2px; }
+.dz-close { font-size: 20px; }
+
+.dz-stage { position: relative; flex: 1; overflow: hidden; cursor: grab; }
+.dz-stage.dragging { cursor: grabbing; }
+
+/* The cloned figure keeps class "dsd-fig" so the page's diagram styles still apply;
+   these overrides strip the card look and let JS position it with a transform. */
+.dz-overlay .dsd-fig.dz-canvas {
+  position: absolute; left: 0; top: 0; cursor: inherit;
+  margin: 0 !important; padding: 0 !important; border: 0 !important; border-radius: 0 !important;
+  background: transparent !important; overflow: visible !important; box-sizing: border-box;
+  transform-origin: 0 0;
+}
+.dz-overlay .dsd-fig.dz-canvas > svg {
+  display: block; width: 100% !important; height: 100% !important; min-width: 0 !important;
+  max-width: none; user-select: none; -webkit-user-select: none;
+}
+.dz-help {
+  flex: none; padding: 6px 10px calc(8px + env(safe-area-inset-bottom, 0px));
+  text-align: center; color: #8d9db5; font: 12px/1.3 'IBM Plex Sans', sans-serif;
+}
+
+body.dz-lock { overflow: hidden; }
