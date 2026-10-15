@@ -494,7 +494,7 @@
 
   /* ---- footer ---- */
   footer.site-footer{
-    display:flex;justify-content:center;margin-top:2.5rem;
+    display:flex;justify-content:center;flex-wrap:wrap;gap:.25rem .5rem;margin-top:2.5rem;
     padding-top:1.5rem;border-top:1px dashed var(--line);
   }
   footer.site-footer a{

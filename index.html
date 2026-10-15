@@ -6,13 +6,66 @@
 <title>INFO2001A | Exam Prep</title>
 <meta name="description" content="INFO2001A exam prep: flashcards, quizzes and mock papers for SQL, database design, system design and C#.">
 <link rel="icon" type="image/png" href="assets/img/favicon-32.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/site.css">
 <script src="assets/js/site-nav.js" defer></script>
 <style>
-  .hero{margin-bottom:2.25rem;}
+  /* ---- hero: same width + gutters as the floating nav bar (max 1120px, 16px side padding) ---- */
+  .hero-wrap{max-width:1152px;margin:0 auto;padding:88px 16px 0;perspective:1200px;} /* 88px = nav top 14 + height 58 + 16 gap */
+  .hero{
+    position:relative;isolation:isolate;overflow:hidden;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    min-height:clamp(340px,44vw,480px);
+    padding:clamp(1.25rem,4vw,3rem);
+    border-radius:16px;               /* matches .nav-bar */
+    border:1px solid rgba(255,255,255,.09);
+    background:#0d1117;
+    box-shadow:0 12px 34px rgba(0,0,0,.45);
+    /* 3D tilt: --rx/--ry/--mx/--my are set by the pointer script below */
+    transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+    transform-origin:center;will-change:transform;
+    transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s ease;
+  }
+  .hero.is-tilting{transition:transform .08s linear,box-shadow .3s ease;box-shadow:0 28px 60px rgba(0,0,0,.6);}
+  .hero-bg{ /* image layer: oversized so it can drift opposite to the tilt (parallax depth) */
+    position:absolute;inset:-4%;z-index:-2;
+    background:url("assets/img/hero-section.jpg") 62% 40%/cover no-repeat;
+    transform:translate(calc(var(--mx,0) * -14px),calc(var(--my,0) * -10px));
+    transition:transform .5s cubic-bezier(.2,.8,.2,1);
+  }
+  .hero.is-tilting .hero-bg{transition:transform .08s linear;}
+  .hero-glare{ /* light that follows the pointer */
+    position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;
+    background:radial-gradient(circle at calc(50% + var(--mx,0) * 50%) calc(50% + var(--my,0) * 50%),rgba(255,255,255,.16),transparent 45%);
+    transition:opacity .3s ease;
+  }
+  .hero.is-tilting .hero-glare{opacity:1;}
+  .hero-text{transform:translate(calc(var(--mx,0) * 8px),calc(var(--my,0) * 6px));transition:transform .5s cubic-bezier(.2,.8,.2,1);}
+  .hero.is-tilting .hero-text{transition:transform .08s linear;}
+  .hero::before{ /* legibility scrim: dark on the text side, image shows through on the right */
+    content:"";position:absolute;inset:0;z-index:-1;
+    background:linear-gradient(90deg,rgba(13,17,23,.92) 0%,rgba(13,17,23,.7) 42%,rgba(13,17,23,.1) 78%),
+               linear-gradient(0deg,rgba(13,17,23,.65) 0%,transparent 55%);
+  }
+  .hero .page-sub{color:#c3ccd8;}
+  .hero-wrap + .page{padding-top:2rem;}
+  @media(max-width:860px){
+    .hero-bg{background-position:70% 40%;}
+    .hero::before{background:linear-gradient(0deg,rgba(13,17,23,.94) 0%,rgba(13,17,23,.7) 55%,rgba(13,17,23,.25) 100%);}
+  }
+  @media(max-width:600px){
+    /* mobile: just the course code + title, no tilt, no intro text */
+    .hero{min-height:clamp(220px,62vw,280px);border-radius:14px;transform:none !important;}
+    .hero .page-sub{display:none;}
+    .hero .page-title{margin-bottom:0;}
+    .hero-text{transform:none !important;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .hero,.hero-bg,.hero-text{transform:none !important;}
+    .hero-glare{display:none;}
+  }
+  @media(min-width:1600px){.hero{min-height:500px;}}
 
   .tracks{
     display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem;
@@ -109,12 +162,19 @@
 </head>
 <body>
 
-<main class="page">
-  <section class="hero">
-    <p class="eyebrow">Information Systems IIB &middot; INFO2001A</p>
-    <h1 class="page-title">Choose your track</h1>
-    <p class="page-sub">Flashcards, quizzes and full mock papers for databases, SQL, system design and C#. Pick a card to jump in.</p>
+<div class="hero-wrap">
+  <section class="hero" id="hero" aria-labelledby="hero-title">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-glare" aria-hidden="true"></div>
+    <div class="hero-text">
+      <p class="eyebrow">Information Systems IIB &middot; INFO2001A</p>
+      <h1 class="page-title" id="hero-title">Choose your track</h1>
+      <p class="page-sub">Flashcards, quizzes and full mock papers for databases, SQL, system design and C#. Pick a card to jump in.</p>
+    </div>
   </section>
+</div>
+
+<main class="page" id="tracks">
 
   <section class="tracks" aria-label="Study tracks">
 
@@ -221,10 +281,36 @@
       <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
       <span>sphe-hlongwa</span>
     </a>
+    <a href="privacy.html"><span>Privacy</span></a>
   </footer>
 </main>
 
 <script data-goatcounter="https://info2001a.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
+<script>
+/* hero 3D tilt: only for fine pointers (mouse/trackpad), desktop widths, and no reduced-motion */
+(function(){
+  var hero=document.getElementById('hero');
+  if(!hero||!window.matchMedia)return;
+  var ok=matchMedia('(hover:hover) and (pointer:fine) and (min-width:601px)');
+  var calm=matchMedia('(prefers-reduced-motion:reduce)');
+  var MAX=5; /* max tilt in degrees */
+  function move(e){
+    var r=hero.getBoundingClientRect();
+    var x=((e.clientX-r.left)/r.width-.5)*2, y=((e.clientY-r.top)/r.height-.5)*2;
+    hero.classList.add('is-tilting');
+    hero.style.setProperty('--ry',(x*MAX).toFixed(2)+'deg');
+    hero.style.setProperty('--rx',(-y*MAX).toFixed(2)+'deg');
+    hero.style.setProperty('--mx',x.toFixed(3));
+    hero.style.setProperty('--my',y.toFixed(3));
+  }
+  function leave(){
+    hero.classList.remove('is-tilting');
+    ['--rx','--ry','--mx','--my'].forEach(function(k){hero.style.removeProperty(k);});
+  }
+  hero.addEventListener('pointermove',function(e){if(ok.matches&&!calm.matches&&e.pointerType==='mouse')move(e);});
+  hero.addEventListener('pointerleave',leave);
+})();
+</script>
 </body>
 </html>
