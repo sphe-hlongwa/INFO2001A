@@ -1,28 +1,38 @@
 /* ================= diagram fit + tap-to-zoom ================= */
 
-/* Small screens: shrink every diagram to the card width (no sideways swipe). */
+/* Small screens: shrink every diagram to the card width (no sideways swipe).
+   Covers the Diagrams page (.dsd-fig) and the tests / mock papers (.diagram-wrap,
+   including the old ".wide" ones that used to scroll sideways). */
 @media (max-width: 900px) {
-  .dsd-fig { overflow: hidden !important; position: relative; cursor: zoom-in; -webkit-tap-highlight-color: transparent; padding-bottom: 34px !important; }
-  .dsd-fig > svg { min-width: 0 !important; width: 100% !important; height: auto !important; }
+  .dsd-fig, .diagram-wrap {
+    overflow: hidden !important; position: relative; cursor: zoom-in;
+    -webkit-tap-highlight-color: transparent; padding-bottom: 36px !important;
+  }
+  .dsd-fig > svg,
+  .diagram-wrap svg, .diagram-wrap img {
+    min-width: 0 !important; max-width: 100% !important;
+    width: 100% !important; height: auto !important; display: block; margin: 0 auto;
+  }
 
-  /* little "tap to zoom" chip */
-  .dz-hint {
-    position: absolute; right: 8px; bottom: 6px; z-index: 2;
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 4px 9px; border-radius: 999px;
-    background: rgba(5, 8, 16, .82); border: 1px solid rgba(255, 255, 255, .16);
+  /* the old "scroll sideways" caption no longer applies: diagrams now fit */
+  .diagram-wrap .scroll-hint { display: none !important; }
+
+  /* "Tap to zoom" chip (pure CSS, so it also works on diagrams injected later by JS) */
+  .dsd-fig::after, .diagram-wrap::after {
+    content: 'Tap to zoom';
+    position: absolute; right: 8px; bottom: 6px; z-index: 2; white-space: nowrap;
+    padding: 5px 10px 5px 27px; border-radius: 999px;
+    background: rgba(5, 8, 16, .82) no-repeat 9px 50% / 13px 13px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23cfe0f7' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='4.6'/%3E%3Cpath d='m10.6 10.6 3.4 3.4M7 5v4M5 7h4'/%3E%3C/svg%3E");
+    border: 1px solid rgba(255, 255, 255, .16);
     color: #cfe0f7; font: 600 11px/1 'Space Grotesk', sans-serif;
     pointer-events: none;
   }
-  .dz-hint { white-space: nowrap; }
-  /* beat the page's ".dsd-fig svg {width:100%}" rule */
-  .dz-hint svg { width: 13px !important; height: 13px !important; min-width: 0 !important; display: inline-block !important; flex: none; }
 }
-@media (min-width: 901px) { .dz-hint { display: none; } }
 
 /* ---------- full-screen viewer ---------- */
 .dz-overlay {
-  position: fixed; inset: 0; z-index: 3000;       /* above nav (1600) and TOC drawer (2000) */
+  position: fixed; inset: 0; z-index: 10000;      /* above nav (1600), TOC drawer (2000) and test1's exam modal (9999) */
   display: none; flex-direction: column;
   background: #04070e;
   touch-action: none; overscroll-behavior: contain;
@@ -53,15 +63,17 @@
 
 /* The cloned figure keeps class "dsd-fig" so the page's diagram styles still apply;
    these overrides strip the card look and let JS position it with a transform. */
-.dz-overlay .dsd-fig.dz-canvas {
+.dz-overlay .dz-canvas {
   position: absolute; left: 0; top: 0; cursor: inherit;
   margin: 0 !important; padding: 0 !important; border: 0 !important; border-radius: 0 !important;
-  background: transparent !important; overflow: visible !important; box-sizing: border-box;
+  overflow: visible !important; box-sizing: border-box;
   transform-origin: 0 0;
 }
-.dz-overlay .dsd-fig.dz-canvas > svg {
-  display: block; width: 100% !important; height: 100% !important; min-width: 0 !important;
-  max-width: none; user-select: none; -webkit-user-select: none;
+.dz-overlay .dz-canvas::after { display: none !important; }
+.dz-overlay .dz-canvas .dz-main {
+  display: block !important; width: 100% !important; height: 100% !important;
+  min-width: 0 !important; max-width: none !important; margin: 0 !important;
+  user-select: none; -webkit-user-select: none; -webkit-user-drag: none;
 }
 .dz-help {
   flex: none; padding: 6px 10px calc(8px + env(safe-area-inset-bottom, 0px));

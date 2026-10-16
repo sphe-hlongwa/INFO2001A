@@ -9,48 +9,73 @@
   var MAX_ZOOM = 8;            // relative to the "fit" size
   var DOUBLE_TAP_ZOOM = 2.5;
 
-  var ZOOM_ICON =
-    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">' +
-    '<circle cx="7" cy="7" r="4.6"/><path d="m10.6 10.6 3.4 3.4M7 5v4M5 7h4"/></svg>';
+  // Diagrams page uses .dsd-fig; the tests and mock papers use .diagram-wrap (SVG or PNG inside)
+  var FIG_SEL = '.dsd-fig, .diagram-wrap';
 
   var state = null; // set while the viewer is open
 
-  /* ---------- decorate the inline figures ---------- */
+  /* ---------- wire up the inline figures ---------- */
+  // Clicks are delegated, so diagrams that are rendered by JS or revealed later
+  // (model answers, quiz cards, ...) work without any extra setup.
+  function mainEl(fig) { return fig.querySelector('svg, img'); }
+
   function init() {
-    var figs = document.querySelectorAll('.dsd-fig');
-    Array.prototype.forEach.call(figs, function (fig) {
-      var svg = fig.querySelector(':scope > svg');
-      if (!svg) return;
-
-      var hint = document.createElement('span');
-      hint.className = 'dz-hint';
-      hint.innerHTML = ZOOM_ICON + 'Tap to zoom';
-      fig.appendChild(hint);
-
-      fig.tabIndex = 0;
-      fig.addEventListener('click', function () { if (MOBILE.matches) open(fig); });
-      fig.addEventListener('keydown', function (e) {
-        if ((e.key === 'Enter' || e.key === ' ') && MOBILE.matches) { e.preventDefault(); open(fig); }
-      });
+    document.addEventListener('click', function (e) {
+      if (!MOBILE.matches || state) return;
+      var fig = e.target.closest && e.target.closest(FIG_SEL);
+      if (!fig || !mainEl(fig)) return;
+      open(fig);
     });
+    document.addEventListener('keydown', function (e) {
+      if (state || (e.key !== 'Enter' && e.key !== ' ') || !MOBILE.matches) return;
+      var fig = e.target.classList && e.target.matches && e.target.matches(FIG_SEL) ? e.target : null;
+      if (fig && mainEl(fig)) { e.preventDefault(); open(fig); }
+    });
+
+    // make figures keyboard-focusable, including ones added later
+    function decorate(root) {
+      var list = (root.matches && root.matches(FIG_SEL)) ? [root] : [];
+      if (root.querySelectorAll) list = list.concat([].slice.call(root.querySelectorAll(FIG_SEL)));
+      list.forEach(function (f) { if (!f.hasAttribute('tabindex') && mainEl(f)) f.tabIndex = 0; });
+    }
+    decorate(document);
+    if (window.MutationObserver) {
+      new MutationObserver(function (muts) {
+        muts.forEach(function (m) {
+          [].forEach.call(m.addedNodes, function (n) { if (n.nodeType === 1) decorate(n); });
+        });
+      }).observe(document.documentElement, { childList: true, subtree: true });
+    }
   }
 
   /* ---------- viewer ---------- */
   function open(fig) {
     if (state) return;
-    var srcSvg = fig.querySelector(':scope > svg');
-    if (!srcSvg) return;
+    var src = mainEl(fig);
+    if (!src) return;
+    var isImg = src.tagName.toLowerCase() === 'img';
 
-    var vb = (srcSvg.getAttribute('viewBox') || '').split(/[\s,]+/).map(Number);
-    var vbW = vb[2] || srcSvg.getBoundingClientRect().width || 800;
-    var vbH = vb[3] || srcSvg.getBoundingClientRect().height || 500;
+    // natural size of the drawing: viewBox for SVG, pixel size for images
+    var vbW, vbH;
+    if (isImg) {
+      vbW = src.naturalWidth; vbH = src.naturalHeight;
+    } else {
+      var vb = (src.getAttribute('viewBox') || '').split(/[\s,]+/).map(Number);
+      vbW = vb[2]; vbH = vb[3];
+    }
+    if (!vbW || !vbH) {
+      var r0 = src.getBoundingClientRect();
+      vbW = r0.width || 800; vbH = r0.height || 500;
+    }
 
-    var title = fig.getAttribute('aria-label') ||
-      (srcSvg.querySelector('title') ? srcSvg.querySelector('title').textContent : 'Diagram');
+    var title = fig.getAttribute('aria-label') || src.getAttribute('aria-label') || src.getAttribute('alt') ||
+      (!isImg && src.querySelector('title') ? src.querySelector('title').textContent : '') || 'Diagram';
 
-    // The page's diagram styles are scoped to "#section .dsd-fig ...", so the viewer
-    // must live inside the same section as the figure for the clone to look identical.
-    var host = fig.closest('section[id]') || document.body;
+    // The Diagrams page styles its figures with "#section .dsd-fig ...", so there the viewer
+    // must live inside the same section for the clone to look identical. Elsewhere body is safest.
+    var fs = document.fullscreenElement;               // a fullscreen element only paints its own children
+    var host = fig.matches('.dsd-fig') ? (fig.closest('section[id]') || document.body)
+             : (fs && fs !== document.documentElement && fs.contains(fig) ? fs : document.body);
 
     var overlay = document.createElement('div');
     overlay.className = 'dz-overlay open';
@@ -71,16 +96,17 @@
 
     var stage = overlay.querySelector('.dz-stage');
     var canvas = fig.cloneNode(true);
-    var hintClone = canvas.querySelector('.dz-hint');
-    if (hintClone) hintClone.remove();
-    canvas.removeAttribute('tabindex');
-    canvas.removeAttribute('role');
-    canvas.removeAttribute('aria-label');
-    canvas.className = 'dsd-fig dz-canvas';
+    var bg = getComputedStyle(fig).backgroundColor;          // keep the card look (white on the tests)
+    ['tabindex', 'role', 'aria-label', 'id'].forEach(function (x) { canvas.removeAttribute(x); });
+    canvas.className = fig.className.replace(/\bwide\b/g, '') + ' dz-canvas';
+    canvas.style.cssText = '';
+    canvas.style.setProperty('background-color', bg, 'important');
     Array.prototype.forEach.call(canvas.querySelectorAll('title[id]'), function (t) { t.removeAttribute('id'); });
-    var svg = canvas.querySelector(':scope > svg');
+    var svg = canvas.querySelector('svg, img');             // the drawing itself
+    svg.classList.add('dz-main');
     svg.removeAttribute('aria-labelledby');
     svg.setAttribute('aria-hidden', 'true');
+    if (isImg) svg.draggable = false;
     stage.appendChild(canvas);
 
     host.appendChild(overlay);
@@ -130,7 +156,7 @@
   // s = pixels per viewBox unit. cx,cy = screen point (relative to stage) that stays fixed.
   function setScale(s, anchor, instant) {
     var st = state;
-    s = clamp(s, st.fit, st.fit * MAX_ZOOM);
+    s = clamp(s, st.fit, Math.max(st.fit * MAX_ZOOM, 2));
     var ax = anchor ? anchor.x : st.sw / 2;
     var ay = anchor ? anchor.y : st.sh / 2;
     var k = s / st.s;

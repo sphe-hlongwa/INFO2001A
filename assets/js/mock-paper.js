@@ -1,8 +1,10 @@
 /* Renders one mock paper into #mock-container.
-   Needs: window.MOCK_PAPER (assets/data/mock-N.js) and <body data-paper="N">. */
+   Needs: window.MOCK_PAPER (assets/data/mock-N.js or t1-mock-N.js) and <body data-paper="N">.
+   Optional: <body data-paper-key="t1-N"> keeps that paper's timer separate from other tests' papers. */
 (function(){
   const paper = window.MOCK_PAPER;
   const num = Number(document.body.dataset.paper);
+  const paperKey = document.body.dataset.paperKey || num;
   const container = document.getElementById('mock-container');
   const timerEl = document.getElementById('mock-timer');
   const fsBtn = document.getElementById('mock-fullscreen');
@@ -25,7 +27,7 @@
       const id = 'ans-' + (uid++);
       return `
         <div class="qitem">
-          <p class="qtitle"><span class="qnum-tag">${x.id}</span>${x.q} ${qMarks(x.marks)}</p>
+          <p class="qtitle">${x.id ? `<span class="qnum-tag">${x.id}</span>` : ''}${x.q}${x.marks != null ? ' ' + qMarks(x.marks) : ''}</p>
           <button class="reveal-btn" data-target="${id}">Show model answer</button>
           <div class="model-answer" id="${id}">${x.a}</div>
         </div>`;
@@ -34,11 +36,11 @@
 
   function partHTML(p){
     if(p.type === 'mcq'){
-      return `<h3 class="part-title">${p.heading}</h3>
+      return `${p.heading ? `<h3 class="part-title">${p.heading}</h3>` : ''}
         <div class="scenario"><b>Instructions.</b> ${p.intro}</div>
         ${mcqHTML(p.items, p.start)}`;
     }
-    return `<h3 class="part-title">${p.heading}</h3>
+    return `${p.heading ? `<h3 class="part-title">${p.heading}</h3>` : ''}
       ${p.intro ? `<div class="scenario">${p.intro}</div>` : ''}
       ${p.scenario ? `<div class="scenario"><b>Scenario.</b> ${p.scenario}</div>` : ''}
       ${p.diagram ? p.diagram : ''}
@@ -49,6 +51,8 @@
 
   function renderExam(){
     const total = paper.sections.reduce((a,s)=>a+s.marks,0);
+    const written = paper.sections.slice(1).map(s=>s.key);
+    const writtenRange = written.length > 1 ? `${written[0]} to ${written[written.length-1]}` : written[0];
     const prev = num > 1 ? `<a href="mock${num-1}.html">&larr; Mock ${num-1}</a>` : '<span></span>';
     const next = num < 3 ? `<a href="mock${num+1}.html">Mock ${num+1} &rarr;</a>` : '<span></span>';
     return `
@@ -57,7 +61,7 @@
         <ol>
           <li>Answer <b>all</b> questions and number them correctly. Sections ${paper.sections.map(s=>s.key).join(', ')} carry ${paper.sections.map(s=>s.marks).join(', ')} marks respectively.</li>
           <li>Diagrams may be drawn in pencil, in landscape orientation if necessary.</li>
-          <li>The Section A MCQs are auto-marked below; for Sections B to E, write your answer first and then reveal the model answer to mark yourself.</li>
+          <li>The Section A MCQs are auto-marked below; for Sections ${writtenRange}, write your answer first and then reveal the model answer to mark yourself.</li>
         </ol>
       </div>
       <div id="mcq-score" class="quiz-score">Section A multiple choice: 0 / 0</div>
@@ -65,7 +69,7 @@
         <div class="exam-section ${s.color}">
           <div class="head"><span>${s.title}</span><span class="badge">${s.marks} MARKS</span></div>
           <div class="exam-body">
-            <p class="time-hint">Suggested time: ${s.time}</p>
+            ${s.time ? `<p class="time-hint">Suggested time: ${s.time}</p>` : ''}
             ${s.parts.map(partHTML).join('')}
           </div>
         </div>`).join('')}
@@ -100,7 +104,7 @@
   });
 
   // ---- timer (survives a page refresh; Restart resets it) ----
-  const KEY = 'info2001a-mock-' + num + '-deadline';
+  const KEY = 'info2001a-mock-' + paperKey + '-deadline';
   const store = {
     get(){ try{ return Number(localStorage.getItem(KEY)) || 0; }catch(e){ return 0; } },
     set(v){ try{ localStorage.setItem(KEY, String(v)); }catch(e){} }
