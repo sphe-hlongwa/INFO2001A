@@ -8,7 +8,8 @@
     { label: 'Home', href: 'index.html' },
     { label: 'Tests', items: [
       { label: 'Test 1', sub: 'SQL + Database Design', href: 'test1.html' },
-      { label: 'Test 2', sub: 'SQL + Database Design + System Design + C#', href: 'test2.html' }
+      { label: 'Test 2', sub: 'SQL + Database Design + System Design + C#', href: 'test2.html' },
+      { label: 'Exam', sub: 'Semester 2 (Blocks 3 & 4): 100 marks, 3 hours', href: 'exam.html' }
     ]},
     { label: 'Learn', items: [
       { label: 'Database Fundamentals', sub: 'Access SQL, normalization, indexing', href: 'sql-fundamentals.html' },
