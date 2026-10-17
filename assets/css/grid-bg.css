@@ -1,4 +1,7 @@
-/* Blueprint grid used as the page background on every page */
+/* Blueprint grid used as the page background on every page.
+   This plain CSS grid is the fallback. When assets/js/cursor-grid.js starts
+   (WebGL2 available) it adds .cg-on to <html>, hides this grid, and draws the
+   same grid on a canvas that reacts to the cursor. */
 body{
   background-image:
     linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
@@ -6,3 +9,9 @@ body{
   background-size:32px 32px !important;
   background-position:-1px -1px !important;
 }
+html.cg-on body{background-image:none !important;}
+
+/* Interactive grid canvas, fixed behind all page content */
+.cursor-grid{position:fixed;top:0;left:0;right:0;bottom:0;z-index:-1;pointer-events:none;overflow:hidden;}
+.cursor-grid__canvas{position:absolute;top:0;left:0;display:block;width:100%;height:100%;pointer-events:none;}
+@media print{.cursor-grid{display:none;}}

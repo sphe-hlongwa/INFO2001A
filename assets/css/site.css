@@ -45,7 +45,7 @@ p.page-sub{color:var(--muted);font-size:16px;margin:0;max-width:56ch;}
 
 /* ================= logo slider (infinite marquee above footer) ================= */
 .logo-slider{
-  margin-top:3.5rem;padding:1.75rem 0;overflow:hidden;
+  margin-top:3.5rem;padding:.7rem 0;overflow:hidden;
   border-top:4px solid #3b4558;border-bottom:4px solid #3b4558;
 }
 .logo-viewport{overflow:hidden;
@@ -65,6 +65,10 @@ p.page-sub{color:var(--muted);font-size:16px;margin:0;max-width:56ch;}
 @media (prefers-reduced-motion:reduce){
   .logo-track{animation:none;}
   .logo-viewport{overflow-x:auto;-webkit-mask-image:none;mask-image:none;}
+}
+@media (max-width:600px){
+  .logo-slider{margin-top:2.5rem;padding:.5rem 0;}
+  .logo{padding:0 1.5rem;}
 }
 /* footer straight after the slider: the slider's own bottom line is the divider */
 .logo-slider + footer.site-footer{border-top:0;margin-top:0;padding-top:1rem;}
