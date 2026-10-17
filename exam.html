@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Exam | INFO2001A</title>
-<meta name="description" content="INFO2001A exam preparation: scope, flashcards, quizzes and two full 100-mark practice papers.">
+<meta name="description" content="INFO2001A exam preparation: scope, flashcards, quizzes and four full 100-mark practice papers.">
 <link rel="icon" type="image/png" href="assets/img/favicon-32.png">
 <link rel="preload" href="assets/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/fonts.css">
@@ -59,7 +59,7 @@
           <button type="button" class="sb-item" data-view="mock">
             <span class="side-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span>
             <span class="side-label sb-fade" style="--i:4">Exam papers</span>
-            <span class="sb-badge sb-fade" id="mock-count" style="--i:5">2</span>
+            <span class="sb-badge sb-fade" id="mock-count" style="--i:5">4</span>
           </button>
         </div>
       </div>
@@ -82,7 +82,7 @@
     <h1>Exam Preparation</h1>
     <div class="meta-row">
       <span>Format: <b>100 marks &middot; 3 hours &middot; Sections A, B and C</b></span>
-      <span>Practice set: <b>2 full papers &middot; flashcards &middot; topic quizzes</b></span>
+      <span>Practice set: <b>4 full papers &middot; flashcards &middot; topic quizzes</b></span>
     </div>
   </header>
 
@@ -184,7 +184,7 @@
   <!-- MOCK TEST -->
   <section class="view" id="mock">
     <h2 class="section-title">Exam papers</h2>
-    <p class="section-desc">Two full 100-mark, 3-hour papers in the exam format (A: MCQs 15, B: interaction design and usability 17, C: comprehensive case scenario 68). Each paper opens on its own page &mdash; the timer starts as soon as the page loads. Section A is auto-marked; for Sections B and C write your answer first, then reveal the model answer and mark yourself.</p>
+    <p class="section-desc">Four full 100-mark, 3-hour papers in the exam format (A: MCQs 15, B: interaction design and usability 17, C: comprehensive case scenario 68). Each paper opens on its own page &mdash; the timer starts as soon as the page loads. Section A is auto-marked; for Sections B and C write your answer first, then reveal the model answer and mark yourself.</p>
     <div class="pill-row" id="mock-pills"></div>
   </section>
 
@@ -296,7 +296,7 @@
   renderQuiz();
 
   // ---- mock paper data ----
-  const mockPapers = [{"title": "Exam 1 - UrbanCycle Bike Share", "summary": "100 marks &middot; 3 sections &middot; 3 hours (exam format).", "href": "mock/exam1.html"}, {"title": "Exam 2 - PawPrint Dog Boarding", "summary": "100 marks &middot; 3 sections &middot; 3 hours (exam format).", "href": "mock/exam2.html"}];
+  const mockPapers = [{"title": "Exam 1 - UrbanCycle Bike Share", "summary": "100 marks &middot; 3 sections &middot; 3 hours (exam format).", "href": "mock/exam1.html"}, {"title": "Exam 2 - PawPrint Dog Boarding", "summary": "100 marks &middot; 3 sections &middot; 3 hours (exam format).", "href": "mock/exam2.html"}, {"title": "Exam 3 - BrightPath Tutoring Centre", "summary": "100 marks &middot; 3 sections &middot; 3 hours (exam format).", "href": "mock/exam3.html"}, {"title": "Exam 4 - StageLine Ticketing", "summary": "100 marks &middot; 3 sections &middot; 3 hours (exam format).", "href": "mock/exam4.html"}];
 
   // ---- sidebar header dropdown: jump straight into a mock paper (each has its own page) ----
   (function(){

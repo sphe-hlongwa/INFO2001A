@@ -9,8 +9,8 @@ Static study site for INFO2001A (Information Systems, Wits). No build step: open
 | `index.html` | Landing page |
 | `test1.html` | Test 1: SQL + database design (flashcards, quizzes, mock) |
 | `test2.html` | Test 2: systems design + database + C# (flashcards, quizzes, mock paper selector) |
-| `exam.html` | Exam: scope and format, flashcards, quizzes and the two full 100-mark exam papers |
-| `mock/exam1.html`, `mock/exam2.html` | The two Exam papers (A: 15 MCQs, B: 17 usability, C: 68 case), timer, auto-marked MCQs, model answers |
+| `exam.html` | Exam: scope and format, flashcards, quizzes and the four full 100-mark exam papers |
+| `mock/exam1.html` … `mock/exam4.html` | The four Exam papers (A: 15 MCQs, B: 17 usability, C: 68 case), timer, auto-marked MCQs, model answers |
 | `mock/mock1.html` … `mock3.html` | The three full Test 2 mock papers, one page each (timer, auto-marked MCQs, model answers) |
 | `sql-fundamentals.html` | Access SQL, normalization and indexing reference |
 | `diagrams.html` | Use case, class, ERD, normalisation, DSD, wireframe, storyboard and report blueprints |
