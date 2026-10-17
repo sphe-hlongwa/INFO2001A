@@ -11,7 +11,7 @@ Static study site for INFO2001A (Information Systems, Wits). No build step: open
 | `test2.html` | Test 2: systems design + database + C# (flashcards, quizzes, mock paper selector) |
 | `exam.html` | Exam: scope and format, flashcards, quizzes and the four full 100-mark exam papers |
 | `mock/exam1.html` … `mock/exam4.html` | The four Exam papers (A: 15 MCQs, B: 17 usability, C: 68 case), timer, auto-marked MCQs, model answers |
-| `mock/mock1.html` … `mock3.html` | The three full Test 2 mock papers, one page each (timer, auto-marked MCQs, model answers) |
+| `mock-test2/mock1.html` … `mock3.html` | The three full Test 2 mock papers, one page each (timer, auto-marked MCQs, model answers) |
 | `sql-fundamentals.html` | Access SQL, normalization and indexing reference |
 | `diagrams.html` | Use case, class, ERD, normalisation, DSD, wireframe, storyboard and report blueprints |
 | `csharp-sql.html` | C# + SQL step-by-step with screenshots |
@@ -20,7 +20,8 @@ Static study site for INFO2001A (Information Systems, Wits). No build step: open
 
 ```
 index.html, test1.html, test2.html, sql-fundamentals.html, diagrams.html, csharp-sql.html
-mock/                  mock1.html, mock2.html, mock3.html
+mock/                  exam1.html … exam4.html (Exam papers)
+mock-test2/            mock1.html, mock2.html, mock3.html (Test 2 mocks)
 assets/
   css/                 site, nav, grid-bg, test2, mock-paper, csharp-learn
   js/                  site-nav, quiz-sound, quiz-fail, csharp-learn, mock-paper
@@ -35,7 +36,7 @@ docs/                  LOCAL ONLY, listed in .gitignore so it is never committed
 ## Adding a mock paper
 
 1. Create `assets/data/mock-4.js` containing `window.MOCK_PAPER = { title, subtitle, summary, duration, sections: [...] };` (copy the shape of `mock-3.js`).
-2. Copy `mock/mock3.html` to `mock/mock4.html` and change `data-paper="3"` and the `mock-3.js` script tag to 4.
+2. Copy `mock-test2/mock3.html` to `mock-test2/mock4.html` and change `data-paper="3"` and the `mock-3.js` script tag to 4.
 3. Add the paper to the `mockPapers` list in `test2.html` (title, summary, `href`).
 4. Bump the "next" link logic in `assets/js/mock-paper.js` (`num < 3`).
 

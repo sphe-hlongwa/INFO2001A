@@ -97,13 +97,47 @@
     <div class="exam-section blue">
       <div class="head"><span>Section A &mdash; Multiple Choice Questions</span><span class="badge">15 MARKS</span></div>
       <div class="exam-body">
-        <p class="time-hint">Foundational concepts across all Block 3 and Block 4 topics &middot; suggested time: about 40 minutes</p>
-        <ul>
-          <li><b>Database normalisation:</b> identify 1NF, 2NF and 3NF violations; partial versus transitive functional dependencies; update, insert and delete anomalies.</li>
-          <li><b>Data types and storage:</b> choosing numeric, text, date and Boolean types; variable-length storage rules (<code class="inline">VARCHAR</code>) and memory constraints.</li>
-          <li><b>ADO.NET objects:</b> the roles of <code class="inline">OleDbConnection</code>, <code class="inline">OleDbCommand</code>, <code class="inline">OleDbDataReader</code> and <code class="inline">OleDbDataAdapter</code>.</li>
-          <li>Also: relational model and keys, entity and referential integrity, three-layer architecture, DSD frames, usability goals, reporting.</li>
-        </ul>
+        <p class="time-hint">30 questions at &frac12; mark each &middot; Block 3 and Block 4 content &middot; suggested time: about 40 minutes</p>
+        <p>These MCQs test <b>reasoning and analytical skills, not recall</b>. Expect to diagnose a flawed design, trace a short piece of code, apply a rule to a table or diagram, and pick the best of several plausible options. The content below is spread across all four practice papers, because it cannot all fit into one 30-question paper.</p>
+        <ol>
+          <li><b>Relational data model and integrity rules (Block 3)</b>
+            <ul>
+              <li><b>Entity integrity:</b> every table has a primary key, and its values must be unique and NOT NULL.</li>
+              <li><b>Referential integrity:</b> a foreign key value must match an existing primary key value, or be <code class="inline">NULL</code> where the column allows it (for example a project with no manager assigned yet).</li>
+              <li><b>Key types:</b> primary key (a <i>composite</i> key when several attributes are combined), foreign key, <b>surrogate key</b> (an artificial sequential number when no natural key exists), <b>superkey</b> (any attribute set that uniquely identifies a row) and <b>candidate key</b> (a minimal superkey that could become the primary key).</li>
+              <li><b>Controlled redundancy:</b> foreign key values are deliberately duplicated to link tables. <b>Indexes</b> speed up lookups.</li>
+            </ul>
+          </li>
+          <li><b>Normalisation and anomalies (Block 3)</b>
+            <ul>
+              <li><b>Anomalies:</b> insertion (cannot record one fact without another), update (a duplicated value changed in one row only) and deletion (deleting a row loses an unrelated fact).</li>
+              <li><b>1NF:</b> atomic values (no repeating or multivalued cells), a defined primary key, no dependence on row order, and one data type per column.</li>
+              <li><b>2NF:</b> in 1NF with <b>no partial dependencies</b> on part of a composite key. A table with a single-column primary key is automatically in 2NF.</li>
+              <li><b>3NF:</b> in 2NF with <b>no transitive dependencies</b>: &ldquo;the key, the whole key and nothing but the key&rdquo;. When A &rarr; B is removed into a new table, the determinant A stays behind as a <b>foreign key</b>.</li>
+            </ul>
+          </li>
+          <li><b>Data types and storage (Block 3)</b>
+            <ul>
+              <li><code class="inline">CHAR(N)</code> reserves a fixed amount of memory for every value (wasteful for short or variable text), whereas <code class="inline">VARCHAR(N)</code> stores only what is entered, up to <i>N</i>.</li>
+              <li>A data type fixes the allowed values, memory size, valid operations and interpretation, which prevents errors.</li>
+            </ul>
+          </li>
+          <li><b>Three-layer architecture and sequence diagrams (Blocks 3 and 4)</b>
+            <ul>
+              <li><b>Boundary</b> (<code class="inline">:Form</code>): user interaction, input and error display. <b>Controller</b> (<code class="inline">:Handler</code>): use case logic, validation and transactions. <b>Entity</b> (<code class="inline">:Table</code>): persisted records represented in memory.</li>
+              <li><b>Frames:</b> <code class="inline">alt</code> (if&ndash;else), <code class="inline">opt</code> (only if a condition is true), <code class="inline">loop</code> (repetition) and <code class="inline">ref</code> (refers to another diagram).</li>
+              <li><b>Messages:</b> a solid horizontal arrow is a synchronous call; a dashed arrow is a return value.</li>
+            </ul>
+          </li>
+          <li><b>ADO.NET, C# and usability (Block 4)</b>
+            <ul>
+              <li><code class="inline">OleDbConnection</code> (the channel to the <code class="inline">.accdb</code> file), <code class="inline">OleDbCommand</code> (SQL text and parameters; <code class="inline">?</code> placeholders are filled strictly by position), <code class="inline">OleDbDataReader</code> (fast, read-only, forward-only, needs an open connection) and <code class="inline">OleDbDataAdapter</code> with a <code class="inline">DataTable</code> (disconnected data for grids).</li>
+              <li><code class="inline">ExecuteNonQuery()</code> returns the number of rows affected (never a new primary key). <code class="inline">ExecuteScalar()</code> returns the first column of the first row, such as a <code class="inline">COUNT(*)</code>. <code class="inline">ExecuteReader()</code> returns a stream of rows for a <code class="inline">SELECT</code>.</li>
+              <li><b>ComboBox:</b> <code class="inline">DisplayMember</code> is the text the user sees (<code class="inline">CourseName</code>); <code class="inline">ValueMember</code> is the underlying foreign key (<code class="inline">CourseCode</code>).</li>
+              <li><b>Usability:</b> Shneiderman&rsquo;s 8 golden rules (consistency, informative feedback, error prevention) and Nielsen&rsquo;s 10 heuristics (visibility of system status, recognition rather than recall).</li>
+            </ul>
+          </li>
+        </ol>
       </div>
     </div>
 
@@ -137,7 +171,7 @@
     <div class="tbl-scroll"><table class="flow">
       <thead><tr><th>Part</th><th>Marks</th><th>Scope</th></tr></thead>
       <tbody>
-        <tr><td>A &mdash; 30 MCQs at &frac12; mark</td><td>15</td><td>Keys, normalisation, data types, three layers and DSDs, ADO.NET, usability and UI, reporting</td></tr>
+        <tr><td>A &mdash; 30 MCQs at &frac12; mark</td><td>15</td><td>Keys and integrity rules, normalisation and anomalies, data types and storage, three layers and DSD frames, ADO.NET, C# controls and usability frameworks</td></tr>
         <tr><td>B &mdash; Usability scenario with a screen</td><td>17</td><td>Nielsen heuristics (5), Shneiderman rules (4), control selection (4), feedback and error handling (4)</td></tr>
         <tr><td>C1 &mdash; Database design and ERD</td><td>16</td><td>Class diagram to ERD, PK/FK placement, bridge table, normalisation of a spreadsheet</td></tr>
         <tr><td>C2 &mdash; Use case realisation</td><td>25</td><td>Full DSD (18) with frames; pre- and post-conditions; reasoning about frames</td></tr>
@@ -145,6 +179,19 @@
         <tr><td>C4 &mdash; ADO.NET code analysis</td><td>7</td><td>Tracing code, parameter order, exceptions and <code class="inline">finally</code></td></tr>
         <tr><td>C5 &mdash; Report design</td><td>12</td><td>Rationale table (7), prototype with derived fields (3), SQL (2)</td></tr>
         <tr><td><b>Total</b></td><td><b>100</b></td><td></td></tr>
+      </tbody></table></div>
+
+    <h3 class="part-title">How the Section A questions are spread across the papers</h3>
+    <p class="section-desc">Each paper has 30 MCQs and touches every pillar, but no two papers ask the same thing. Together the four papers cover every point listed above, so work through all of them rather than stopping at one.</p>
+    <div class="tbl-scroll"><table class="flow">
+      <thead><tr><th>Pillar</th><th>Exam 1</th><th>Exam 2</th><th>Exam 3</th><th>Exam 4</th></tr></thead>
+      <tbody>
+        <tr><td>1 &mdash; Relational model and integrity</td><td>7</td><td>5</td><td>5</td><td>6</td></tr>
+        <tr><td>2 &mdash; Normalisation and anomalies</td><td>6</td><td>6</td><td>5</td><td>4</td></tr>
+        <tr><td>3 &mdash; Data types and storage</td><td>4</td><td>3</td><td>5</td><td>2</td></tr>
+        <tr><td>4 &mdash; Three layers and DSDs</td><td>5</td><td>6</td><td>6</td><td>7</td></tr>
+        <tr><td>5 &mdash; ADO.NET, C# and usability</td><td>8</td><td>10</td><td>9</td><td>11</td></tr>
+        <tr><td><b>Questions per paper</b></td><td><b>30</b></td><td><b>30</b></td><td><b>30</b></td><td><b>30</b></td></tr>
       </tbody></table></div>
 
     <h3 class="part-title">Where to start</h3>

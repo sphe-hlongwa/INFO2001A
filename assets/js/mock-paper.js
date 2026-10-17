@@ -15,6 +15,7 @@
     return items.map((x,i)=>`
       <div class="q-block">
         <p class="q-text"><span class="qnum">A${start+i}</span>${x[0]}</p>
+        ${x[4] || ''}
         <div class="options">${x[1].map((o,j)=>`<button class="opt mcq-opt" data-correct="${x[2]}" data-choice="${j}">${String.fromCharCode(65+j)}. ${o}</button>`).join('')}</div>
         <p class="explain">${x[3]}</p>
       </div>`).join('');
