@@ -2629,6 +2629,72 @@ window.QUIZ_BANK = [
         ],
         "c": 2,
         "e": "Resource ownership extends to the whole form. Repeatedly opening undisposed windows is a common way a stable application degrades through a shift."
+      },
+      {
+        "q": "After an INSERT into <code class=\"inline\">Students</code> succeeds, a developer opens a <em>new</em> <code class=\"inline\">OleDbConnection</code>, runs <code class=\"inline\">SELECT @@IDENTITY</code> there and shows the result as the new ID. Why is this unreliable, and what is the fix?",
+        "o": [
+          "@@IDENTITY only works inside a stored routine, so the key must be read with ExecuteReader and a saved query instead",
+          "The second connection cannot see committed rows until the application restarts, so the key must be cached after Fill()",
+          "It reports the key made on its own connection, so a new connection has none; run it on the INSERT's connection",
+          "ExecuteScalar cannot return an integer, so the key has to be read with ExecuteNonQuery and the affected-row count"
+        ],
+        "c": 2,
+        "e": "The last generated AutoNumber belongs to the connection that ran the INSERT. ExecuteNonQuery returns rows affected, so the key needs its own SELECT on that same connection."
+      },
+      {
+        "q": "<code class=\"inline\">LoadStudents</code> fills a <em>fresh</em> DataSet and only then replaces the table shown in the grid. The Access file is locked and <code class=\"inline\">Fill()</code> throws. What does the user see, and what would change if the old table were removed first?",
+        "o": [
+          "An empty grid either way, because the exception clears every binding and the DataSet then has no table to show again",
+          "The old list stays on screen because nothing displayed was touched; removing the table first would leave an empty grid",
+          "A half-filled grid, and removing the table first would not change that because Fill adds rows one at a time to the live table",
+          "The previous list, and removing first would be identical because a DataSet rolls back by itself when an exception occurs"
+        ],
+        "c": 1,
+        "e": "Swapping only after a successful Fill keeps the last good data on screen. A DataSet has no automatic rollback, so removing first loses it."
+      },
+      {
+        "q": "A student has no e-mail address. The code assigns <code class=\"inline\">txtEmail.Text.Trim()</code> to the parameter and an empty string is stored. A report later filters <code class=\"inline\">WHERE [E-mail Address] IS NULL</code> to find students without an address. What happens, and what is the fix?",
+        "o": [
+          "Those students are missed, because an empty string is a value and not NULL; assign DBNull.Value when the trimmed text is blank",
+          "The filter works, because Access treats an empty string and NULL as identical in every query and every report",
+          "The INSERT fails, because a Short Text field cannot hold an empty string unless a validation rule allows it",
+          "Only the first such student is missed; the rest are matched because the filter stops reading after one mismatch"
+        ],
+        "c": 0,
+        "e": "NULL means no value and an empty string is a value. Saving a blank optional field as DBNull.Value keeps IS NULL filters truthful."
+      },
+      {
+        "q": "The grid shows 3 students from an earlier load. Another process then inserts a fourth. The user clicks Count (a <code class=\"inline\">SELECT COUNT(*)</code> read with <code class=\"inline\">ExecuteScalar</code>) and sees 4, while the position label still reads “1 of 3”. Which statement is correct?",
+        "o": [
+          "The count is wrong, because ExecuteScalar returns a cached first result from the connection pool until it is closed",
+          "The count is wrong, because ExecuteScalar returns a cached first result from the connection pool until the connection is closed and reopened",
+          "Neither can be trusted until the form is restarted, since both read from the same stale in-memory DataSet object",
+          "Both are right: the scalar asks the database now, the label reflects only the rows loaded earlier; load again to level them"
+        ],
+        "c": 3,
+        "e": "The database count and the BindingSource count measure different things. Load students refreshes the cache."
+      },
+      {
+        "q": "After a delete, the code reloads the list and reselects the grid row at the same index the deleted student had, then uses that row for the next Edit. Meanwhile another user removed an earlier student. What goes wrong, and what is the safer approach?",
+        "o": [
+          "Nothing, because positions in a BindingSource are stable keys that the DataSet renumbers automatically after each reload",
+          "The DataSet raises a concurrency exception and reloads without selecting anything, so the user must click a row again",
+          "The index now points at another student, so the edit may hit the wrong record; reselect by primary key with Find",
+          "The grid becomes read-only until the form is reopened, because the cached table no longer matches its stored schema"
+        ],
+        "c": 2,
+        "e": "A position is only an index into the current list. Updates and deletes must use the primary key, and reselection after a refresh should find that key."
+      },
+      {
+        "q": "<code class=\"inline\">btnConnect_Click</code> opens an <code class=\"inline\">OleDbConnection</code> inside <code class=\"inline\">using</code>, the block ends, and the form shows “Connected”. A developer argues that later operations must fail because the connection is now closed. Which reading is better?",
+        "o": [
+          "Connect only proved the file and provider work and stored the string; each later operation opens its own short-lived connection",
+          "using keeps the connection open until the form closes, which is why Load students needs no further connection string at all, even after errors",
+          "using keeps the connection open until the form closes, which is why Load students needs no further connection string",
+          "The connected flag can only be set true while a connection object stays open, so the design as written has a defect"
+        ],
+        "c": 0,
+        "e": "Connection pooling and short-lived connections mean the string, not an open object, is what is kept. Each operation opens, runs and disposes its own."
       }
     ]
   },
@@ -3151,6 +3217,72 @@ window.QUIZ_BANK = [
         ],
         "c": 1,
         "e": "Normalisation of input belongs with validation. Comparing untrimmed strings makes uniqueness depend on invisible characters."
+      },
+      {
+        "q": "A save INSERTs a student successfully, then the reload that refreshes the list throws an OleDbException. The handler shows “Save failed” and keeps the input, and the user clicks Save again. What is the consequence, and what should the handler have done?",
+        "o": [
+          "The retry hits the unique Student ID index because the first save committed; report that the save worked and mark the list for reload",
+          "Nothing happens, because the second INSERT overwrites the first row with the same values and returns one affected row",
+          "The retry succeeds and silently creates two identical students, because Access ignores unique indexes on text fields",
+          "The database rolls back the first save when the reload fails, so the retry correctly writes the record for the first time"
+        ],
+        "c": 0,
+        "e": "Writing and refreshing are separate steps. Reporting a completed write as a failure invites a duplicate."
+      },
+      {
+        "q": "A form disables buttons by setting Enabled inside each click handler. After a new case is added, a user can move to another row in the middle of an edit. Which design prevents this class of fault?",
+        "o": [
+          "Add comments listing which buttons each handler must toggle, and review those comments whenever a new case is added to the form",
+          "Disable the whole form while editing and re-enable it on Save, so that the user cannot interact with any control at all",
+          "Keep state in flags and have one method derive every control's Enabled from them, called by every handler and position event",
+          "Move the navigation buttons into a second form that opens only when the list has been loaded successfully by the first"
+        ],
+        "c": 2,
+        "e": "A single method that computes availability from state cannot forget a control, so the form cannot reach an impossible combination."
+      },
+      {
+        "q": "Validation is written as <code class=\"inline\">valid &= CheckRequired(txtStudentID)</code> for each field, not <code class=\"inline\">valid = valid && CheckRequired(txtStudentID)</code>. What is the difference in behaviour?",
+        "o": [
+          "There is no difference, because both forms evaluate every check and give the same result in all situations",
+          "The &= form stops at the first failure, which is faster and avoids showing the user several errors at the same time",
+          "The && form marks all fields while &= marks only the last one, because &= overwrites the earlier results as it goes",
+          "&= runs every check, so all invalid fields are flagged at once, while && stops after the first failure"
+        ],
+        "c": 3,
+        "e": "Non-short-circuit & evaluates both operands. Each CheckRequired call sets its own error, so all problems are shown together."
+      },
+      {
+        "q": "<code class=\"inline\">btnSave_Click</code> sets <code class=\"inline\">busy = true</code> before the database call, and the code that clears it was written after the try/catch instead of in a <code class=\"inline\">finally</code> block. An OleDbException is thrown and caught. What does the user experience?",
+        "o": [
+          "The save is retried automatically until it works, because catch blocks re-enter the handler while busy is still set",
+          "The form works normally, because the catch block resets every flag whenever an OleDbException has been handled",
+          "busy stays true, so controls stay disabled and the form is stuck; finally resets state however the call ends",
+          "Only the Save button stays disabled, while every other control is available because UpdateControls ignores the flag"
+        ],
+        "c": 2,
+        "e": "A state flag that is not cleared on every exit path locks the interface. finally runs on success, failure and early returns."
+      },
+      {
+        "q": "A user clicks New, types a code and a name, then clicks Cancel. The status says no database write was made. Which design makes that statement true?",
+        "o": [
+          "New inserts a blank row immediately and Cancel deletes it again, so the database count is the same afterwards",
+          "New starts a database transaction that Cancel leaves uncommitted, so Access discards the pending changes on its own",
+          "Cancel runs the SELECT again and rebuilds the whole DataSet, which replaces everything the user typed with stored data",
+          "New only clears the textboxes and sets the flags, adding no row; Cancel restores the cached values, with no SQL run"
+        ],
+        "c": 3,
+        "e": "Nothing is written until Save. Cancel therefore only needs to leave entry mode and show the cached record again."
+      },
+      {
+        "q": "A delete confirmation uses <code class=\"inline\">MessageBoxDefaultButton.Button2</code> on a Yes/No dialog. What risk does that default address?",
+        "o": [
+          "A reflex press of Enter or Space chooses No, so an accidental keypress cannot delete data; Yes needs a deliberate action",
+          "It stops the dialog appearing twice when the user double-clicks Delete before the first confirmation has closed",
+          "It runs the DELETE inside a transaction, so choosing Yes can still be undone by pressing the Cancel button later",
+          "It marks Yes as the validated choice so the SQL is parameterised before the statement is sent to Access by the form"
+        ],
+        "c": 0,
+        "e": "Defaulting to the safe button is a usability safeguard. Destructive actions should require intent."
       }
     ]
   },

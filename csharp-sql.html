@@ -222,7 +222,8 @@
   </div>
 
   <div class="modes" role="tablist" aria-label="Mode">
-    <button type="button" class="mode" role="tab" data-mode="build"><b>Build it</b><small>6 steps &middot; do the lab</small></button>
+    <button type="button" class="mode" role="tab" data-mode="build"><b>Build it</b><small>Tutorial 1 &middot; designer</small></button>
+    <button type="button" class="mode" role="tab" data-mode="code"><b>Code it</b><small>Tutorial 2 &middot; runtime</small></button>
     <button type="button" class="mode" role="tab" data-mode="learn"><b>Understand it</b><small>8 concepts &middot; Lecture 2</small></button>
     <button type="button" class="mode" role="tab" data-mode="practice"><b>Practice</b><small>flashcards &middot; quiz</small></button>
   </div>
@@ -236,6 +237,15 @@
     <button class="tab" role="tab" data-p="cheat"><span class="n">6</span>Cheat table</button>
   </div>
 
+  <div class="tabs" role="tablist" aria-label="Code it sections" data-mode="code" hidden>
+    <button class="tab" role="tab" data-p="t2setup"><span class="n">1</span>Code-first</button>
+    <button class="tab" role="tab" data-p="t2load"><span class="n">2</span>Connect &amp; load</button>
+    <button class="tab" role="tab" data-p="t2state"><span class="n">3</span>State &amp; move</button>
+    <button class="tab" role="tab" data-p="t2save"><span class="n">4</span>Create &amp; edit</button>
+    <button class="tab" role="tab" data-p="t2end"><span class="n">5</span>Cancel &amp; delete</button>
+    <button class="tab" role="tab" data-p="t2query"><span class="n">6</span>Reader &amp; scalar</button>
+    <button class="tab" role="tab" data-p="t2check"><span class="n">7</span>Checkpoints</button>
+  </div>
   <div class="tabs" role="tablist" aria-label="Understand it sections" data-mode="learn" hidden>
     <button class="tab" role="tab" data-p="objects"><span class="n">1</span>Objects</button>
     <button class="tab" role="tab" data-p="runsql"><span class="n">2</span>Run SQL</button>
@@ -901,12 +911,139 @@ finally
     </div>
   </section>
 
+  <!-- ===================== CODE IT (TUTORIAL 2) ===================== -->
+  <section class="panel" id="t2setup" role="tabpanel">
+    <h2 class="t">Code-first: same app, you own the data layer</h2>
+    <p class="lead">Tutorial 1 let the wizard build the connection and TableAdapter. Tutorial 2 builds them in code, so you must know what each object does and when.</p>
+<h3 class="s">Tutorial 1 vs Tutorial 2</h3><div class="tscroll"><table class="cmp"><tr><th></th><th>Tutorial 1</th><th>Tutorial 2</th></tr><tr><td>Connection</td><td>Wizard, saved in settings</td><td>OleDbConnectionStringBuilder at runtime; path from <code class="i">AppContext.BaseDirectory</code></td></tr><tr><td>Loading</td><td>TableAdapter.Fill into a typed DataSet</td><td>OleDbDataAdapter.Fill into a <b>fresh</b> DataSet, swapped in only on success</td></tr><tr><td>Binding</td><td>Designer writes DataBindings</td><td>BindText() in code, with <code>DataSourceUpdateMode.Never</code></td></tr><tr><td>Saving</td><td>EndEdit() then Update()</td><td>Your own parameterised INSERT, UPDATE, DELETE</td></tr><tr><td>Control state</td><td>Mostly implicit</td><td>Flags plus one UpdateControls() method</td></tr></table></div><h3 class="s">Fields and who enforces what</h3><div class="tscroll"><table class="cmp"><tr><th>Field</th><th>Type</th><th>Rule</th></tr><tr><td>ID</td><td>AutoNumber, integer</td><td>Key for UPDATE, DELETE, lookup. Never typed by the user</td></tr><tr><td>Student ID</td><td>Short Text 20, unique index</td><td>Required by the <b>application</b>. Text, so leading zeros survive</td></tr><tr><td>First / Last Name</td><td>Short Text 50</td><td>Required by the <b>application</b></td></tr><tr><td>E-mail Address</td><td>Short Text 50</td><td>Optional. Blank is saved as <code class="i">DBNull.Value</code></td></tr></table></div><div class="callout"><b>Rule</b><span>The database allows nulls in the text fields. &ldquo;Required&rdquo; here is a tutorial business rule, so your code must check it. Only the unique index on Student ID is enforced by Access.</span></div><h3 class="s">Seven fields that drive the whole form</h3><pre class="code"><code>private readonly DataSet studentData = new DataSet("StudentData");
+private string connectionString;
+private bool connected, loaded, editing, adding, busy;
+private int editingId;</code></pre><div class="three" style="margin-top:.8rem;"><div class="mini-card" style="--c:#6fa8ea"><span class="tag">connected / loaded</span><p>Access was reached; the list was retrieved. Different facts, different buttons.</p></div><div class="mini-card" style="--c:#a98be8"><span class="tag">editing / adding</span><p>Entry mode. adding picks INSERT, otherwise UPDATE.</p></div><div class="mini-card" style="--c:#e8a04c"><span class="tag">busy / editingId</span><p>busy blocks competing clicks. editingId pins the key before edits begin.</p></div></div><div class="callout tip"><b>Output copy</b><span>Add Students.accdb with <i>Copy if newer</i>. The app runs the copy in <code class="i">bin\Debug</code>, so saved rows appear there, not in the project file. Cleaning the build can wipe your practice data.</span></div>
+  </section>
+
+  <section class="panel" id="t2load" role="tabpanel">
+    <h2 class="t">Connect, load, bind</h2>
+    <p class="lead">Connecting only proves access. Loading retrieves rows. Binding shows them. Each is its own step, and each can fail separately.</p>
+<details class="dt" open><summary>Connect: build the string, test it, close it <small>btnConnect_Click</small></summary><div class="in"><pre class="code"><code>string path = Path.Combine(AppContext.BaseDirectory, "Students.accdb");
+if (!File.Exists(path)) { /* report, then return */ }
+var builder = new OleDbConnectionStringBuilder
+{
+    Provider = "Microsoft.ACE.OLEDB.12.0",
+    DataSource = path
+};
+connectionString = builder.ConnectionString;
+using (var connection = new OleDbConnection(connectionString))
+{
+    connection.Open();      // proves access, then is disposed
+}
+connected = true;</code></pre></div></details><details class="dt"><summary>Load: fill a fresh DataSet, then swap <small>LoadStudents</small></summary><div class="in"><pre class="code"><code>using (var fresh = new DataSet("StudentData"))
+{
+    using (var connection = new OleDbConnection(connectionString))
+    using (var adapter = new OleDbDataAdapter(
+        "SELECT [ID], [Student ID], [First Name], [Last Name], " +
+        "[E-mail Address] FROM [Students] ORDER BY [ID]", connection))
+    {
+        connection.Open();
+        adapter.Fill(fresh, "Students");
+    }
+    studentSource.DataSource = null;          // only now touch the display
+    if (studentData.Tables.Contains("Students"))
+        studentData.Tables.Remove("Students");
+    studentData.Tables.Add(fresh.Tables["Students"].Copy());
+    studentSource.DataSource = studentData;
+    studentSource.DataMember = "Students";
+    gridStudents.DataSource = studentSource;
+    BindTextBoxes();
+    loaded = true;
+}</code></pre></div></details><details class="dt"><summary>Bind: display only, no silent edits <small>BindText</small></summary><div class="in"><pre class="code"><code>box.DataBindings.Clear();     // reloading must not stack bindings
+box.DataBindings.Add(new Binding("Text", studentSource, field,
+    true, DataSourceUpdateMode.Never, ""));</code></pre></div></details><div class="two" style="margin-top:.9rem;"><div class="mini-card" style="--c:#5cb87a"><span class="tag">Why a fresh DataSet</span><p>If Fill throws halfway, the grid still shows the last good data. Replace only after success.</p></div><div class="mini-card" style="--c:#a98be8"><span class="tag">Why Never</span><p>Typing must not change the cached row. Save reads the textboxes and runs explicit SQL.</p></div></div><div class="callout"><b>Brackets</b><span>SQL needs <code class="i">[First Name]</code>. A Binding takes <code class="i">"First Name"</code> with no brackets. Mixing them up is a runtime error, not a compile error.</span></div><div class="callout tip"><b>Order</b><span>Load is also your refresh. After any write, reload and reselect by ID, because a position is not a key.</span></div>
+  </section>
+
+  <section class="panel" id="t2state" role="tabpanel">
+    <h2 class="t">State and navigation</h2>
+    <p class="lead">One method decides which control is allowed right now. Event handlers change state and call it. They never toggle buttons ad hoc.</p>
+<h3 class="s">What is enabled, and when</h3><div class="tscroll"><table class="cmp"><tr><th>State</th><th>Enabled</th><th>Disabled</th></tr><tr><td>Before connect</td><td>Connect</td><td>Everything else</td></tr><tr><td>Connected, not loaded</td><td>Load students</td><td>New, Find, Count, grid, navigation</td></tr><tr><td>Browsing, empty list</td><td>New, Load, Find, Count</td><td>Edit, Delete, navigation (no current row)</td></tr><tr><td>Browsing, rows</td><td>All actions. First/Prev only if Position &gt; 0, Next/Last only if below Count &minus; 1</td><td>Save, Cancel</td></tr><tr><td>Adding / editing</td><td>Save, Cancel, the four fields</td><td>Navigation, grid, Load, Find, Count, Delete</td></tr><tr><td>busy</td><td>Nothing</td><td>Every action, until finally runs</td></tr></table></div><details class="dt" open><summary>The rule behind it <small>UpdateControls</small></summary><div class="in"><pre class="code"><code>bool browse = connected &amp;&amp; loaded &amp;&amp; !editing &amp;&amp; !busy;
+bool hasRow = studentSource.Current is DataRowView;
+int position = studentSource.Position, count = studentSource.Count;
+lblPosition.Text = count == 0 ? "0 of 0" : (position + 1) + " of " + count;
+btnEdit.Enabled = btnDelete.Enabled = browse &amp;&amp; hasRow;
+btnFirst.Enabled = btnPrevious.Enabled = browse &amp;&amp; hasRow &amp;&amp; position &gt; 0;
+btnNext.Enabled  = btnLast.Enabled     = browse &amp;&amp; hasRow &amp;&amp; position &lt; count - 1;
+btnSave.Enabled  = btnCancel.Enabled   = editing &amp;&amp; !busy;</code></pre></div></details><div class="two" style="margin-top:.9rem;"><div class="mini-card" style="--c:#6fa8ea"><span class="tag">Navigation</span><p>MoveFirst, MovePrevious, MoveNext, MoveLast change Position only. No SQL runs.</p></div><div class="mini-card" style="--c:#e8a04c"><span class="tag">Two events</span><p>PositionChanged and ListChanged both call UpdateControls so the label, buttons and grid never disagree.</p></div></div><div class="callout tip"><b>Off by one</b><span>Position starts at 0, so the label shows <code class="i">Position + 1</code>. CurrentId() returns <code class="i">int?</code>, and null means there is no row.</span></div>
+  </section>
+
+  <section class="panel" id="t2save" role="tabpanel">
+    <h2 class="t">Create and edit</h2>
+    <p class="lead">Save is a pipeline. Validate first, then write once, then check the write, then refresh. A failure at any point must leave the user&rsquo;s input intact.</p>
+<div class="pipe"><span class="p">Validate</span><span class="ar">&rarr;</span><span class="p">Parameters</span><span class="ar">&rarr;</span><span class="p">INSERT or UPDATE</span><span class="ar">&rarr;</span><span class="p">Rows = 1?</span><span class="ar">&rarr;</span><span class="p">Reload + reselect</span></div><h3 class="s">Parameters: position decides</h3><div class="tscroll"><table class="cmp"><tr><th>Order</th><th>Field</th><th>Type</th></tr><tr><td>1</td><td>Student ID</td><td>VarWChar, 20</td></tr><tr><td>2</td><td>First Name</td><td>VarWChar, 50</td></tr><tr><td>3</td><td>Last Name</td><td>VarWChar, 50</td></tr><tr><td>4</td><td>E-mail Address</td><td>VarWChar, 50. DBNull.Value if blank</td></tr><tr><td>5 (UPDATE only)</td><td>ID</td><td>Integer, from editingId</td></tr></table></div><div class="callout"><b>Order</b><span>OleDb ignores parameter names. The names <code class="i">@first</code> and <code class="i">@last</code> are for you. Swap two lines and you silently save the surname as the first name.</span></div><details class="dt" open><summary>INSERT, then read the new key <small>InsertStudent</small></summary><div class="in"><pre class="code"><code>using (var transaction = connection.BeginTransaction())
+{
+    using (var cmd = new OleDbCommand(
+        "INSERT INTO [Students] ([Student ID], [First Name], " +
+        "[Last Name], [E-mail Address]) VALUES (?, ?, ?, ?)",
+        connection, transaction))
+    {
+        AddStudentParameters(cmd);
+        if (cmd.ExecuteNonQuery() != 1)
+            throw new InvalidOperationException("Not one row.");
+    }
+    using (var cmd = new OleDbCommand("SELECT @@IDENTITY",
+        connection, transaction))
+        id = Convert.ToInt32(cmd.ExecuteScalar());
+    transaction.Commit();     // no Commit means rollback on dispose
+}</code></pre></div></details><details class="dt"><summary>UPDATE: the key goes last <small>UpdateStudent</small></summary><div class="in"><pre class="code"><code>"UPDATE [Students] SET [Student ID] = ?, [First Name] = ?, " +
+"[Last Name] = ?, [E-mail Address] = ? WHERE [ID] = ?"
+// AddStudentParameters(cmd); then the Integer ID parameter
+if (cmd.ExecuteNonQuery() == 0) { /* not found: not a successful edit */ }</code></pre></div></details><h3 class="s">Why each safeguard exists</h3><div class="three"><div class="mini-card" style="--c:#6fa8ea"><span class="tag">ExecuteNonQuery</span><p>Returns rows affected, never the new AutoNumber. Read the key separately.</p></div><div class="mini-card" style="--c:#a98be8"><span class="tag">@@IDENTITY</span><p>Is per connection, so it must run on the same connection and transaction as the INSERT.</p></div><div class="mini-card" style="--c:#e8a04c"><span class="tag">RefreshAfterWrite</span><p>If the reload fails after a good write, say the save worked. Do not report a failed save.</p></div></div><div class="callout"><b>Trap</b><span>A blank Student ID must be rejected by your validation. A duplicate is only caught by the unique index, as an OleDbException. Handle both and keep the input.</span></div>
+  </section>
+
+  <section class="panel" id="t2end" role="tabpanel">
+    <h2 class="t">Cancel, delete and close safely</h2>
+    <p class="lead">These are the paths where data is lost. Each needs the target pinned, the user asked, and the outcome checked.</p>
+<details class="dt" open><summary>Cancel touches no database <small>CancelEntry</small></summary><div class="in"><pre class="code"><code>editing = false; adding = false;
+studentErrors.Clear();
+studentSource.ResetBindings(false);
+foreach (TextBox box in boxes)
+{
+    if (studentSource.Count == 0) box.Clear();
+    else foreach (Binding b in box.DataBindings) b.ReadValue();   // restore cache
+}
+UpdateControls();</code></pre></div></details><details class="dt"><summary>Closing mid-entry <small>FormClosing</small></summary><div class="in"><pre class="code"><code>if (editing &amp;&amp; MessageBox.Show("Discard the unsaved entry and close?",
+    "Unsaved entry", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+    MessageBoxDefaultButton.Button2) != DialogResult.Yes) e.Cancel = true;</code></pre></div></details><details class="dt"><summary>Delete by key, default to No <small>btnDelete_Click + DeleteStudent</small></summary><div class="in"><pre class="code"><code>int? id = CurrentId();                       // capture before the dialog
+if (MessageBox.Show(..., MessageBoxDefaultButton.Button2) != DialogResult.Yes)
+    return;                                  // nothing has run yet
+// "DELETE FROM [Students] WHERE [ID] = ?"  with an Integer parameter
+// 0 rows: "not found". Then RefreshAfterWrite(null, "Student deleted.")</code></pre></div></details><div class="two" style="margin-top:.9rem;"><div class="mini-card bad" style="--c:#e2665b"><span class="tag">Provider error on delete</span><p>Related records may block it. Report it. Never switch off relationships to force the delete.</p></div><div class="mini-card good" style="--c:#5cb87a"><span class="tag">After delete</span><p>Reload with no id to select, so Position lands on a real row or the empty state.</p></div></div>
+  </section>
+
+  <section class="panel" id="t2query" role="tabpanel">
+    <h2 class="t">Reader and scalar: ask the database directly</h2>
+    <p class="lead">The grid shows what was loaded. These two calls ask Access right now, so their answers can differ from the grid.</p>
+<div class="tscroll"><table class="cmp"><tr><th>Button</th><th>Method</th><th>Returns</th><th>Limit</th></tr><tr><td>Find ID</td><td>ExecuteReader</td><td>One row, read once, forward only</td><td>Cannot update the record it returned</td></tr><tr><td>Count students</td><td>ExecuteScalar</td><td>One value, first column of first row</td><td>Counts stored rows, not loaded rows</td></tr><tr><td>Save / Delete</td><td>ExecuteNonQuery</td><td>Rows affected</td><td>Does not return data</td></tr></table></div><details class="dt" open><summary>Reader: TryParse, parameter, Read, IsDBNull <small>FindWithReader</small></summary><div class="in"><pre class="code"><code>if (!int.TryParse(txtLookupID.Text, out id) || id &lt;= 0) { /* message */ return; }
+// SELECT [First Name], [Last Name] FROM [Students] WHERE [ID] = ?
+using (var reader = cmd.ExecuteReader())
+{
+    if (!reader.Read()) { /* no match is normal, not an exception */ return; }
+    first = reader.IsDBNull(0) ? "" : reader.GetString(0);
+    last  = reader.IsDBNull(1) ? "" : reader.GetString(1);
+}
+int position = studentSource.Find("ID", id);   // select it if it is loaded</code></pre></div></details><details class="dt"><summary>Scalar: count, then convert <small>CountWithScalar</small></summary><div class="in"><pre class="code"><code>"SELECT COUNT(*) FROM [Students]"
+int count = Convert.ToInt32(cmd.ExecuteScalar());</code></pre></div></details><div class="callout tip"><b>Check</b><span>The lookup takes the internal <b>ID</b>, not DEMO01. With an empty table COUNT(*) returns 0, not nothing. If Find says &ldquo;not loaded&rdquo;, the database is ahead of the cache. Click Load students.</span></div>
+  </section>
+
+  <section class="panel" id="t2check" role="tabpanel">
+    <h2 class="t">Checkpoints and traps</h2>
+    <p class="lead">Test in this order. Each check proves one behaviour, so a failure points at one method.</p>
+<ol class="steps"><li><span><b>Empty table:</b> 0 of 0, New enabled, Edit, Delete and navigation disabled.</span></li><li><span><b>Blank required field:</b> Save writes nothing and highlights the field.</span></li><li><span><b>Three records:</b> record the real IDs. Do not assume they are consecutive.</span></li><li><span><b>Duplicate Student ID:</b> error handled, input retained.</span></li><li><span><b>Edit and Cancel:</b> the original value returns, and the database count is unchanged.</span></li><li><span><b>Close mid-entry:</b> choose No and stay on the form.</span></li><li><span><b>Delete:</b> No keeps the row. Yes removes exactly that ID.</span></li><li><span><b>Find and Count:</b> a real ID, a missing ID, letters, and an empty table.</span></li></ol><h3 class="s">Traps that cost marks</h3><div class="mistakes"><div class="mistake"><div><b>Parameter order</b><span>Same count, wrong order. It saves, but into the wrong columns.</span></div></div><div class="mistake"><div><b>Two handlers</b><span>Double-clicking again, or also wiring Click in the constructor, runs the code twice.</span></div></div><div class="mistake"><div><b>Redeclaring components</b><span>Do not declare studentSource or studentErrors. The Designer owns them.</span></div></div><div class="mistake"><div><b>Concatenated SQL</b><span>Input goes in parameters, never into the SQL text.</span></div></div><div class="mistake"><div><b>Wrong file</b><span>Checking the project .accdb while the app writes to the output copy.</span></div></div><div class="mistake"><div><b>Claiming a failed save</b><span>A write that succeeded followed by a failed reload is still a success.</span></div></div></div><div class="callout tip"><b>Link</b><span>Tutorial 1 hides these steps behind generated code. If you can explain this page, you can explain what the TableAdapter was doing for you.</span></div>
+  </section>
+
   <!-- ===================== PRACTICE ===================== -->
 
   <!-- 9. FLASHCARDS -->
   <section class="panel" id="cards" role="tabpanel">
     <h2 class="t">Flashcards</h2>
-    <p class="lead">Tap a card to flip it. Filter by topic. These cover the build guide and the solution-design lecture.</p>
+    <p class="lead">Tap a card to flip it. Filter by topic. These cover both build tutorials and the solution-design lecture.</p>
     <div class="fc-bar">
       <span class="count" id="fcCount"></span>
       <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
@@ -948,14 +1085,16 @@ finally
   /* ---------- modes, tabs + pager ---------- */
   const MODES = {
     build:{order:['overview','connect','bind','navigate','edit','cheat']},
+    code:{order:['t2setup','t2load','t2state','t2save','t2end','t2query','t2check']},
     learn:{order:['objects','runsql','related','validate','crud','search','usable','errors']},
     practice:{order:['cards','quiz']}
   };
   const NAMES = {overview:'Big picture',connect:'Connect',bind:'Bind & load',navigate:'Navigate',edit:'Add, edit, delete',cheat:'Cheat table',
+    t2setup:'Code-first',t2load:'Connect & load',t2state:'State & move',t2save:'Create & edit',t2end:'Cancel & delete',t2query:'Reader & scalar',t2check:'Checkpoints',
     objects:'Objects',runsql:'Run SQL',related:'Related data',validate:'Validate',crud:'CRUD & move',search:'Search',usable:'Usability',errors:'Errors',
     cards:'Flashcards',quiz:'Quiz'};
   const modeOf = id => Object.keys(MODES).find(m=>MODES[m].order.includes(id));
-  const lastIn = {build:'overview',learn:'objects',practice:'cards'};
+  const lastIn = {build:'overview',code:'t2setup',learn:'objects',practice:'cards'};
   const activeId = () => (document.querySelector('.panel.active')||{}).id;
   function show(id, push){
     let m = modeOf(id);
@@ -986,8 +1125,8 @@ finally
   show(location.hash.slice(1));
 
   /* ---------- tiny C# highlighter + copy buttons ---------- */
-  const KW = /\b(private|void|if|else|return|try|catch|finally|new|this|null|true|false|class|var|using|while|int|decimal|out)\b/;
-  const TY = /\b(object|EventArgs|Exception|DialogResult|MessageBox|MessageBoxButtons|MessageBoxIcon|string|OleDbCommand|OleDbType|OleDbException|OleDbDataAdapter|DataTable|Convert)\b/;
+  const KW = /\b(private|void|if|else|return|try|catch|finally|new|this|null|true|false|class|var|using|while|int|decimal|out|bool|foreach|throw|in|is|as|readonly|using)\b/;
+  const TY = /\b(object|EventArgs|Exception|DialogResult|MessageBox|MessageBoxButtons|MessageBoxIcon|string|OleDbCommand|OleDbType|OleDbException|OleDbDataAdapter|DataTable|Convert|DataSet|OleDbConnection|OleDbConnectionStringBuilder|Binding|TextBox|DataRowView|Path|File|AppContext)\b/;
   function csHighlight(root){ (root||document).querySelectorAll('pre.code').forEach(pre=>{
     if(pre.querySelector('.copy')) return;
     const raw = pre.textContent;
