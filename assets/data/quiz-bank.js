@@ -2675,7 +2675,7 @@ window.QUIZ_BANK = [
         "e": "The database count and the BindingSource count measure different things. Load students refreshes the cache."
       },
       {
-        "q": "After a delete, the code reloads the list and reselects the grid row at the same index the deleted student had, then uses that row for the next Edit. Meanwhile another user removed an earlier student. What goes wrong, and what is the safer approach?",
+        "q": "After editing a student who still exists, the code reloads the list and reselects the grid row at the same index that student had, then uses that row for the next Edit. Meanwhile another user removed an earlier student. What goes wrong, and what is the safer approach?",
         "o": [
           "Nothing, because positions in a BindingSource are stable keys that the DataSet renumbers automatically after each reload",
           "The DataSet raises a concurrency exception and reloads without selecting anything, so the user must click a row again",
@@ -3256,11 +3256,11 @@ window.QUIZ_BANK = [
         "o": [
           "The save is retried automatically until it works, because catch blocks re-enter the handler while busy is still set",
           "The form works normally, because the catch block resets every flag whenever an OleDbException has been handled",
-          "busy stays true, so controls stay disabled and the form is stuck; finally resets state however the call ends",
+          "The save fails, but the caught exception lets execution continue after the try/catch, where busy is cleared and the controls are re-enabled",
           "Only the Save button stays disabled, while every other control is available because UpdateControls ignores the flag"
         ],
         "c": 2,
-        "e": "A state flag that is not cleared on every exit path locks the interface. finally runs on success, failure and early returns."
+        "e": "A caught exception does not end the handler, so execution reaches cleanup after the try/catch. A finally block is still needed to clear state if another path returns early or an exception escapes."
       },
       {
         "q": "A user clicks New, types a code and a name, then clicks Cancel. The status says no database write was made. Which design makes that statement true?",
