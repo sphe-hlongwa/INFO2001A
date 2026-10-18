@@ -311,13 +311,14 @@
   v.className='hero-live';v.muted=true;v.defaultMuted=true;v.playsInline=true;
   v.preload='auto';v.setAttribute('aria-hidden','true');v.tabIndex=-1;
   v.innerHTML='<source src="assets/media/hero-live.webm" type="video/webm"><source src="assets/media/hero-live.mp4" type="video/mp4">';
+  var sources=v.querySelectorAll('source'),finalSource=sources[sources.length-1];
   function done(){v.classList.remove('is-on');setTimeout(function(){if(v.parentNode)v.parentNode.removeChild(v);},700);}
   v.addEventListener('playing',function(){
     try{sessionStorage.setItem(KEY,'1');}catch(e){}
     v.classList.add('is-on');
   },{once:true});
   v.addEventListener('ended',done);
-  v.addEventListener('error',done,true);
+  v.addEventListener('error',function(e){if(e.target===v||e.target===finalSource)done();},true);
   bg.appendChild(v);
   var pr=v.play();
   if(pr&&pr.catch)pr.catch(done); /* autoplay blocked: keep still, try again next page view */
