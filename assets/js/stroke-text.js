@@ -263,7 +263,9 @@
     fontsReady.catch(function () {}).then(function () {
       init();
       /* a late font swap can change glyph widths: re-measure once it settles */
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (ready) measure(); });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () {
+        if (ready && measure() && mode === 'done') render(total + 1);
+      });
     });
 
     return { follow: follow, end: end, redraw: redraw, duration: total, element: wrap };
