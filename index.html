@@ -9,8 +9,15 @@
 <link rel="preload" href="assets/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/fonts.css">
 <link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/stroke-text.css">
 <script src="assets/js/site-nav.js" defer></script>
+<script>
+/* hide the plain hero title until the outline-draw version is built (avoids a text-to-SVG flash); failsafe reveals it anyway */
+document.documentElement.classList.add('st-wait');
+setTimeout(function(){document.documentElement.classList.remove('st-wait');},2500);
+</script>
 <style>
+  .st-wait #hero-title{visibility:hidden;}
   /* ---- hero: same width + gutters as the floating nav bar (max 1120px, 16px side padding) ---- */
   .hero-wrap{max-width:1152px;margin:0 auto;padding:88px 16px 0;perspective:1200px;} /* 88px = nav top 14 + height 58 + 16 gap */
   .hero{
@@ -299,29 +306,49 @@
 
 <script data-goatcounter="https://info2001a.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
+<script src="assets/js/stroke-text.js"></script>
+<script>
+/* "Choose your track" outline-draw title (StrokeText). It starts hidden and is driven by the intro clip's clock below;
+   when the clip isn't played (already seen this session, reduced motion, save-data, blocked autoplay) it simply shows finished. */
+var heroTitle=(window.StrokeText&&document.getElementById('hero-title'))?StrokeText(document.getElementById('hero-title'),{
+  strokeColor:'#A78BFA',
+  strokeWidth:1,        /* 1.4 was tuned for 128px type; this heading is 30-48px */
+  drawDuration:1.6,fillDelay:0.2,stagger:0.05,ease:'power2.out',
+  fillMode:'wipe',wipeFrom:'left',
+  fontSize:48,letterSpacing:-0.96, /* = -0.02em, same tracking as .page-title */
+  hoverRedraw:true
+}):null;
+</script>
 <script>
 /* hero intro clip: plays once per browser session (first load only), then the still image is used until the tab/browser is closed */
 (function(){
   var KEY='heroLivePlayed',bg=document.querySelector('.hero-bg');
-  if(!bg)return;
-  try{if(sessionStorage.getItem(KEY))return;}catch(e){return;} /* already played, or storage blocked: show still only */
-  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  if(navigator.connection&&navigator.connection.saveData)return;
+  function still(){if(heroTitle)heroTitle.end();} /* no clip this visit: title just shows finished */
+  if(!bg){still();return;}
+  try{if(sessionStorage.getItem(KEY)){still();return;}}catch(e){still();return;} /* already played, or storage blocked: show still only */
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){still();return;}
+  if(navigator.connection&&navigator.connection.saveData){still();return;}
   var v=document.createElement('video');
   v.className='hero-live';v.muted=true;v.defaultMuted=true;v.playsInline=true;
   v.preload='auto';v.setAttribute('aria-hidden','true');v.tabIndex=-1;
   v.innerHTML='<source src="assets/media/hero-live.webm" type="video/webm"><source src="assets/media/hero-live.mp4" type="video/mp4">';
   var sources=v.querySelectorAll('source'),finalSource=sources[sources.length-1];
-  function done(){v.classList.remove('is-on');setTimeout(function(){if(v.parentNode)v.parentNode.removeChild(v);},700);}
+  function done(){
+    still(); /* clip over/failed: make sure the title is finished */
+    v.classList.remove('is-on');setTimeout(function(){if(v.parentNode)v.parentNode.removeChild(v);},700);
+  }
   v.addEventListener('playing',function(){
     try{sessionStorage.setItem(KEY,'1');}catch(e){}
     v.classList.add('is-on');
+    /* title draws along with the clip: progress follows v.currentTime (0.5s in, finishing at ~6s as the light burst lands) */
+    if(heroTitle)heroTitle.follow(v,{start:0.5,span:5.5});
   },{once:true});
   v.addEventListener('ended',done);
   v.addEventListener('error',function(e){if(e.target===v||e.target===finalSource)done();},true);
   bg.appendChild(v);
   var pr=v.play();
   if(pr&&pr.catch)pr.catch(done); /* autoplay blocked: keep still, try again next page view */
+  setTimeout(function(){if(!v.classList.contains('is-on'))still();},4000); /* clip never started (slow network): don't leave the title blank */
 })();
 </script>
 <script>

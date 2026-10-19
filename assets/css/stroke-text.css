@@ -1,0 +1,15 @@
+/* StrokeText: sized in em (set from JS) so it follows the host heading's responsive font-size. */
+.stroke-text{
+  display:block;
+  line-height:0;
+}
+.stroke-text__svg{
+  display:block;
+  max-width:100%;
+  height:auto;
+  overflow:visible;
+}
+.stroke-text__stroke,
+.stroke-text__fill{
+  user-select:none;
+}
