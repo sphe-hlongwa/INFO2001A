@@ -11,7 +11,6 @@
 <link rel="stylesheet" href="assets/css/grid-bg.css">
 <link rel="stylesheet" href="assets/css/test2.css">
 <link rel="stylesheet" href="assets/css/diagram-zoom.css">
-<!-- <script src="assets/js/cursor-grid.js"></script> -->
 </head>
 <body>
 <input type="checkbox" id="navToggle" class="nav-toggle-state">
@@ -259,6 +258,7 @@
 <script src="assets/js/quiz-fail.js"></script>
 <script src="assets/data/quiz-bank.js"></script>
 <script src="assets/data/flashcard-bank.js"></script>
+<script src="assets/js/flashcards.js"></script>
 <script>
   // ---- sidebar nav ----
   function showView(name){
@@ -268,11 +268,6 @@
       if(on) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
     });
     document.querySelectorAll('section.view').forEach(v=>v.classList.toggle('active', v.id === name));
-    if(name === 'quiz'){
-      requestAnimationFrame(()=>quizList.querySelectorAll('.options').forEach(options=>{
-        equaliseOptionHeights(options.querySelectorAll('.opt'));
-      }));
-    }
   }
   document.querySelectorAll('.view-sidebar [data-view]').forEach(btn=>{
     btn.addEventListener('click', ()=> showView(btn.dataset.view));
@@ -280,39 +275,7 @@
 
   // ---- flashcards ----
   const flashcards = window.FLASHCARD_BANK;
-  const FLASH_TAGS = ['All', ...Array.from(new Set(flashcards.map(c=>c.tag)))];
-  let activeFlashTag = 'All';
-  const grid = document.getElementById('flash-grid');
-  const filterRow = document.getElementById('flash-filters');
-  function renderFlashFilters(){
-    filterRow.innerHTML = '';
-    FLASH_TAGS.forEach(tag=>{
-      const opt = document.createElement('option');
-      const count = tag === 'All' ? flashcards.length : flashcards.filter(c=>c.tag===tag).length;
-      opt.value = tag; opt.textContent = `${tag} (${count})`;
-      if (tag === activeFlashTag) opt.selected = true;
-      filterRow.appendChild(opt);
-    });
-  }
-  filterRow.addEventListener('change', ()=>{ activeFlashTag = filterRow.value; renderFlashGrid(); });
-  function renderFlashGrid(){
-    grid.innerHTML = '';
-    const list = activeFlashTag === 'All' ? flashcards : flashcards.filter(c=>c.tag===activeFlashTag);
-    list.forEach(c=>{
-      const el = document.createElement('div');
-      el.className = 'flashcard';
-      el.innerHTML = `<div class="inner"><div class="face front"><div class="tag">${c.tag}</div><p>${c.front}</p><span class="hint">tap to flip</span></div><div class="face back"><div class="tag">${c.tag}</div><p>${c.back}</p></div></div>`;
-      el.addEventListener('click', ()=> el.classList.toggle('flipped'));
-      grid.appendChild(el);
-    });
-    document.getElementById('flash-count').textContent = list.length + ' cards';
-  }
-  renderFlashFilters(); renderFlashGrid();
-  document.getElementById('flash-reset').addEventListener('click', ()=>{
-    const cards = document.querySelectorAll('#flash-grid .flashcard');
-    const allFlipped = Array.from(cards).every(c=>c.classList.contains('flipped'));
-    cards.forEach(c=>c.classList.toggle('flipped', !allFlipped));
-  });
+  initFlashcards(flashcards);
 
   // ---- topic quizzes ----
   const quizzes = window.QUIZ_BANK.map(function (quiz) { return { title: quiz.title, questions: quiz.questions.map(function (item) { return { q: item.q, opts: item.o, correct: item.c, explain: item.e }; }) }; });
@@ -326,11 +289,6 @@
       [choices[i], choices[j]] = [choices[j], choices[i]];
     }
     return choices;
-  }
-  function equaliseOptionHeights(buttons){
-    buttons.forEach(button=>button.style.minHeight = '');
-    const tallest = Math.max(...Array.from(buttons, button=>button.offsetHeight));
-    buttons.forEach(button=>button.style.minHeight = `${tallest}px`);
   }
   function updateQuizScore(){
     document.getElementById('quiz-score').textContent = `Score: ${qScore} / ${qAnswered} (${quizzes[activeQuiz].questions.length} questions)`;
@@ -357,7 +315,6 @@
         if(qAnswered === quizzes[activeQuiz].questions.length && window.quizFinished) quizFinished(qScore, qAnswered);
       }));
       quizList.appendChild(block);
-      equaliseOptionHeights(btns);
     });
     updateQuizScore();
   }

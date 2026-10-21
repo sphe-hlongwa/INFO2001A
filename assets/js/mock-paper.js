@@ -9,7 +9,7 @@
   const restartBtn = document.getElementById('mock-restart');
   let uid = 0;
 
-  const qMarks = n => `<span class="marks">[${n} ${n===1?'mark':'marks'}]</span>`;
+  const qMarks = n => typeof n === 'number' ? `<span class="marks">[${n} ${n===1?'mark':'marks'}]</span>` : '';
 
   function mcqHTML(items, start){
     return items.map((x,i)=>`
@@ -26,7 +26,7 @@
       const id = 'ans-' + (uid++);
       return `
         <div class="qitem">
-          <p class="qtitle"><span class="qnum-tag">${x.id}</span>${x.q} ${qMarks(x.marks)}</p>
+          <p class="qtitle">${x.id ? `<span class="qnum-tag">${x.id}</span>` : ''}${x.q} ${qMarks(x.marks)}</p>
           <button class="reveal-btn" data-target="${id}">Show model answer</button>
           <div class="model-answer" id="${id}">${x.a}</div>
         </div>`;
@@ -71,7 +71,7 @@
         <div class="exam-section ${s.color}">
           <div class="head"><span>${s.title}</span><span class="badge">${s.marks} MARKS</span></div>
           <div class="exam-body">
-            <p class="time-hint">Suggested time: ${s.time}</p>
+            ${s.time ? `<p class="time-hint">Suggested time: ${s.time}</p>` : ''}
             ${s.parts.map(partHTML).join('')}
           </div>
         </div>`).join('')}
@@ -106,7 +106,7 @@
   });
 
   // ---- timer (survives a page refresh; Restart resets it) ----
-  const KEY = 'info2001a-' + (document.body.dataset.prefix || 'mock') + '-' + num + '-deadline';
+  const KEY = 'info2001a-' + (document.body.dataset.paperKey || (document.body.dataset.prefix || 'mock') + '-' + num) + '-deadline';
   const store = {
     get(){ try{ return Number(localStorage.getItem(KEY)) || 0; }catch(e){ return 0; } },
     set(v){ try{ localStorage.setItem(KEY, String(v)); }catch(e){} }

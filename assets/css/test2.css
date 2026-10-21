@@ -373,7 +373,7 @@
   }
   .q-block .q-text{font-weight:500;margin:0 0 .8rem;font-size:15px;}
   .q-block .q-text .qnum{color:var(--cyan);font-family:'IBM Plex Mono',monospace;margin-right:.4rem;}
-  .options{display:flex;flex-direction:column;gap:.5rem;}
+  .options{display:grid;grid-auto-rows:1fr;gap:.5rem;} /* equal-height options, so answer length gives nothing away */
   .opt{
     text-align:left;
     background:var(--panel-2);

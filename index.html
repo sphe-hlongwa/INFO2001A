@@ -42,12 +42,6 @@ setTimeout(function(){document.documentElement.classList.remove('st-wait');},250
     transition:transform .5s cubic-bezier(.2,.8,.2,1);
   }
   .hero.is-tilting .hero-bg{transition:transform .08s linear;}
-  .hero-live{ /* one-time intro clip: sits on top of the still, fades out to reveal it */
-    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:62% 40%;
-    opacity:0;transition:opacity .6s ease;pointer-events:none;
-  }
-  .hero-live.is-on{opacity:1;}
-  @media(max-width:760px){.hero-live{object-position:70% 40%;}}
   .hero-glare{ /* light that follows the pointer */
     position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;
     background:radial-gradient(circle at calc(50% + var(--mx,0) * 50%) calc(50% + var(--my,0) * 50%),rgba(255,255,255,.16),transparent 45%);
@@ -172,7 +166,7 @@ setTimeout(function(){document.documentElement.classList.remove('st-wait');},250
     .track h2{font-size:16px;} .track-desc{font-size:11.5px;}
   }
 </style>
-<script src="assets/js/cursor-grid.js"></script>
+<script src="assets/js/cursor-grid.js" defer></script>
 </head>
 <body>
 
@@ -308,47 +302,26 @@ setTimeout(function(){document.documentElement.classList.remove('st-wait');},250
         async src="//gc.zgo.at/count.js"></script>
 <script src="assets/js/stroke-text.js"></script>
 <script>
-/* "Choose your track" outline-draw title (StrokeText). It starts hidden and is driven by the intro clip's clock below;
-   when the clip isn't played (already seen this session, reduced motion, save-data, blocked autoplay) it simply shows finished. */
+/* "Choose your track" outline-draw title (StrokeText). It draws itself once per browser session (first visit only);
+   on later page views, with reduced motion, or if the script is missing, it just shows finished. */
+var heroTitleStart=0; /* set when the font is measured and the title is ready, so the draw never starts half-finished */
 var heroTitle=(window.StrokeText&&document.getElementById('hero-title'))?StrokeText(document.getElementById('hero-title'),{
   strokeColor:'#A78BFA',
   strokeWidth:1,        /* 1.4 was tuned for 128px type; this heading is 30-48px */
   drawDuration:1.6,fillDelay:0.2,stagger:0.05,ease:'power2.out',
   fillMode:'wipe',wipeFrom:'left',
   fontSize:48,letterSpacing:-0.96, /* = -0.02em, same tracking as .page-title */
-  hoverRedraw:true
+  hoverRedraw:true,
+  onReady:function(){heroTitleStart=performance.now();}
 }):null;
-</script>
-<script>
-/* hero intro clip: plays once per browser session (first load only), then the still image is used until the tab/browser is closed */
 (function(){
-  var KEY='heroLivePlayed',bg=document.querySelector('.hero-bg');
-  function still(){if(heroTitle)heroTitle.end();} /* no clip this visit: title just shows finished */
-  if(!bg){still();return;}
-  try{if(sessionStorage.getItem(KEY)){still();return;}}catch(e){still();return;} /* already played, or storage blocked: show still only */
-  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){still();return;}
-  if(navigator.connection&&navigator.connection.saveData){still();return;}
-  var v=document.createElement('video');
-  v.className='hero-live';v.muted=true;v.defaultMuted=true;v.playsInline=true;
-  v.preload='auto';v.setAttribute('aria-hidden','true');v.tabIndex=-1;
-  v.innerHTML='<source src="assets/media/hero-live.webm" type="video/webm"><source src="assets/media/hero-live.mp4" type="video/mp4">';
-  var sources=v.querySelectorAll('source'),finalSource=sources[sources.length-1];
-  function done(){
-    still(); /* clip over/failed: make sure the title is finished */
-    v.classList.remove('is-on');setTimeout(function(){if(v.parentNode)v.parentNode.removeChild(v);},700);
-  }
-  v.addEventListener('playing',function(){
-    try{sessionStorage.setItem(KEY,'1');}catch(e){}
-    v.classList.add('is-on');
-    /* title draws along with the clip: progress follows v.currentTime (0.5s in, finishing at ~6s as the light burst lands) */
-    if(heroTitle)heroTitle.follow(v,{start:0.5,span:5.5});
-  },{once:true});
-  v.addEventListener('ended',done);
-  v.addEventListener('error',function(e){if(e.target===v||e.target===finalSource)done();},true);
-  bg.appendChild(v);
-  var pr=v.play();
-  if(pr&&pr.catch)pr.catch(done); /* autoplay blocked: keep still, try again next page view */
-  setTimeout(function(){if(!v.classList.contains('is-on'))still();},4000); /* clip never started (slow network): don't leave the title blank */
+  if(!heroTitle)return;
+  var play=false;
+  try{if(!sessionStorage.getItem('heroTitleDrawn')){sessionStorage.setItem('heroTitleDrawn','1');play=true;}}catch(e){}
+  if(play&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    /* follow() only needs an object with a currentTime, so a plain clock can drive the draw */
+    heroTitle.follow({get currentTime(){return heroTitleStart?(performance.now()-heroTitleStart)/1000:0;}},{start:0,span:heroTitle.duration});
+  }else{heroTitle.end();}
 })();
 </script>
 <script>

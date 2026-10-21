@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diagrams | INFO2001A</title>
+<meta name="description" content="INFO2001A diagram blueprints: step-by-step methods for use case diagrams, class diagrams, ERDs, normalisation, DSDs, wireframes and storyboards.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='2' y='3' width='20' height='6' rx='1.5' fill='%236fa8ea'/%3E%3Crect x='2' y='10' width='20' height='6' rx='1.5' fill='%234a7fc4'/%3E%3Crect x='2' y='17' width='20' height='4' rx='1.5' fill='%232f5a94'/%3E%3Ccircle cx='6' cy='6' r='1' fill='%230d1526'/%3E%3Ccircle cx='6' cy='13' r='1' fill='%230d1526'/%3E%3Ccircle cx='6' cy='19' r='1' fill='%230d1526'/%3E%3C/svg%3E">
 <link rel="preload" href="assets/fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/fonts.css">
@@ -612,7 +613,6 @@
   :is(#usecase, #classdiagram, #erd, #fd) .dsd-fig .fd-t2 { stroke: #e0605a; stroke-width: 2; fill: none; stroke-dasharray: 6 4; }
   :is(#usecase, #classdiagram, #erd, #fd) ol { margin: 6px 0 12px; }
 </style>
-<!-- <script src="assets/js/cursor-grid.js"></script> -->
 </head>
 <body>
 
@@ -4173,199 +4173,7 @@ ORDER BY COUNT(ts.SessionID) DESC;</code></pre>
   Diagrams - use case, class, ERD, normalisation, DSD, wireframe, storyboard and report blueprints
 </footer>
 
-<script>
-  (function () {
-    var toggle = document.getElementById('tocToggle');
-    if (!toggle) return;
-
-    // Close the drawer after tapping a link inside the TOC (mobile only)
-    document.querySelectorAll('.toc a').forEach(function (link) {
-      link.addEventListener('click', function () {
-        toggle.checked = false;
-      });
-    });
-
-    // Close on Escape
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && toggle.checked) {
-        toggle.checked = false;
-      }
-    });
-
-    // Keep the "Contents" toggle bar pinned directly beneath the sticky
-    // header, whatever height the header renders at (it varies with
-    // viewport width / text wrapping).
-    var headerEl = document.querySelector('header');
-    var toggleBtn = document.querySelector('.toc-toggle-btn');
-    if (headerEl && toggleBtn) {
-      var syncOffset = function () {
-        toggleBtn.style.top = headerEl.offsetHeight + 'px';
-      };
-      syncOffset();
-      window.addEventListener('resize', syncOffset);
-      if (window.ResizeObserver) {
-        new ResizeObserver(syncOffset).observe(headerEl);
-      }
-    }
-  })();
-</script>
-
-<script>
-  // ---- pagination: show one top-level section at a time ----
-  (function () {
-    var main = document.querySelector('main');
-    if (!main) return;
-    var sections = Array.prototype.slice.call(main.querySelectorAll(':scope > section[id]'));
-    if (!sections.length) return;
-
-    function buildNav() {
-      var nav = document.createElement('div');
-      nav.className = 'page-nav';
-
-      var prevBtn = document.createElement('button');
-      prevBtn.type = 'button';
-      prevBtn.className = 'page-prev';
-      prevBtn.textContent = '← Previous';
-
-      var indicator = document.createElement('span');
-      indicator.className = 'page-indicator';
-
-      var nextBtn = document.createElement('button');
-      nextBtn.type = 'button';
-      nextBtn.className = 'page-next';
-      nextBtn.textContent = 'Next →';
-
-      nav.appendChild(prevBtn);
-      nav.appendChild(indicator);
-      nav.appendChild(nextBtn);
-
-      prevBtn.addEventListener('click', function () {
-        var curIdx = sections.findIndex(function (s) { return s.classList.contains('page-active'); });
-        if (curIdx > 0) navigateTo(sections[curIdx - 1].id);
-      });
-      nextBtn.addEventListener('click', function () {
-        var curIdx = sections.findIndex(function (s) { return s.classList.contains('page-active'); });
-        if (curIdx < sections.length - 1) navigateTo(sections[curIdx + 1].id);
-      });
-
-      return nav;
-    }
-
-    // Give every section its own prev/next footer
-    sections.forEach(function (s) { s.appendChild(buildNav()); });
-
-    function syncNavButtons(activeIdx) {
-      sections.forEach(function (s, i) {
-        var nav = s.querySelector(':scope > .page-nav');
-        if (!nav) return;
-        nav.querySelector('.page-prev').disabled = (i === 0);
-        nav.querySelector('.page-next').disabled = (i === sections.length - 1);
-        nav.querySelector('.page-indicator').textContent = 'Page ' + (i + 1) + ' of ' + sections.length;
-      });
-    }
-
-    function updateTocHighlight(activeId) {
-      document.querySelectorAll('.toc a.current-page').forEach(function (a) {
-        a.classList.remove('current-page');
-      });
-      var link = document.querySelector('.toc a[href="#' + activeId + '"]');
-      if (link) {
-        link.classList.add('current-page');
-        var details = link.closest('details');
-        if (details) details.open = true;
-      }
-    }
-
-    function showSectionById(id, skipScroll) {
-      var idx = sections.findIndex(function (s) { return s.id === id; });
-      if (idx === -1) return;
-      sections.forEach(function (s, i) { s.classList.toggle('page-active', i === idx); });
-      syncNavButtons(idx);
-      updateTocHighlight(id);
-      if (!skipScroll) window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-    }
-
-    function navigateTo(id, skipScroll) {
-      showSectionById(id, skipScroll);
-      history.replaceState(null, '', '#' + id);
-    }
-
-    // Intercept every TOC link: jump to its page instead of scrolling a long document
-    document.querySelectorAll('.toc a').forEach(function (a) {
-      a.addEventListener('click', function (e) {
-        var href = this.getAttribute('href') || '';
-        if (href.charAt(0) !== '#') return;
-        e.preventDefault();
-        var targetId = href.slice(1);
-        var targetEl = document.getElementById(targetId);
-        if (!targetEl) return;
-        var sectionEl = targetEl.closest('section[id]');
-        if (!sectionEl) return;
-        var isSubLink = sectionEl.id !== targetId;
-        navigateTo(sectionEl.id, isSubLink);
-        if (isSubLink) {
-          requestAnimationFrame(function () {
-            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          });
-        }
-      });
-    });
-
-    // Work out the starting page: deep-link hash if present, else the first section
-    var initialId = sections[0].id;
-    if (location.hash) {
-      var h = location.hash.slice(1);
-      var el = document.getElementById(h);
-      if (el) {
-        var sec = el.closest('section[id]');
-        if (sec) initialId = sec.id;
-      }
-    }
-    showSectionById(initialId, true);
-  })();
-
-  // ---- toc search ----
-  (function () {
-    var input = document.getElementById('tocSearchInput');
-    if (!input) return;
-    var tocDetails = document.querySelectorAll('.toc details');
-    var tocLeafs = document.querySelectorAll('.toc-leaf');
-    
-    input.addEventListener('input', function(e) {
-      var query = e.target.value.toLowerCase();
-      
-      tocDetails.forEach(function(detail) {
-        var summary = detail.querySelector('summary').textContent.toLowerCase();
-        var links = detail.querySelectorAll('li a');
-        var matchFound = summary.includes(query);
-        
-        links.forEach(function(link) {
-          if (link.textContent.toLowerCase().includes(query)) {
-            matchFound = true;
-            link.style.display = '';
-          } else {
-            link.style.display = query ? 'none' : '';
-          }
-        });
-        
-        detail.style.display = matchFound ? '' : 'none';
-        if (query && matchFound) {
-          detail.open = true;
-        } else if (!query) {
-          detail.open = false;
-        }
-      });
-      
-      tocLeafs.forEach(function(leaf) {
-        if (leaf.textContent.toLowerCase().includes(query)) {
-          leaf.style.display = '';
-        } else {
-          leaf.style.display = query ? 'none' : '';
-        }
-      });
-    });
-  })();
-</script>
+<script src="assets/js/toc-pages.js"></script>
 
 <script data-goatcounter="https://info2001a.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>

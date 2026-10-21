@@ -2,12 +2,12 @@
    Each glyph's outline draws on (staggered), then the fill wipes/fades in.
 
    The whole animation is a pure function of time (render(t)), so it can be driven by any clock.
-   Here it is driven by the hero intro video's own currentTime (follow()), which keeps the two
-   perfectly in sync, including stalls and buffering.
+   follow() takes anything with a currentTime (a <video>, or a plain clock object like the one the
+   home page uses), so the draw stays in sync with whatever drives it.
 
    Usage:
      var st = StrokeText(document.getElementById('hero-title'), { fontSize: 48, ... });
-     st.follow(videoEl, { start: 0.5, span: 5.5 }); // draw along with the video
+     st.follow(clock, { start: 0, span: st.duration }); // draw along with clock.currentTime (seconds)
      st.end();                                      // jump straight to the finished state
 */
 (function (global) {
