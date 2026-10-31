@@ -10,7 +10,7 @@ Static study site for INFO2001A (Information Systems, Wits). No build step: open
 | `test1.html` | Test 1: SQL + database design. Flashcards, a 10-question quick quiz and three mock papers |
 | `test2.html` | Test 2: systems design + database design. Flashcards, topic quizzes and three mock papers |
 | `exam.html` | Exam study page: scope, flashcards, topic quizzes and four full practice papers |
-| `mock/exam1.html` ... `exam4.html` | The four Exam papers (A: 30 MCQs worth 15 marks, B: 17 interaction design/usability, C: 68 case scenario). Timer, auto-marked MCQs, model answers |
+| `mock/exam1.html` ... `exam4.html` | The four Exam papers (A: 15 MCQs at 1 mark each, 15 marks, B: 17 interaction design/usability, C: 68 case scenario). Timer, auto-marked MCQs, model answers |
 | `mock-test1/mock1.html` ... `mock3.html` | The three Test 1 mock papers (A: MCQs, B: normalisation, C: ER modelling, D: Access SQL) |
 | `mock-test2/mock1.html` ... `mock3.html` | The three Test 2 mock papers (99 marks in five sections, A to E) |
 | `sql-fundamentals.html` | Access SQL, normalisation and indexing reference |
@@ -67,7 +67,7 @@ Paths inside `assets/js/` are relative to the script's own folder (`quiz-sound.j
 
 Each page filters the banks to its own topics:
 
-- `exam.html` uses everything.
+- `exam.html` uses everything except the five SQL flashcard tags and the BCNF, recursive-relationship and weak-entity cards, plus seven duplicate cards (160 cards).
 - `test2.html` uses everything except the "SQL & database design" quiz topic and the five SQL flashcard tags (Keys & integrity (SQL), ER modelling (SQL), SQL basics, Access SQL, Anomalies & design).
 - `test1.html` uses the Normalisation and SQL flashcard tags, and draws its 10-question quick quiz at random from the "SQL & database design" and "Normalisation" topics.
 

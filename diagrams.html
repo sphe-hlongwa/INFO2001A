@@ -2658,14 +2658,18 @@
     <p class="fig-cap"><strong>Reads as:</strong> only if the trainer is available, create the booking. There is no else half. Note the created <code>Booking</code> box drops down to its own step.</p>
 
     <h4 id="dsd-frame-ref">4. The <code>ref</code> frame (invoking another diagram)</h4>
-    <p><strong>Use when</strong> the scenario hands off to another complete use case, e.g. <em>"the customer's details are retrieved using another sequence diagram"</em>. Draw a clean box spanning the lifelines involved, put <strong><code>ref</code></strong> in the top-left tab and write the name of the referenced use case inside.</p>
+    <p><strong>Use when</strong> the scenario hands off to another complete use case, e.g. <em>"the customer's details are retrieved using another sequence diagram"</em>. Draw a box over the lifelines the referenced diagram uses, put <strong><code>ref</code></strong> in the top-left tab and write the name of the referenced use case inside. The calling message ends on the frame&rsquo;s left edge, and the result comes back as a dashed return from that edge.</p>
 <div class="dsd-fig" role="group" aria-label="ref frame example">
 <svg viewBox="0 0 780 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fr-t" style="min-width:640px"><title id="fr-t">Design sequence diagram</title>
 <defs><marker id="fr-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker><marker id="fr-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M1 1L9 5L1 9" class="mk-o"/></marker></defs>
-<rect x="320" y="170" width="420" height="54" class="frame"/>
-<polygon points="320,170 358,170 358,181 350,190 320,190" class="frame-tab"/>
-<text x="327" y="184.5" class="kw">ref</text>
-<text x="530.0" y="206.0" class="reftxt" text-anchor="middle">Validate Customer</text>
+<rect x="590" y="160" width="150" height="76" class="frame"/>
+<polygon points="590,160 628,160 628,171 620,180 590,180" class="frame-tab"/>
+<text x="597" y="174.5" class="kw">ref</text>
+<text x="665.0" y="214.0" class="reftxt" text-anchor="middle">Validate Customer</text>
+<line x1="406" y1="192" x2="590" y2="192" class="msg" marker-end="url(#fr-f)"/>
+<text x="498.0" y="185" class="lbl" text-anchor="middle">validate(mobileNo)</text>
+<line x1="590" y1="222" x2="406" y2="222" class="msg ret" marker-end="url(#fr-o)"/>
+<text x="498.0" y="215" class="lbl" text-anchor="middle">validationResult()</text>
 <line x1="130" y1="60" x2="130" y2="288" class="lifeline"/>
 <line x1="400" y1="60" x2="400" y2="288" class="lifeline"/>
 <line x1="670" y1="60" x2="670" y2="288" class="lifeline"/>
@@ -2682,14 +2686,14 @@
 <text x="670" y="49.5" class="ll" text-anchor="middle">:Client</text>
 </svg>
 </div>
-    <p class="fig-cap"><strong>Reads as:</strong> at this point run the whole Validate Customer diagram, then carry on. Nothing is drawn inside the box except the name; it spans the lifelines it touches.</p>
+    <p class="fig-cap"><strong>Reads as:</strong> at this point run the whole Validate Customer diagram, then carry on. The handler sends <code>validate(mobileNo)</code> to the frame edge and the result returns as a dashed arrow; the referenced diagram itself is not redrawn inside the box.</p>
 
     <table>
       <tr><th>Frame</th><th>Trigger words</th><th>Guard</th><th>Remember</th></tr>
       <tr><td><code>loop</code></td><td>for each, repeats, until</td><td><code>[for each item]</code></td><td>Box only the repeating messages</td></tr>
       <tr><td><code>alt</code></td><td>if / else, valid / invalid</td><td>One guard per half</td><td><strong>Dashed line</strong> between the halves</td></tr>
       <tr><td><code>opt</code></td><td>if available, only if</td><td><code>[condition]</code></td><td>No else branch</td></tr>
-      <tr><td><code>ref</code></td><td>"using another diagram"</td><td>-</td><td>Name the referenced use case</td></tr>
+      <tr><td><code>ref</code></td><td>"using another diagram"</td><td>-</td><td>Name the referenced use case; call arrow in, dashed return out</td></tr>
     </table>
     <div class="note"><strong>Exam workflow:</strong> underline the Actor, Boundary, Controller and Entity nouns in the narrative first (Phase 1), then draw the lifelines, then walk the story top to bottom adding messages (Phase 2), choosing the right lifecycle pattern for each entity (Phase 3), wrapping logic in frames (Phase 5), and finally run the Phase 4 checklist.</div>
     <h3 id="dsd-worked-examples">Worked Examples: From Flow of Activities to DSD</h3>
@@ -2892,7 +2896,7 @@
       <tr><td><span class="bd">1</span></td><td>Actor 1: requests to book a trainer</td><td>Receptionist → BookingForm</td><td><code>requestToBookTrainer()</code></td><td><span class="pat pat-pass">Delegate</span></td></tr>
       <tr><td><span class="bd">2</span></td><td>Actor 2: enters number, selects trainer</td><td>Receptionist → BookingForm</td><td><code>bookTrainer(mobileNo, trainerId)</code></td><td><span class="pat pat-pass">Delegate</span></td></tr>
       <tr><td><span class="bd">3</span></td><td>Actor 2 (screen hands it on)</td><td>BookingForm → salesHandler</td><td><code>bookTrainer(mobileNo, trainerId)</code></td><td><span class="pat pat-pass">Delegate</span></td></tr>
-      <tr><td><span class="bd">4</span></td><td>2.1 Invokes Validate Customer</td><td>spans salesHandler and Client</td><td><code>Validate Customer</code></td><td><span class="pat pat-ref">ref frame</span></td></tr>
+      <tr><td><span class="bd">4</span></td><td>2.1 Invokes Validate Customer</td><td>salesHandler &rarr; ref frame (covers Client)</td><td><code>validate(mobileNo)</code> into the frame, <code>validationResult()</code> (dashed) back</td><td><span class="pat pat-ref">ref frame</span></td></tr>
       <tr><td><span class="bd">5</span></td><td>2.2 Searches the CLIENT table</td><td>salesHandler → Client</td><td><code>client := searchClient(mobileNo)</code></td><td><span class="pat pat-read">Read</span></td></tr>
       <tr><td><span class="bd">6</span></td><td>2.3 Checks the trainer</td><td>salesHandler → Trainer</td><td><code>isAvailable := checkAvailability(trainerId)</code></td><td><span class="pat pat-read">Read</span></td></tr>
       <tr><td colspan="5"><strong>"If trainer is available" and the extension "If trainer is not available"</strong> (step 2.4 appears in both) means one <code>alt</code> frame with a dashed divider</td></tr>
@@ -2907,14 +2911,19 @@
 <pre><code>Receptionist   :BookingForm   :salesHandler   newBooking:Booking   :Client   :Trainer
                                               ^ no box until message 7, inside the alt   ^ ^ already exist (top row)</code></pre>
 
-    <p><strong>Step 4 - Draw it:</strong> the <code>ref</code> box goes in first as a simple block between the lifelines it touches, then the <code>alt</code> frame is drawn around everything that depends on the availability check.</p>
+    <p><strong>Step 4 - Draw it:</strong> the <code>ref</code> frame goes in first, over the lifelines it uses, with the call arrow into its left edge and the dashed result back, then the <code>alt</code> frame is drawn around everything that depends on the availability check.</p>
 <div class="dsd-fig" role="group" aria-label="Design sequence diagram for booking a personal trainer">
 <svg viewBox="0 0 1200 744" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ex2-t" style="min-width:1050px"><title id="ex2-t">Design sequence diagram</title>
 <defs><marker id="ex2-f" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10z" class="mk-f"/></marker><marker id="ex2-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M1 1L9 5L1 9" class="mk-o"/></marker></defs>
-<rect x="405" y="206" width="595" height="50" class="frame"/>
-<polygon points="405,206 443,206 443,217 435,226 405,226" class="frame-tab"/>
-<text x="412" y="220.5" class="kw">ref</text>
-<text x="702.5" y="240.0" class="reftxt" text-anchor="middle">Validate Customer</text>
+<rect x="640" y="202" width="360" height="74" class="frame"/>
+<polygon points="640,202 678,202 678,213 670,222 640,222" class="frame-tab"/>
+<text x="647" y="216.5" class="kw">ref</text>
+<text x="820.0" y="254.0" class="reftxt" text-anchor="middle">Validate Customer</text>
+<line x1="481" y1="236" x2="640" y2="236" class="msg" marker-end="url(#ex2-f)"/>
+<text x="560.5" y="229" class="lbl" text-anchor="middle">validate(mobileNo)</text>
+<circle cx="15" cy="236" r="9.5" class="badge"/><text x="15" y="240" class="badge-t" text-anchor="middle">4</text>
+<line x1="640" y1="266" x2="481" y2="266" class="msg ret" marker-end="url(#ex2-o)"/>
+<text x="560.5" y="259" class="lbl" text-anchor="middle">validationResult()</text>
 <rect x="38" y="372" width="1100" height="346" class="frame"/>
 <polygon points="38,372 76,372 76,383 68,392 38,392" class="frame-tab"/>
 <text x="45" y="386.5" class="kw">alt</text>

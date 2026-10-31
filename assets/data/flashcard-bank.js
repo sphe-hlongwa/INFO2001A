@@ -3,7 +3,7 @@ window.FLASHCARD_BANK = [
   {
     "tag": "Interaction design",
     "front": "List Shneiderman's 8 golden rules.",
-    "back": "1 Strive for consistency. 2 Enable frequent users to use shortcuts. 3 Offer informative feedback. 4 Design dialogs to yield closure. 5 Offer error prevention and simple error handling. 6 Permit easy reversal of actions. 7 Support internal locus of control. 8 Reduce short-term memory load."
+    "back": "1 Strive for consistency. 2 Seek universal usability. 3 Offer informative feedback. 4 Design dialogs to yield closure. 5 Prevent errors. 6 Permit easy reversal of actions. 7 Keep users in control. 8 Reduce short-term memory load."
   },
   {
     "tag": "Interaction design",
@@ -127,8 +127,8 @@ window.FLASHCARD_BANK = [
   },
   {
     "tag": "Database basics",
-    "front": "Which design stage does the course prioritise, and why?",
-    "back": "Logical design: create a clear, normalised structure (what data and how it is related) before deciding how to implement it physically in a specific DBMS."
+    "front": "At which design stage are tables, keys and normalisation decided, and why before physical design?",
+    "back": "Logical design: a clear, normalised structure of tables, keys and relationships is settled first, independent of any DBMS. Physical design then implements it in a specific DBMS."
   },
   {
     "tag": "Database basics",
@@ -302,18 +302,18 @@ window.FLASHCARD_BANK = [
   },
   {
     "tag": "Domain models & ERDs",
-    "front": "In the room-rental ERD, TENANT_ROOM has PK = TenantID + RoomID. Why does it exist, and what limit follows from the PK as drawn?",
-    "back": "It resolves the many-to-many between tenant and room into two 1:* links. As drawn, the same tenant cannot rent the same room twice, because that pair would repeat."
+    "front": "TENANT_ROOM has PK = TenantID + RoomID (both foreign keys). Why does it exist, and what limit follows from that primary key?",
+    "back": "It resolves the many-to-many between tenant and room into two 1:* links. With this composite PK the same tenant cannot be recorded renting the same room twice, because the pair would repeat. Add a date to the key (or a surrogate key) if repeat rentals must be stored."
   },
   {
     "tag": "Domain models & ERDs",
-    "front": "“Purposes may be stored even if no rental periods are linked.” What multiplicity does this give?",
-    "back": "Zero on the rental-period side, so purpose to rental is 0..* (optional). Lower bound 0 means optional."
+    "front": "Business rule: “Purposes may be stored even if no rental periods are linked to them.” What multiplicity does this give?",
+    "back": "The rental-period end is optional: RENTAL_PURPOSE 1 to 0..* RENTAL_PERIOD. A lower bound of 0 means optional."
   },
   {
     "tag": "Domain models & ERDs",
-    "front": "“A rental period can only have one defined purpose.” What does it tell you?",
-    "back": "The rental period side has a mandatory 1..1 to RENTAL_PURPOSE. Business rules become the multiplicity bounds."
+    "front": "Business rule: “A rental period can only have one defined purpose.” What does it tell you?",
+    "back": "Each rental period is linked to exactly one purpose: 1..1 on the RENTAL_PURPOSE side (mandatory). Business rules become the multiplicity bounds."
   },
   {
     "tag": "Domain models & ERDs",
@@ -352,22 +352,22 @@ window.FLASHCARD_BANK = [
   },
   {
     "tag": "Use case realisation & DSDs",
-    "front": "Flow row: “1. Requests to create tenant” (Actor column). What do you draw?",
+    "front": "Create tenant use case, main flow row: “1. Requests to create tenant” (Actor column). What do you draw?",
     "back": "A solid message from Administrator to :CreateTenantForm, named requestToCreateTenant(). Every Actor row becomes a message to the Boundary. The Boundary and Controller are not in the table; you supply them."
   },
   {
     "tag": "Use case realisation & DSDs",
-    "front": "Flow row: “1.1 Prompts for first name, last name and mobile number”. Do you draw it?",
-    "back": "Usually not. The memo’s Create tenant diagram skips the prompt and starts at the actor entering the data."
+    "front": "Create tenant use case, main flow row: “1.1 Prompts for first name, last name and mobile number”. Do you draw it?",
+    "back": "Usually not. The prompt is part of what the form displays, not a message the diagram needs. The diagram normally starts with the Administrator entering the data into the form, and the form then passing it on."
   },
   {
     "tag": "Use case realisation & DSDs",
     "front": "Create tenant: the Form calls the Handler with the details, and only afterwards the Administrator enters them. What is wrong?",
-    "back": "The order. The Actor’s EnterTenantData (a solid request) must come first, then the Form passes it on. The memo’s diagram has this slip."
+    "back": "The order. The Administrator’s EnterTenantData (a solid request to the form) must come first; only then can the form pass the details to the handler. A message cannot carry data that has not yet been entered."
   },
   {
     "tag": "Use case realisation & DSDs",
-    "front": "Flow row: “2.1 Invokes Search tenant use case to verify no tenant with that mobile number exists”.",
+    "front": "Create tenant use case, main flow row: “2.1 Invokes Search tenant use case to verify no tenant with that mobile number exists”. What do you draw?",
     "back": "A ref frame named Search tenant. The handler sends searchTenant(MobileNumber) into it and gets the result back. Do not redraw the search inside this diagram."
   },
   {
@@ -377,23 +377,23 @@ window.FLASHCARD_BANK = [
   },
   {
     "tag": "Use case realisation & DSDs",
-    "front": "Flow row: “2.2 Receives newly-generated TenantID from the DBMS”.",
-    "back": "A dashed return carrying the ID back to :tenantHandler, drawn just before the create call (the memo awarded a mark for it). The ID then goes into the create message."
+    "front": "Create tenant use case, main flow row: “2.2 Receives newly-generated TenantID from the DBMS”. What do you draw?",
+    "back": "A dashed return carrying the ID back to :tenantHandler, drawn just before the create call. The ID then goes into the create message."
   },
   {
     "tag": "Use case realisation & DSDs",
-    "front": "Flow row: “2.3 Creates new tenant in the TENANT table incl. TenantID, TenantFName, TenantLName, TenantMobile, TenantStatus = ‘new’”.",
-    "back": "A Create pattern: createTenant(TenantDetails) from :tenantHandler to a lowered aNew:Tenant box (the lifeline starts below it). Add a UML note TenantDetails with the five attributes and TenantStatus = “new”. The blueprint’s generic label is createObject(params)."
+    "front": "Create tenant use case, main flow row: “2.3 Creates new tenant in the TENANT table incl. TenantID, TenantFName, TenantLName, TenantMobile, TenantStatus = ‘new’”. What do you draw?",
+    "back": "A Create pattern: createTenant(TenantDetails) from :tenantHandler to a lowered aNew:Tenant box (the lifeline starts below it). Add a UML note TenantDetails with the five attributes and TenantStatus = “new”. In general the message is written createObject(parameters)."
   },
   {
     "tag": "Use case realisation & DSDs",
-    "front": "Where do you place the newly created object’s lifeline?",
-    "back": "Between the controller and the existing entities, not at the far right. The box sits at the step where it is created, with nothing above it."
+    "front": "Where do you place the lifeline of an object that is created during the use case?",
+    "back": "At the step where it is created, below the controller’s create message, with nothing above its box. Entities that already exist stay at the top."
   },
   {
     "tag": "Use case realisation & DSDs",
-    "front": "Flow row: “2.4 Confirms creation of new tenant” and the extension “2.2 Confirms no tenant creation”. How far do the dashed arrows go?",
-    "back": "All the way to the Administrator, in both alt operands: handler to form, then form to the actor. The memo’s diagram stops at the form."
+    "front": "Create tenant use case, main flow row: “2.4 Confirms creation of new tenant” and the extension “2.2 Confirms no tenant creation”. How far do the dashed arrows go?",
+    "back": "All the way to the Administrator, in both alt operands: handler to form, then form to the actor. Stopping at the form would leave the actor without a response."
   },
   {
     "tag": "Use case realisation & DSDs",
@@ -402,8 +402,8 @@ window.FLASHCARD_BANK = [
   },
   {
     "tag": "Use case realisation & DSDs",
-    "front": "Update tenant (partial diagram): which frame, guard and message complete it?",
-    "back": "opt [TenantStatus == new AND hasCompletedStatus] around setTenantStatus(TenantID, “active”) to :tenant. Entry message: requestUpdateTenant(TenantID/MobileNumber)."
+    "front": "Update tenant: a tenant’s status is set to “active” only if it is currently “new”. Which frame, guard and message show this?",
+    "back": "opt (one conditional step, no else): opt [TenantStatus = “new”] around setTenantStatus(TenantID, “active”) sent to :tenant. The entry message is requestUpdateTenant(TenantID)."
   },
   {
     "tag": "Use case realisation & DSDs",
@@ -412,18 +412,18 @@ window.FLASHCARD_BANK = [
   },
   {
     "tag": "Use case realisation & DSDs",
-    "front": "Add products to cart: “Repeat steps 1 to 1.3 for each product to add”. What goes inside the loop frame?",
-    "back": "Messages 1 to 6: addProduct from Customer and Form, getPrice, createObject for the CartItem, updateStock and its confirmation. The loop is [for each product to add]. finishAdding() (Actor step 2) sits outside it."
+    "front": "A use case says “Repeat for each product to add”: add the product, look up its price, create the cart item and update the stock. Which frame do you use and what goes inside it?",
+    "back": "A loop frame [for each product to add] around the repeating messages (addProduct, getPrice, creating the cart item, updateStock and its confirmation). A step that happens once after the repetition, such as finishAdding(), sits outside the loop."
   },
   {
     "tag": "Use case realisation & DSDs",
-    "front": "A dashed cartTotal arrow appears with no arrow before it. What is the fix?",
-    "back": "Every dashed arrow answers a request. Actor step 2, “Finishes adding products”, is its own solid request, finishAdding(), passed from Form to Handler. The total then comes back."
+    "front": "A dashed cartTotal arrow appears with no solid arrow before it. What is the fix?",
+    "back": "Every dashed return answers a request. The actor’s step “Finishes adding products” is its own solid request, finishAdding(), passed from the form to the handler. The total then comes back."
   },
   {
     "tag": "Use case realisation & DSDs",
     "front": "Why does price := getPrice(productId) have no dashed return arrow?",
-    "back": "The result is stored in a variable in the request message itself, so a separate return is not needed."
+    "back": "When the result is stored in a variable in the message itself (price := getPrice(productId)), the assignment shows the return, so a separate dashed arrow is optional. Draw a dashed return whenever the result is not captured that way, and be consistent."
   },
   {
     "tag": "Use case realisation & DSDs",
@@ -543,7 +543,7 @@ window.FLASHCARD_BANK = [
   {
     "tag": "Validation, CRUD & search",
     "front": "Meaning of LIKE patterns.",
-    "back": "Prefix: Moko% ; contains: %Moko% ; one character: M_ko (ANSI-92 from OLE DB). Put the whole pattern, wildcards included, in one parameter."
+    "back": "Prefix: Moko% ; contains: %Moko% ; one character: M_ko. These are the ANSI-92 wildcards that OLE DB uses from C#. (Access’s own query view uses * and ? instead.) Put the whole pattern, wildcards included, in one parameter."
   },
   {
     "tag": "Validation, CRUD & search",
@@ -658,7 +658,7 @@ window.FLASHCARD_BANK = [
   {
     "tag": "Interaction design",
     "front": "A door handle affords pulling. What is a signifier, and how does it differ from an affordance?",
-    "back": "An affordance is a clue about what something can do. A signifier is the design feature that alludes to that affordance (a raised, coloured Save button, a scrollbar, an icon that invites clicking)."
+    "back": "The handle affords pulling: it is a clue about what the object can do (the affordance). A signifier is the design feature that alludes to that affordance, such as the handle’s shape, a raised and coloured Save button, a scrollbar or an icon that invites clicking."
   },
   {
     "tag": "Interaction design",
@@ -677,8 +677,8 @@ window.FLASHCARD_BANK = [
   },
   {
     "tag": "Interaction design",
-    "front": "Match the Golden Rule: (a) a booking ends with a “Booking complete” screen; (b) the tenant’s name stays visible on every step; (c) shortcuts for frequent users.",
-    "back": "(a) Design dialogs to yield closure. (b) Reduce short-term memory load. (c) Enable frequent users to use shortcuts (novices and experts); this is Nielsen’s flexibility and efficiency of use."
+    "front": "Match the Golden Rule: (a) a booking ends with a “Booking complete” screen; (b) the tenant’s name stays visible on every step; (c) a saved change can be undone.",
+    "back": "(a) Design dialogs to yield closure. (b) Reduce short-term memory load. (c) Permit easy reversal of actions (Nielsen: user control and freedom)."
   },
   {
     "tag": "Usability & interface design",
@@ -723,7 +723,7 @@ window.FLASHCARD_BANK = [
   {
     "tag": "Usability & interface design",
     "front": "Delete tenant removes the record on one click. Which rules are broken and what do you add?",
-    "back": "Error prevention and easy reversal (Shneiderman: simple error handling and permit easy reversal). Add a confirmation naming the tenant, a safe default of Cancel, and Undo if possible."
+    "back": "Error prevention and easy reversal (Shneiderman: prevent errors and permit easy reversal of actions; Nielsen: error prevention and user control and freedom). Add a confirmation naming the tenant, a safe default of Cancel, and Undo if possible."
   },
   {
     "tag": "Usability & interface design",
@@ -742,13 +742,13 @@ window.FLASHCARD_BANK = [
   },
   {
     "tag": "Usability & interface design",
-    "front": "Section D wireframe: what must a form sketch show?",
+    "front": "Wireframe of a form: what must the sketch show?",
     "back": "Title, labelled fields with the right controls, required markers, primary and secondary buttons, and a place for feedback and error messages."
   },
   {
     "tag": "Usability & interface design",
     "front": "Name Shneiderman&rsquo;s Eight Golden Rules.",
-    "back": "Strive for consistency; enable shortcuts for frequent users; offer informative feedback; design dialogues to yield closure; offer simple error handling; permit easy reversal of actions; support internal locus of control; reduce short-term memory load."
+    "back": "Strive for consistency; seek universal usability; offer informative feedback; design dialogues to yield closure; prevent errors; permit easy reversal of actions; keep users in control; reduce short-term memory load."
   },
   {
     "tag": "Usability & interface design",
@@ -767,8 +767,8 @@ window.FLASHCARD_BANK = [
   },
   {
     "tag": "Reporting",
-    "front": "Fill the report rationale table for the 31-day exception report.",
-    "back": "Name, type (exception), format (table), recipient (administrator), frequency (e.g. weekly), rationale (late tenants), decision (follow up or cancel)."
+    "front": "Fill the report rationale table for the “pending 31 days or more” exception report.",
+    "back": "Name (Pending applications, 31 days or more), type (exception / operational), format (on-screen table), recipients (processing administrators and their manager), frequency (daily or on demand), rationale (surfaces applications breaching the 31-day rule), decision (which to investigate or escalate first)."
   },
   {
     "tag": "Reporting",
@@ -857,8 +857,8 @@ window.FLASHCARD_BANK = [
   },
   {
     "tag": "Keys & integrity (SQL)",
-    "front": "Why prefer a surrogate key over a natural key as a primary key?",
-    "back": "Natural keys can change (names, phone numbers, even ID numbers get reissued), which breaks stability for a key that other tables reference via foreign keys."
+    "front": "When is a surrogate key better than a natural key as a primary key?",
+    "back": "When no natural key exists, or when the natural key can change (names, phone numbers, even reissued ID numbers) and other tables reference it through foreign keys. A system-generated key stays stable."
   },
   {
     "tag": "Keys & integrity (SQL)",
@@ -883,7 +883,7 @@ window.FLASHCARD_BANK = [
   {
     "tag": "ER modelling (SQL)",
     "front": "Crow's foot: one and only one?",
-    "back": "A single straight tick mark across the relationship line - mandatory, cardinality of exactly one."
+    "back": "Two parallel bars across the relationship line (||): mandatory, minimum 1 and maximum 1. Some course ERDs write this as 1..1."
   },
   {
     "tag": "ER modelling (SQL)",
@@ -913,7 +913,7 @@ window.FLASHCARD_BANK = [
   {
     "tag": "ER modelling (SQL)",
     "front": "Mandatory one vs. optional one in crow's foot notation?",
-    "back": "Mandatory one = a single tick bar. Optional one = a circle plus a tick bar, meaning the relationship may or may not exist, but if it does, it’s exactly one."
+    "back": "Mandatory one = two bars (||). Optional one (zero or one) = a circle plus a single bar, meaning the relationship may or may not exist, but if it does, it is exactly one."
   },
   {
     "tag": "ER modelling (SQL)",
@@ -992,13 +992,13 @@ window.FLASHCARD_BANK = [
   },
   {
     "tag": "Access SQL",
-    "front": "Access wildcard for \"any number of characters\"?",
-    "back": "The asterisk (*), used with LIKE - e.g. LIKE 'Jo*' matches Jonathan, Joe, Jones, etc."
+    "front": "In Access’s own query view, what is the wildcard for “any number of characters”?",
+    "back": "The asterisk (*), used with LIKE, e.g. LIKE 'Jo*' matches Jonathan, Joe, Jones. When the same query is sent from C# through OLE DB, use % instead."
   },
   {
     "tag": "Access SQL",
-    "front": "Access wildcard for \"exactly one character\"?",
-    "back": "The question mark (?) - e.g. LIKE 'a?e' matches \"ace\" and \"are\" but not \"apple\"."
+    "front": "In Access’s own query view, what is the wildcard for “exactly one character”?",
+    "back": "The question mark (?), e.g. LIKE 'a?e' matches “ace” and “are” but not “apple”. Through OLE DB from C#, use _ instead."
   },
   {
     "tag": "Access SQL",
