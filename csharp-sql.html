@@ -214,52 +214,32 @@
 </head>
 <body>
 
-<main class="page">
-  <div class="head-row">
-    <p class="eyebrow">C# + SQL &middot; Windows Forms &middot; Access</p>
-    <h1 class="page-title">From form to database</h1>
-    <p class="page-sub">Build it step by step, understand why it works, then test yourself.</p>
-  </div>
+<main class="page shell" id="shell" data-mode="build">
+  <header class="head">
+    <div>
+      <p class="eyebrow">C# + SQL &middot; Windows Forms &middot; Access</p>
+      <h1 class="page-title">From form to database</h1>
+      <p class="page-sub">Build it step by step, understand why it works, then test yourself.</p>
+    </div>
+    <div class="progress-card" aria-live="polite">
+      <div class="row"><span>Your progress</span><b id="progTxt">0 of 0</b></div>
+      <div class="bar"><i id="progBar"></i></div>
+      <button type="button" id="progReset">Reset</button>
+    </div>
+  </header>
 
-  <div class="modes" role="tablist" aria-label="Mode">
-    <button type="button" class="mode" role="tab" data-mode="build"><b>Build it</b><small>Tutorial 1 &middot; designer</small></button>
-    <button type="button" class="mode" role="tab" data-mode="code"><b>Code it</b><small>Tutorial 2 &middot; runtime</small></button>
-    <button type="button" class="mode" role="tab" data-mode="learn"><b>Understand it</b><small>8 concepts &middot; Lecture 2</small></button>
-    <button type="button" class="mode" role="tab" data-mode="practice"><b>Practice</b><small>flashcards &middot; quiz</small></button>
-  </div>
+  <button type="button" class="m-bar" id="mBar" aria-expanded="false" aria-controls="outline">
+    <span class="dot"></span>
+    <span class="cur" id="mCur"></span>
+    <span class="cnt" id="mCnt"></span>
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg>
+  </button>
 
-  <div class="tabs" role="tablist" aria-label="Build it sections" data-mode="build">
-    <button class="tab" role="tab" data-p="overview"><span class="n">1</span>Big picture</button>
-    <button class="tab" role="tab" data-p="connect"><span class="n">2</span>Connect</button>
-    <button class="tab" role="tab" data-p="bind"><span class="n">3</span>Bind &amp; load</button>
-    <button class="tab" role="tab" data-p="navigate"><span class="n">4</span>Navigate</button>
-    <button class="tab" role="tab" data-p="edit"><span class="n">5</span>Add, edit, delete</button>
-    <button class="tab" role="tab" data-p="cheat"><span class="n">6</span>Cheat table</button>
-  </div>
+  <div class="layout">
+    <nav class="outline" id="outline" aria-label="Course outline"></nav>
 
-  <div class="tabs" role="tablist" aria-label="Code it sections" data-mode="code" hidden>
-    <button class="tab" role="tab" data-p="t2setup"><span class="n">1</span>Code-first</button>
-    <button class="tab" role="tab" data-p="t2load"><span class="n">2</span>Connect &amp; load</button>
-    <button class="tab" role="tab" data-p="t2state"><span class="n">3</span>State &amp; move</button>
-    <button class="tab" role="tab" data-p="t2save"><span class="n">4</span>Create &amp; edit</button>
-    <button class="tab" role="tab" data-p="t2end"><span class="n">5</span>Cancel &amp; delete</button>
-    <button class="tab" role="tab" data-p="t2query"><span class="n">6</span>Reader &amp; scalar</button>
-    <button class="tab" role="tab" data-p="t2check"><span class="n">7</span>Checkpoints</button>
-  </div>
-  <div class="tabs" role="tablist" aria-label="Understand it sections" data-mode="learn" hidden>
-    <button class="tab" role="tab" data-p="objects"><span class="n">1</span>Objects</button>
-    <button class="tab" role="tab" data-p="runsql"><span class="n">2</span>Run SQL</button>
-    <button class="tab" role="tab" data-p="related"><span class="n">3</span>Related data</button>
-    <button class="tab" role="tab" data-p="validate"><span class="n">4</span>Validate</button>
-    <button class="tab" role="tab" data-p="crud"><span class="n">5</span>CRUD &amp; move</button>
-    <button class="tab" role="tab" data-p="search"><span class="n">6</span>Search</button>
-    <button class="tab" role="tab" data-p="usable"><span class="n">7</span>Usability</button>
-    <button class="tab" role="tab" data-p="errors"><span class="n">8</span>Errors</button>
-  </div>
-  <div class="tabs" role="tablist" aria-label="Practice sections" data-mode="practice" hidden>
-    <button class="tab" role="tab" data-p="cards"><span class="n">1</span>Flashcards</button>
-    <button class="tab" role="tab" data-p="quiz"><span class="n">2</span>Quiz</button>
-  </div>
+    <div class="content" id="content">
+    <div class="crumb" id="crumb"></div>
 
   <!-- ===================== 1. BIG PICTURE ===================== -->
   <section class="panel" id="overview" role="tabpanel">
@@ -335,19 +315,21 @@
     <h2 class="t">Connect to the database</h2>
     <p class="lead">Eight clicks-through, done once per project. Tap a screenshot to enlarge it.</p>
 
-    <div class="stepper">
-      <div class="st-side">
-        <div class="count" id="stCount"></div>
-        <h3 id="stTitle"></h3>
-        <div id="stText"></div>
-        <div class="dots" id="stDots"></div>
+    <div class="stepper2">
+      <div class="dots" id="stDots" role="group" aria-label="Steps"></div>
+      <div class="st-card">
+        <div class="st-copy">
+          <div class="count" id="stCount"></div>
+          <h3 id="stTitle"></h3>
+          <div id="stText"></div>
+        </div>
         <div class="btnrow">
           <button class="btn" id="stPrev">&larr; Back</button>
           <button class="btn primary" id="stNext">Next step &rarr;</button>
         </div>
-        <div class="done-msg" id="stDone"><b>Connected.</b> You now have a typed DataSet and TableAdapter. Next: show the data on the form.</div>
       </div>
       <div class="shots" id="stShots"></div>
+      <div class="done-msg" id="stDone"><b>Connected.</b> You now have a typed DataSet and TableAdapter. Next: show the data on the form.</div>
     </div>
   </section>
 
@@ -1062,12 +1044,16 @@ int count = Convert.ToInt32(cmd.ExecuteScalar());</code></pre></div></details><d
     <div class="drill" id="quizList"></div>
   </section>
 
-  <div class="pager" id="pager">
-    <button class="btn" id="pgPrev">&larr; Back</button>
-    <button class="btn primary" id="pgNext">Next &rarr;</button>
-  </div>
+  <nav class="pager" id="pager" aria-label="Previous and next section">
+    <a class="pg prev" id="pgPrev" href="#"><small>Previous</small><b></b><em></em></a>
+    <a class="pg next" id="pgNext" href="#"><small>Next</small><b></b><em></em></a>
+  </nav>
+    </div><!-- /content -->
 
-  <footer class="site-footer">
+    <aside class="toc" id="toc" aria-label="On this page"></aside>
+  </div><!-- /layout -->
+
+<footer class="site-footer">
     <a href="https://github.com/sphe-hlongwa" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
       <span>sphe-hlongwa</span>
@@ -1082,47 +1068,116 @@ int count = Convert.ToInt32(cmd.ExecuteScalar());</code></pre></div></details><d
 (function(){
   const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-  /* ---------- modes, tabs + pager ---------- */
-  const MODES = {
-    build:{order:['overview','connect','bind','navigate','edit','cheat']},
-    code:{order:['t2setup','t2load','t2state','t2save','t2end','t2query','t2check']},
-    learn:{order:['objects','runsql','related','validate','crud','search','usable','errors']},
-    practice:{order:['cards','quiz']}
-  };
+  /* ---------- course outline, progress, pager, "on this page" ---------- */
+  const $ = (q, r) => (r || document).querySelector(q);
+  const GROUPS = [
+    {id:'build',    t:'Build it',      s:'Tutorial 1 · designer',   c:'#a98be8', order:['overview','connect','bind','navigate','edit','cheat']},
+    {id:'code',     t:'Code it',       s:'Tutorial 2 · runtime',    c:'#6fa8ea', order:['t2setup','t2load','t2state','t2save','t2end','t2query','t2check']},
+    {id:'learn',    t:'Understand it', s:'8 concepts · Lecture 2',  c:'#e8a04c', order:['objects','runsql','related','validate','crud','search','usable','errors']},
+    {id:'practice', t:'Practice',      s:'flashcards · quiz',       c:'#5cb87a', order:['cards','quiz']}
+  ];
   const NAMES = {overview:'Big picture',connect:'Connect',bind:'Bind & load',navigate:'Navigate',edit:'Add, edit, delete',cheat:'Cheat table',
     t2setup:'Code-first',t2load:'Connect & load',t2state:'State & move',t2save:'Create & edit',t2end:'Cancel & delete',t2query:'Reader & scalar',t2check:'Checkpoints',
     objects:'Objects',runsql:'Run SQL',related:'Related data',validate:'Validate',crud:'CRUD & move',search:'Search',usable:'Usability',errors:'Errors',
     cards:'Flashcards',quiz:'Quiz'};
-  const modeOf = id => Object.keys(MODES).find(m=>MODES[m].order.includes(id));
-  const lastIn = {build:'overview',code:'t2setup',learn:'objects',practice:'cards'};
-  const activeId = () => (document.querySelector('.panel.active')||{}).id;
-  function show(id, push){
-    let m = modeOf(id);
-    if(!m){ id = 'overview'; m = 'build'; }
-    const ORDER = MODES[m].order;
-    lastIn[m] = id;
-    document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id===id));
-    document.querySelectorAll('.tabs').forEach(r=>{ r.hidden = r.dataset.mode!==m; });
-    document.querySelectorAll('.mode').forEach(b=>b.setAttribute('aria-selected', b.dataset.mode===m));
-    document.querySelectorAll('.tab').forEach(t=>{
-      const on = t.dataset.p===id; t.setAttribute('aria-selected', on);
-      if(on) t.scrollIntoView({block:'nearest',inline:'center'});
+  const FLAT = [];
+  GROUPS.forEach(g => g.order.forEach(id => FLAT.push({id, g})));
+  const idxOf = id => FLAT.findIndex(x => x.id === id);
+
+  let seen = {};
+  try { seen = JSON.parse(localStorage.getItem('cs-seen') || '{}') || {}; } catch (e) { seen = {}; }
+  const saveSeen = () => { try { localStorage.setItem('cs-seen', JSON.stringify(seen)); } catch (e) {} };
+
+  const shell = $('#shell'), outline = $('#outline');
+  const CHEV = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg>';
+  outline.innerHTML = GROUPS.map((g, gi) =>
+    '<section class="og" data-g="' + g.id + '" style="--gc:' + g.c + '">' +
+      '<button type="button" class="og-h" aria-expanded="false"><span class="og-ico">0' + (gi + 1) + '</span>' +
+      '<span class="og-t"><b>' + g.t + '</b><small>' + esc(g.s) + '</small></span><span class="og-n"></span>' + CHEV + '</button>' +
+      '<ol class="og-list">' + g.order.map((id, i) =>
+        '<li><a href="#' + id + '" data-p="' + id + '"><span class="i">' + (i + 1) + '</span><span>' + esc(NAMES[id]) + '</span></a></li>').join('') + '</ol>' +
+    '</section>').join('');
+
+  outline.addEventListener('click', e => {
+    const h = e.target.closest('.og-h');
+    if (h) { const og = h.parentElement; const open = !og.classList.contains('open'); og.classList.toggle('open', open); h.setAttribute('aria-expanded', open); return; }
+    const a = e.target.closest('a[data-p]');
+    if (a) { e.preventDefault(); show(a.dataset.p, true); shell.classList.remove('nav-open'); $('#mBar').setAttribute('aria-expanded', 'false'); }
+  });
+  $('#mBar').addEventListener('click', () => {
+    const on = shell.classList.toggle('nav-open'); $('#mBar').setAttribute('aria-expanded', on);
+  });
+  $('#progReset').addEventListener('click', () => { seen = {}; saveSeen(); paintProgress(); });
+
+  function paintProgress(){
+    const n = FLAT.filter(x => seen[x.id]).length;
+    $('#progTxt').textContent = n + ' of ' + FLAT.length;
+    $('#progBar').style.width = (n / FLAT.length * 100) + '%';
+    outline.querySelectorAll('.og').forEach(og => {
+      const g = GROUPS.find(x => x.id === og.dataset.g);
+      og.querySelector('.og-n').textContent = g.order.filter(id => seen[id]).length + '/' + g.order.length;
+      og.querySelectorAll('a[data-p]').forEach(a => {
+        const done = !!seen[a.dataset.p]; a.classList.toggle('seen', done);
+        const i = a.querySelector('.i'), pos = g.order.indexOf(a.dataset.p) + 1;
+        i.textContent = done && a.getAttribute('aria-current') !== 'page' ? '✓' : pos;
+      });
     });
-    const i = ORDER.indexOf(id);
-    const prev = document.getElementById('pgPrev'), next = document.getElementById('pgNext');
-    prev.style.visibility = i===0 ? 'hidden' : 'visible';
-    prev.textContent = i>0 ? '\u2190 ' + NAMES[ORDER[i-1]] : '';
-    next.style.visibility = i===ORDER.length-1 ? 'hidden' : 'visible';
-    next.textContent = i<ORDER.length-1 ? NAMES[ORDER[i+1]] + ' \u2192' : '';
-    if(push) history.replaceState(null,'','#'+id);
-    if(push) window.scrollTo({top:0,behavior:'smooth'});
   }
-  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>show(t.dataset.p,true)));
-  document.querySelectorAll('.mode').forEach(b=>b.addEventListener('click',()=>show(lastIn[b.dataset.mode],true)));
-  document.getElementById('pgPrev').addEventListener('click',()=>{const o=MODES[modeOf(activeId())].order;show(o[o.indexOf(activeId())-1],true);});
-  document.getElementById('pgNext').addEventListener('click',()=>{const o=MODES[modeOf(activeId())].order;show(o[o.indexOf(activeId())+1],true);});
-  window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
+
+  let spy = null;
+  function buildToc(panel, id){
+    const toc = $('#toc');
+    const hs = Array.from(panel.querySelectorAll('h3.s'));
+    hs.forEach((h, i) => { if (!h.id) h.id = id + '-s' + i; });
+    if (spy) spy.disconnect();
+    if (!hs.length) { toc.innerHTML = ''; return; }
+    toc.innerHTML = '<p class="toc-h">On this page</p><ul>' + hs.map(h => '<li><a href="#' + h.id + '" data-h="' + h.id + '">' + esc(h.textContent) + '</a></li>').join('') + '</ul>';
+    if ('IntersectionObserver' in window) {
+      spy = new IntersectionObserver(es => {
+        es.forEach(en => { if (en.isIntersecting) { toc.querySelectorAll('a').forEach(a => a.classList.toggle('on', a.dataset.h === en.target.id)); } });
+      }, {rootMargin: '-100px 0px -70% 0px'});
+      hs.forEach(h => spy.observe(h));
+    }
+  }
+  $('#toc').addEventListener('click', e => {
+    const a = e.target.closest('a[data-h]'); if (!a) return;
+    e.preventDefault(); const t = document.getElementById(a.dataset.h); if (t) t.scrollIntoView({behavior: 'smooth', block: 'start'});
+  });
+
+  function pgFill(el, item, dir){
+    el.classList.toggle('hide', !item);
+    if (!item) return;
+    el.href = '#' + item.id;
+    el.querySelector('b').textContent = (dir < 0 ? '← ' : '') + NAMES[item.id] + (dir > 0 ? ' →' : '');
+    el.querySelector('em').textContent = item.g.t;
+  }
+  ['pgPrev', 'pgNext'].forEach((id, k) => $('#' + id).addEventListener('click', e => { e.preventDefault(); const h = e.currentTarget.getAttribute('href'); if (h && h.length > 1) show(h.slice(1), true); }));
+
+  function show(id, push){
+    let k = idxOf(id); if (k < 0) { id = 'overview'; k = 0; }
+    const g = FLAT[k].g;
+    document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === id));
+    shell.dataset.mode = g.id;
+    seen[id] = 1; saveSeen();
+    outline.querySelectorAll('.og').forEach(og => {
+      const cur = og.dataset.g === g.id;
+      og.classList.toggle('current', cur);
+      if (cur) { og.classList.add('open'); og.querySelector('.og-h').setAttribute('aria-expanded', 'true'); }
+    });
+    outline.querySelectorAll('a[data-p]').forEach(a => { if (a.dataset.p === id) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    paintProgress();
+    $('#crumb').innerHTML = '<span class="dot"></span>' + g.t + '<span aria-hidden="true">›</span><b>' + esc(NAMES[id]) + '</b><span class="of">' + (k + 1) + ' / ' + FLAT.length + '</span>';
+    $('#mCur').innerHTML = '<small>' + g.t + '</small>' + esc(NAMES[id]);
+    $('#mCnt').textContent = (k + 1) + '/' + FLAT.length;
+    pgFill($('#pgPrev'), FLAT[k - 1], -1);
+    pgFill($('#pgNext'), FLAT[k + 1], 1);
+    buildToc(document.getElementById(id), id);
+    if (push) { history.replaceState(null, '', '#' + id); $('#crumb').scrollIntoView({behavior: 'smooth', block: 'start'}); }
+  }
+  window.addEventListener('hashchange', () => show(location.hash.slice(1)));
   show(location.hash.slice(1));
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.addEventListener('load', () => window.scrollTo(0, 0));
 
   /* ---------- tiny C# highlighter + copy buttons ---------- */
   const KW = /\b(private|void|if|else|return|try|catch|finally|new|this|null|true|false|class|var|using|while|int|decimal|out|bool|foreach|throw|in|is|as|readonly|using)\b/;
@@ -1130,6 +1185,7 @@ int count = Convert.ToInt32(cmd.ExecuteScalar());</code></pre></div></details><d
   function csHighlight(root){ (root||document).querySelectorAll('pre.code').forEach(pre=>{
     if(pre.querySelector('.copy')) return;
     const raw = pre.textContent;
+    pre.dataset.lang = /^\s*(SELECT|INSERT INTO|UPDATE|DELETE FROM)\b/i.test(raw) ? 'SQL' : /^\s*Provider=/.test(raw) ? 'Connection string' : 'C#';
     let html = esc(raw).replace(/(\/\/.*)|(&quot;|"(?:\\.|[^"\\])*")|(\b[A-Za-z_]\w*\b)/g,(m,cm,st,id)=>{
       if(cm) return '<span class="cm">'+cm+'</span>';
       if(st) return '<span class="st">'+st+'</span>';
@@ -1177,7 +1233,7 @@ int count = Convert.ToInt32(cmd.ExecuteScalar());</code></pre></div></details><d
     const shots = document.getElementById('stShots');
     shots.className = 'shots' + (s.i.length>1 ? ' multi':'');
     shots.innerHTML = s.i.map(n=>'<img loading="lazy" src="assets/img/csharp/step-'+n+'.png" alt="Visual Studio screenshot for: '+s.t+'">').join('');
-    document.getElementById('stDots').innerHTML = STEPS.map((_,k)=>'<button type="button" aria-label="Step '+(k+1)+'" class="'+(k<si?'done':k===si?'cur':'')+'" data-k="'+k+'"></button>').join('');
+    document.getElementById('stDots').innerHTML = STEPS.map((_,k)=>'<button type="button" aria-label="Step '+(k+1)+'" class="'+(k<si?'done':k===si?'cur':'')+'" data-k="'+k+'"'+(k===si?' aria-current="step"':'')+'>'+(k+1)+'</button>').join('');
     document.getElementById('stPrev').disabled = si===0;
     const last = si===STEPS.length-1;
     document.getElementById('stNext').style.display = last ? 'none':'';
