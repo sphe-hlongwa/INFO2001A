@@ -427,3 +427,8 @@ table.cmp tr:hover td{background:rgba(255,255,255,.02);}
 .pager{grid-template-columns:1fr 1fr;}
 .pg b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 @media(max-width:480px){.pg{padding:.6rem .8rem;}.pg b{font-size:14px;}}
+
+/* mobile: the sticky contents bar already shows section + count, so hide the duplicate breadcrumb */
+@media(max-width:899px){
+  .crumb{height:0;margin:0;overflow:hidden;visibility:hidden;scroll-margin-top:140px;}
+}

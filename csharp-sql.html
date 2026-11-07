@@ -1102,7 +1102,7 @@ int count = Convert.ToInt32(cmd.ExecuteScalar());</code></pre></div></details><d
     const h = e.target.closest('.og-h');
     if (h) { const og = h.parentElement; const open = !og.classList.contains('open'); og.classList.toggle('open', open); h.setAttribute('aria-expanded', open); return; }
     const a = e.target.closest('a[data-p]');
-    if (a) { e.preventDefault(); show(a.dataset.p, true); shell.classList.remove('nav-open'); $('#mBar').setAttribute('aria-expanded', 'false'); }
+    if (a) { e.preventDefault(); shell.classList.remove('nav-open'); $('#mBar').setAttribute('aria-expanded', 'false'); show(a.dataset.p, true); }
   });
   $('#mBar').addEventListener('click', () => {
     const on = shell.classList.toggle('nav-open'); $('#mBar').setAttribute('aria-expanded', on);
