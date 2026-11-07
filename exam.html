@@ -82,7 +82,6 @@
     <h1>Exam Preparation</h1>
     <div class="meta-row">
       <span>Format: <b>100 marks &middot; 3 hours &middot; Sections A, B and C</b></span>
-      <span>Practice set: <b>4 full papers &middot; flashcards &middot; topic quizzes</b></span>
     </div>
   </header>
 
@@ -91,7 +90,7 @@
   <!-- EXAM SCOPE -->
   <section class="view active" id="scope">
     <h2 class="section-title">Exam scope &amp; format</h2>
-    <p class="section-desc">One paper, <b>100 marks</b>, <b>3 hours (180 minutes)</b>, covering <b>all content from Semester 2</b> (Blocks 3 and 4). It follows the layout of Test 1 and Test 2: a multiple-choice section, a scenario section applying interaction design, and a large case-scenario section built from systems design, database design and ADO.NET.</p>
+    <p class="section-desc">One paper covering <b>all content from Semester 2</b> (Blocks 3 and 4), laid out like Test 1 and Test 2. Suggested times below add up to the full <b>180 minutes</b>.</p>
 
     <div class="exam-section blue">
       <div class="head"><span>Section A &mdash; Multiple Choice Questions</span><span class="badge">15 MARKS</span></div>
@@ -198,7 +197,7 @@
   <!-- QUIZZES -->
   <section class="view" id="quiz">
     <h2 class="section-title">Topic quizzes</h2>
-    <p class="section-desc">12 auto-graded multiple-choice quizzes, one per topic and at least 40 questions in each, matching the style of Section A. Every question is written for these quizzes and none of them repeats anything in the mock papers. Pick a topic, work through it, and read the explanation after each answer.</p>
+    <p class="section-desc">One quiz per topic, 40+ auto-graded questions each, in the style of Section A and none repeated from the exam papers. Pick a topic and read the explanation after each answer.</p>
     <div class="select-wrap">
       <select id="quiz-topic" class="cyber-select"></select>
     </div>
@@ -212,7 +211,7 @@
   <!-- MOCK TEST -->
   <section class="view" id="mock">
     <h2 class="section-title">Exam papers</h2>
-    <p class="section-desc">Four full 100-mark, 3-hour papers in the exam format (A: MCQs 15, B: interaction design and usability 17, C: comprehensive case scenario 68). Each paper opens on its own page &mdash; the timer starts as soon as the page loads. Section A is auto-marked; for Sections B and C write your answer first, then reveal the model answer and mark yourself.</p>
+    <p class="section-desc">Each paper opens on its own page and the timer starts as soon as it loads. Section A is auto-marked; for Sections B and C write your answer first, then reveal the model answer and mark yourself.</p>
     <div class="pill-row" id="mock-pills"></div>
   </section>
 
@@ -325,12 +324,14 @@
     if(badge) badge.textContent = mockPapers.length;
 
     // paper selector on the Mock test view: plain links to the paper pages
+    // identical summaries on every paper add nothing, so only show them when they differ
+    const sameSummary = mockPapers.every(p => p.summary === mockPapers[0].summary);
     const pillRow = document.getElementById('mock-pills');
     mockPapers.forEach(p=>{
       const a = document.createElement('a');
       a.className = 'pill';
       a.href = p.href;
-      a.innerHTML = `<b>${p.title}</b><span class="sub">${p.summary}</span>`;
+      a.innerHTML = `<b>${p.title}</b>${sameSummary ? '' : `<span class="sub">${p.summary}</span>`}`;
       pillRow.appendChild(a);
     });
 
@@ -338,7 +339,7 @@
     const clockIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>';
     const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-    menu.innerHTML = '<div class="sb-menu-label">Open a mock paper</div>' +
+    menu.innerHTML = '<div class="sb-menu-label">Open an exam paper</div>' +
       mockPapers.map(p=>{
         const parts = String(p.title).split(' - ');
         const head = parts.shift();

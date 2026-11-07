@@ -78,7 +78,6 @@
     <h1>Systems Design &amp; Database Mock Exams</h1>
     <div class="meta-row">
       <span>Topics: <b>Semester 2 (Blocks 3 &amp; 4) &middot; Interaction design &amp; usability &middot; Use case realisation (DSDs) &middot; ERDs &middot; ADO.NET &middot; UI design &middot; Reporting</b></span>
-      <span>Mock set: <b>3 papers &middot; 99 marks each &middot; 3 hours</b></span>
     </div>
   </header>
 
@@ -222,12 +221,13 @@
     if(badge) badge.textContent = mockPapers.length;
 
     // paper selector on the Mock test view: plain links to the paper pages
+    const sameSummary = mockPapers.every(p => p.summary === mockPapers[0].summary);
     const pillRow = document.getElementById('mock-pills');
     mockPapers.forEach(p=>{
       const a = document.createElement('a');
       a.className = 'pill';
       a.href = p.href;
-      a.innerHTML = `<b>${p.title}</b><span class="sub">${p.summary}</span>`;
+      a.innerHTML = `<b>${p.title}</b>${sameSummary ? '' : `<span class="sub">${p.summary}</span>`}`;
       pillRow.appendChild(a);
     });
 
